@@ -953,63 +953,63 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             'Monday-10:00am': {
                 title1: 'Breakfast',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1TAuZYdHRBvmMWc_bjh0c-KP_mouGEzrE=w2940-h1680-iv1',
                 text1: 'Every week day 9-11am, four presenters wake up the students of Leeds with pop music, culture round-ups and blind rankings of the things that really matter first thing in the morning!',
             },
             'Monday-11:00am': {
                 title1: 'Terminally Online',
                 
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1TAuZYdHRBvmMWc_bjh0c-KP_mouGEzrE=w2940-h1680-iv1',
                 text1: 'Join Emily and Fleur as they procrastinate another hour from doing uni work to reminisce on the best bits of internet culture. Expect a nostalgia overdose as the girls traverse the history of the world wide web.',
                
             },
             'Monday-12:00pm': {
                title1: 'Sound Salad',
                title2: 'The more you Know',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
-                text1: 'Week 1 : Dive underground with [presenter name] to explore the Leeds music scene. Listen out for guest appearances and a wide coverage of genre.',
-                 image2: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1vu792GSFeI8KbzxAfcc2viTEoUlDqMt5=w2940-h1680-iv1',
+                text1: 'Week 1 : Dive underground to explore the Leeds music scene. Listen out for guest appearances and a wide coverage of genre.',
+                 image2: 'https://lh3.googleusercontent.com/u/0/d/1uZD4HXPZhATfDOeu7hewVh2h2lPpn7AB=w2940-h1680-iv1',
                 text2: 'Week 2 : Ever wondered what really happened at Woodstock 99? Join Matt, Anna and Ella to learn more on some of pop culture’s most historical events.'
             },
             'Monday-1:00pm': {
                 title1: 'Politics Hour',
                 title2: null,
-                image1: 'image5.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/10TRTNzsdvEOZV70GER3_8PN4vgTaj4Kl=w2940-h1680-iv2',
                 text1: 'Politics Hour',
                
             },
             'Monday-2:00pm': {
                 title1: 'SPORT',
                 title2: null,
-                image1: 'image6.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1fFrZWocMVROqqab_evU8w5EESOuUL4oi=w2940-h1680-iv1',
                 text1: 'The sports team take to the airwaves, discussing weekly fixtures and sports news.',
                 
             },
             'Monday-3:00pm': {
                 title1: 'LGBTQ+ Show',
                 title2: null,
-                image1: 'image7.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1Ap6WMfZ9jweSsqfjkxPB-3zbW85FMjkc=w2940-h1680-iv1',
                 text1: 'Championing queer icons in Leeds and beyond, and celebrating the culture of being part of the LGBTQIA+ community.',
               
             },
             'Monday-4:00pm': {
                 title1: 'Bangers and Trash',
                 title2: null,
-                image1: 'image8.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
                 text1: 'We aren’t popular, but our culture is! Each week we dissect our guilty pleasures, current faves (and least faves) and silly little stories. Get your ears into gear!',
                
             },
             'Monday-5:00pm': {
                 title1: 'HOMETIME',
                 title2: null,
-                image1: 'image9.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/17nlJo75YJZH1sWxXbd61Yg2lj05623Es=w2940-h1680-iv1',
                 text1: 'Every week day 5-7pm, four presenters soundtrack students’ commutes home, sharing stories, doing challenges and prepping you for the nightlife landscape of Leeds day by day.',
                
             },
             'Monday-6:00pm': {
                 title1: 'HOMETIME',
                 title2: null,
-                image1: 'image10.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/17nlJo75YJZH1sWxXbd61Yg2lj05623Es=w2940-h1680-iv1',
                 text1: 'Every week day 5-7pm, four presenters soundtrack students’ commutes home, sharing stories, doing challenges and prepping you for the nightlife landscape of Leeds day by day.',
                
             },
