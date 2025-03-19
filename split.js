@@ -1527,59 +1527,59 @@ document.addEventListener('DOMContentLoaded', function () {
             'Saturday-3:00pm': {
                 title1: 'Soccer Punch',
                 title2: null,
-                image1: 'image7.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1Vye6bcruDTIz8XJp-AErJgezBRE4Tkth=w2940-h1680-iv1',
                 text1: 'The students answer to Soccer Saturday, a more laidback overview of Saturday game.',
               
             },
             'Saturday-4:00pm': {
                  title1: 'Soccer Punch',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1Vye6bcruDTIz8XJp-AErJgezBRE4Tkth=w2940-h1680-iv1',
                 text1: 'Soccer Punch: The students answer to Soccer Saturday, a more laidback overview of Saturday game.',
             },
             'Saturday-5:00pm': {
                  title1: 'The Emo Hour',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'The Emo Hour',
             },
             'Saturday-6:00pm': {
                 title1: 'Tinfoil Tales',
                 title2: null,
-                image1: 'image10.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Political conspiracies have been rife in pop culture for longer than we can remember, join the hosts to think critically about the impact of conspiracy theories and how they’ve evolved to be so mainstream today.',
                
             },
             'Saturday-7:00pm': {
                title1: 'SATURDAY NIGHT FEVER',
                title2: null,
-                image1: 'image11.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1lCPY_7y0Gft2JG68vhZdqunyZeo6Vghd=w2940-h1680-iv2',
                 text1: 'The ‘Saturday Night Fever’ (7-9pm) team curate the nighttime vibe with upbeat playlists and advertising new club nights.',
                
             },
             'Saturday-8:00pm': {
                 title1: 'SATURDAY NIGHT FEVER',
                 title2: null,
-                image1: 'image12.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1lCPY_7y0Gft2JG68vhZdqunyZeo6Vghd=w2940-h1680-iv2',
                 text1: 'The ‘Saturday Night Fever’ (7-9pm) team curate the nighttime vibe with upbeat playlists and advertising new club nights.',
              
             },
             'Saturday-9:00pm': {
                 title1: 'Rags, Rebels, Records',
                 title2: null,
-                image1: 'image13.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'If there are two things that Leeds Uni students have amazing taste in, it’s style and music. Rags, Rebels, Records is the premium fashion radio show which combines these two things, exploring how fashion and music have intersected throughout pop culture to create some of the most prevalent subcultures and styles.',
               
             },
             'Saturday-10:00pm': {
                 title1: 'Rosie & Tom try to DJ',
                 title2: null,
-                image1: 'image14.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Live Dj Set',
              
             },
             'Saturday-11:00pm': {
                 title1: 'No Show',
                 title2: null,
-                image1: 'image15.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Nothing..',
                
             },
@@ -1595,32 +1595,32 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             'Sunday-10:00am': {
                 title1: 'The Label Show',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Join Poppy and Ally as they explore different record labels every week, from every genre, highlighting independent labels as well as big names in the industry.',
             },
             'Sunday-11:00am': {
                 title1: 'Witching Hour',
               
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                text1: 'Rory’s back in the studio to talk all things witchcraft! From crystals to candles to card readings you’ll learn the history of the practice and look at the modern iterations of witch life.',
               
             },
             'Sunday-12:00pm': {
                 title1: 'Box Office',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1P6blYgwAzUgb5DogSu4vwkc52mzpgY-O=w2940-h1680-iv1',
                 text1: 'Box Office',
             },
             'Sunday-1:00pm': {
                 title1: 'It Takes A Village',
               
-                image1: 'image5.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Flora examines the nature vs nurture argument in music, interviewing someone new each week to discover how and why they discovered the music which defines their lives.',
                
             },
             'Sunday-2:00pm': {
                 title1: 'SRA CHART SHOW',
              
-                image1: 'image6.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 
                 text1: 'The SRA Chart Show',
             
@@ -1628,18 +1628,18 @@ document.addEventListener('DOMContentLoaded', function () {
             'Sunday-3:00pm': {
                 title1: 'SRA CHART SHOW',
              
-                image1: 'image6.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 
                 text1: 'The SRA Chart Show',
             },
             'Sunday-4:00pm': {
                  title1: 'SUNDAY ROAST',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1BlWo4E0TxsHK_Yue3kjTB-x5iOkOY2ZK=w2940-h1680-iv1',
                 text1: '‘Sunday Roast’ (4-6pm) mocks the week and discusses student icks in a whole new light.',
             },
             'Sunday-5:00pm': {
                  title1: 'SUNDAY ROAST',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1BlWo4E0TxsHK_Yue3kjTB-x5iOkOY2ZK=w2940-h1680-iv1',
                 text1: '‘Sunday Roast’ (4-6pm) mocks the week and discusses student icks in a whole new light.',
             },
             'Sunday-6:00pm': {
