@@ -946,7 +946,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const timeSlotData = {
             'Monday-9:00am': {
                 title1: 'Breakfast',
-                image1: 'https://static.wixstatic.com/media/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg/v1/fill/w_1880,h_1070,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/316c00_2b35f04ff0b04d9b830fc11dbc4eea99~mv2.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1TAuZYdHRBvmMWc_bjh0c-KP_mouGEzrE=w2940-h1680-iv1',
                 text1: 'Every week day 9-11am, four presenters wake up the students of Leeds with pop music, culture round-ups and blind rankings of the things that really matter first thing in the morning!',
                 
                 
@@ -959,7 +959,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Monday-11:00am': {
                 title1: 'Terminally Online',
                 
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1TAuZYdHRBvmMWc_bjh0c-KP_mouGEzrE=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1yMG2EPJ5c28K-SY8SZAB7BQ548DsMNgW=w2940-h1680-iv1',
                 text1: 'Join Emily and Fleur as they procrastinate another hour from doing uni work to reminisce on the best bits of internet culture. Expect a nostalgia overdose as the girls traverse the history of the world wide web.',
                
             },
@@ -1645,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Sunday-6:00pm': {
                 title1: '(Not So) Dumb Blondes',
              
-                image1: 'image10.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
               
                 text1: 'LSR’s Best Show Winter 2024 returns for another season. Hannah and Rebecca decipher if life truly is more fun for blondes by dissecting their lives on air through fun themes!',
             
@@ -1654,35 +1654,35 @@ document.addEventListener('DOMContentLoaded', function () {
             'Sunday-7:00pm': {
                title1: 'ALBUM REVIEW',
                title2: null,
-                image1: 'image11.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Album Review',
                
             },
             'Sunday-8:00pm': {
                 title1: 'Box! Box! Box!',
                 title2: null,
-                image1: 'image12.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Box! Box! Box!',
              
             },
             'Sunday-9:00pm': {
                 title1: 'Alien Invasion',
                 title2: null,
-                image1: 'image13.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Alien Invasion',
               
             },
             'Sunday-10:00pm': {
                 title1: 'Jems Jamborees',
                 title2: null,
-                image1: 'image14.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Live Dj Set',
              
             },
             'Sunday-11:00pm': {
                 title1: 'Tjaro x LSR',
                 title2: null,
-                image1: 'image15.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
                 text1: 'Live Dj Set',
                
             },
