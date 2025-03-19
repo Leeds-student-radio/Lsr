@@ -1322,7 +1322,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Thursday-4:00pm': {
                 title1: 'Last Days of Disco',
                 title2: null,
-                image1: 'image8.jpg',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/10cr5U95lZHr6wMGKkMMz3ZFUGq3rs6je=w2940-h1680-iv1',
                 text1: 'Ruth identifies the greatest disco and disco-adjacent tracks in history. Tracing the origins of the genre back to before the dancefloors of 1970s New York, tune in to hear a love for disco.',
                  
             },
