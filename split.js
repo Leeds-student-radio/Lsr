@@ -235,7 +235,7 @@ schedules.addEventListener('click', function(event) {
             column1.style.width = '45%'; // Default width for two-column layout
             modal.style.width = defaultModalWidth; // Reset modal width
 
-            const imageUrl = `./${showId}.jpg`;
+            const imageUrl = `${showId}`;
             const title = showInfo.querySelector('h2:nth-of-type(1)')?.textContent || ''; //Get the first h2
             const description = showInfo.querySelector('p:nth-of-type(1)')?.textContent || ''; //Get the first p
 
@@ -250,7 +250,7 @@ schedules.addEventListener('click', function(event) {
             if (title2 && description2) {
                 // Display second column
                 column2.style.display = 'block';
-                showImage2.src = `./${showId}_2.jpg`; // Assuming second image has _2 suffix
+                showImage2.src = `${showId}`; // Assuming second image has _2 suffix
                 showTitle2.textContent = title2;
                 showDescription2.textContent = description2;
             } else {
