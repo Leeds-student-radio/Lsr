@@ -236,6 +236,7 @@ schedules.addEventListener('click', function(event) {
             modal.style.width = defaultModalWidth; // Reset modal width
 
             const imageUrl = `${showId}`;
+            const imageUrl2 = tdElement.getAttribute('data-id2') || imageUrl;
             const title = showInfo.querySelector('h2:nth-of-type(1)')?.textContent || ''; //Get the first h2
             const description = showInfo.querySelector('p:nth-of-type(1)')?.textContent || ''; //Get the first p
 
@@ -250,7 +251,7 @@ schedules.addEventListener('click', function(event) {
             if (title2 && description2) {
                 // Display second column
                 column2.style.display = 'block';
-                showImage2.src = `${showId}`; // Assuming second image has _2 suffix
+                showImage2.src = imageUrl2;
                 showTitle2.textContent = title2;
                 showDescription2.textContent = description2;
             } else {
