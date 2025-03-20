@@ -236,7 +236,7 @@ schedules.addEventListener('click', function(event) {
             modal.style.width = defaultModalWidth; // Reset modal width
 
             const imageUrl = `${showId}`;
-            const imageUrl2 = tdElement.getAttribute('data-id2') || imageUrl;
+            const imageUrl2 = target.getAttribute('data-id2');
             const title = showInfo.querySelector('h2:nth-of-type(1)')?.textContent || ''; //Get the first h2
             const description = showInfo.querySelector('p:nth-of-type(1)')?.textContent || ''; //Get the first p
 
