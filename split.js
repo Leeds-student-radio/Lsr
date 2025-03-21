@@ -1091,7 +1091,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 image2: 'https://lh3.googleusercontent.com/u/0/d/1bG31bW3AK2qIraF428n33EsU6eUh1F_P=w2940-h1680-iv1',
                 text2: 'Your Leedslist is a play on everyones favourite spotify feature, the daylist!',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
-                text1: '(Bi-Weekly) As we are very close to the Oscars, there are so many twists, turns, conflicts and dramas to talk about and we’d love to dive into this with listeners on LSR to share our passion for it. We’ll also get into the practical elements of filmmaking to ascertain if the nominees are deserving!',
+                text1: '(Bi-Weekly) As we are very close to the Oscars, there are so many twists, turns, conflicts and dramas to talk about and wed love to dive into this with listeners on LSR to share our passion for it. Well also get into the practical elements of filmmaking to ascertain if the nominees are deserving!',
                 
             },
             'Tuesday-3:00pm': {
@@ -1175,7 +1175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1dh4gpcFdSYmg9xBXuY5BO9QPfIsX9_0G=w2940-h1680-iv1',
                text1: 'Week 1 : A positive news show featuring student-focussed stories and songs. Highlighting the individual and mass change towards good in the world with guests!',
                 image2: 'https://lh3.googleusercontent.com/u/0/d/1o37sYdSHo7-gl5S5ntLwbKkXbIEs_c-4=w2940-h1680-iv1',
-                text2: 'Week 2 : Championing student-led events across Leeds’ campuses, Ruby has friendly chats with different guests each week as they share their light on air.',
+                text2: 'Week 2 : Championing student-led events across Leeds campuses, Ruby has friendly chats with different guests each week as they share their light on air.',
               
             },
             'Wednesday-12:00pm': {
@@ -1215,7 +1215,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'Pioneers of the Playlist',
                 title2: 'Politics of Punk',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1Qv1I1wfHrBzI0NSNBsXl85cGrvsTb_ft=w2940-h1680-iv1',
-                text1: 'Week 1 : This radio show will look into the stories of the most iconic artists and bands who have reshaped music history and influenced culture. Each episode will explore the groundbreaking contributions of musical legends by focusing on their discography, cultural relevance, and the far-reaching impact they’ve had across various aspects of society.',
+                text1: 'Week 1 : This radio show will look into the stories of the most iconic artists and bands who have reshaped music history and influenced culture. Each episode will explore the groundbreaking contributions of musical legends by focusing on their discography, cultural relevance, and the far-reaching impact theyve had across various aspects of society.',
                   image2: 'https://lh3.googleusercontent.com/u/0/d/1Iq3ovxY0ZbxaYyB4kGEewFOVBRa4QGrg=w2940-h1680-iv1',
                  text2: 'Week 2 : Politics of Punk is a show that aims to educate and entertain people on the wild and entertaining world of punk music and all its sub genres.',
                
@@ -1415,7 +1415,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'News of the Week',
               
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1jOYltooDjAzQ39zfbT4VZNogLlRYK1_w=w2940-h1680-iv1',
-                text1: 'Weekly rundown of the world's biggest stories, expect a balanced discussion on global , national, local and student news.',
+                text1: 'Weekly rundown of the worlds biggest stories, expect a balanced discussion on global , national, local and student news.',
                
             },
             'Friday-2:00pm': {
