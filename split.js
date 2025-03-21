@@ -976,7 +976,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'Politics Hour',
                 title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/10TRTNzsdvEOZV70GER3_8PN4vgTaj4Kl=w2940-h1680-iv2',
-                text1: 'Politics Hour',
+                text1: 'Students have a voice too, join these four as they navigate the lastest political arguments that shape university life.',
                
             },
             'Monday-2:00pm': {
@@ -989,14 +989,14 @@ document.addEventListener('DOMContentLoaded', function () {
             'Monday-3:00pm': {
                 title1: 'LGBTQ+ Show',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1Ap6WMfZ9jweSsqfjkxPB-3zbW85FMjkc=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1m3qQuP2su8VPD9Hcrz_2UTbxaP7211Gb=w2940-h1680-iv2',
                 text1: 'Championing queer icons in Leeds and beyond, and celebrating the culture of being part of the LGBTQIA+ community.',
               
             },
             'Monday-4:00pm': {
                 title1: 'Bangers and Trash',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1mK9eXnFZ3xUw6E5Hr7iTSA0EPm7hR4St=w2940-h1680-iv1',
                 text1: 'We aren’t popular, but our culture is! Each week we dissect our guilty pleasures, current faves (and least faves) and silly little stories. Get your ears into gear!',
                
             },
@@ -1038,14 +1038,14 @@ document.addEventListener('DOMContentLoaded', function () {
             'Monday-10:00pm': {
                 title1: 'Radio with Rosie',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1JGKLlWar05obNk34AYTAMvlfo02N7mRK=w2940-h1680-iv1',
                 text1: 'Live Dj set',
              
             },
             'Monday-11:00pm': {
                 title1: '555',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/16Skw4yF_eQEQeb19czoox4s4vf5M7Bbn=w2940-h1680-iv1',
                 text1: 'Live Dj set.',
                
             },
@@ -1081,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title2: 'UML Presents: Archive to Airwaves',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
                 text1: 'Week 1 : Matty and Haley compare UK and US culture on air! A classic LSR show aimed to educate the masses on American and British culture with a soundtrack of the best artists from each country. @theteaparty_lsr on instagram.',
-                  image2: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                  image2: 'https://leeds.ams3.digitaloceanspaces.com/media/yIlXVf9yhlwsONEFuMA0NEn6Xi3pFD9GNP5vLAXG.jpg',
                 text2:  'Week 2 : Union Music Library has taken over! Join the team each week to highlight which findings from their archive are deemed worthy enough for LSR airplay. Tune in to hear hidden gems and the context surrounding classic records.',
                     
             },
@@ -1105,7 +1105,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'Whats Poppin',
                 title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1R70ylM2DmNl3IWRdcXWF6W9KVlTG-e9-=w2940-h1680-iv1',
-                text1: '',
+                text1: 'What is popping? Join Ruby and Zara to find out the latest in pop culture.',
                
             },
             'Tuesday-5:00pm': {
@@ -1202,10 +1202,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 
             },
             'Wednesday-3:00pm': {
-                title1: 'LST.MP3/ Gryph on Air',
-                title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
-                text1: 'LST.MP3/Gryph-On Air',
+                title1: 'LST.MP3',
+                 title2: 'Gryph on Air',
+               
+                image1: 'https://leeds.ams3.digitaloceanspaces.com/media/u9jj8X7eVxFC0rYoOcEAus65HIcxfSeeWgJXHRjN.png',
+                text1: 'Week 1:LSTV takeover time, join our four hosts as we crossover betweeen radio and digital.',
+                 image2: 'https://scontent-lhr6-1.xx.fbcdn.net/v/t39.30808-6/348250827_624121686273460_6603057765271020679_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=g091n3P7kC8Q7kNvgEpveQv&_nc_oc=AdktbKlupu8TuRFS4tfcpm4tRTsGgfeE8b1GP9KK_NcnMxmzy1CeWNZADWhSc_abQcw&_nc_zt=23&_nc_ht=scontent-lhr6-1.xx&_nc_gid=J_5gz7lVdNsc5plmWylX3w&oh=00_AYFGjnoEkpAjWal8bJZzpM1MJIVSl6Zb6_JObMkqzwzoGQ&oe=67E37ACA',
+                text2: 'Week 2 : Gryphon takeover time, join our four hosts as we crossover between radio and paper.',
               
             },
             'Wednesday-4:00pm': {
@@ -1264,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Wednesday-11:00pm': {
                 title1: 'Weekly Wheelup',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/12jh4vOW3urYwKWkZM4JejkTSNUfrGrbB=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
                
             },
@@ -1316,12 +1319,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 text1: 'Incorporating sport and music as one, the boys explore historical and modern sporting events and play the tunes which accompany them. Tune in for chants and culture on air.',
                      },
             'Thursday-3:00pm': {
-                title1: 'Safe Space',
+                title1: 'But where are you really from?',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1lZ5C6ASy_WkEBRrNTTlI93-9g-XF0-0V=w2940-h1680-iv1',
-                text1: 'Exactly that! These presenters discuss the importance of mindfulness and taking care of your mental health at university as well as discussing how neurodiversity impacts student life.',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/11hwERjFTufaKMpU-79bo4q_oz7dDXFWb=w2940-h1680-iv1',
+                text1: 'Discussing race relations on campus and the manifestation of identity for students of ethnic minority backgrounds and international students more broadly.',
               
             },
+
             'Thursday-4:00pm': {
                 title1: 'Last Days of Disco',
                 title2: null,
@@ -1361,13 +1365,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'From Latin America with Love',
                 title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
-                text1: 'Centred around his experience as a child in Miami, the gateway to Latin America, [presenter name] explores Latin-Caribbean and South American discographies country by country.',
+                text1: 'Centred around his experience as a child in Miami, the gateway to Latin America, Frankie explores Latin-Caribbean and South American discographies country by country.',
               
             },
             'Thursday-10:00pm': {
                 title1: 'Roots to Rave',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1e9ZQc1IlsMMsnWt3V1bnOq_ubgjY5Csm=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
              
             },
@@ -1411,7 +1415,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'News of the Week',
               
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1jOYltooDjAzQ39zfbT4VZNogLlRYK1_w=w2940-h1680-iv1',
-                text1: 'News of the week',
+                text1: 'Weekly rundown of the world's biggest stories, expect a balanced discussion on global , national, local and student news.',
                
             },
             'Friday-2:00pm': {
@@ -1421,17 +1425,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 text1: 'The sports team take to the airwaves, discussing weekly fixtures and sports news.',
              
             },
-            'Friday-3:00pm': {
-                title1: 'But where are you really from?',
+            
+            'Fridy-3:00pm': {
+                title1: 'Safe Space',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/11hwERjFTufaKMpU-79bo4q_oz7dDXFWb=w2940-h1680-iv1',
-                text1: 'Discussing race relations on campus and the manifestation of identity for students of ethnic minority backgrounds and international students more broadly.',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1lZ5C6ASy_WkEBRrNTTlI93-9g-XF0-0V=w2940-h1680-iv1',
+                text1: 'Exactly that! These presenters discuss the importance of mindfulness and taking care of your mental health at university as well as discussing how neurodiversity impacts student life.',
               
             },
             'Friday-4:00pm': {
                 title1: 'M&P Megamix',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/12stuuMN3VxhKbjPvMa7S8AEvD-m9k6bZ=w2940-h1680-iv1',
                 text1: 'LUU’s Music and Performance rep Kate highlights the best of those societies. With a different group each week you can get to know them and the projects they have under their belts this semester.',
                  
             },
@@ -1467,20 +1472,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'Sleepytime songs',
                 title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Sleepytime songs',
+                text1: 'Tune in for relaxing songs to end the night with!',
               
             },
             'Friday-10:00pm': {
                 title1: 'Optimistic soul',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1npF5tvtpTjqi9-mLzwDENmUDszh4qjOJ=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
              
             },
             'Friday-11:00pm': {
                 title1: 'Funky Frequencies',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/13Gu7mp8zkDYgThVv_bSGTBHD3FgKu7U3=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
                
             },
@@ -1503,14 +1508,14 @@ document.addEventListener('DOMContentLoaded', function () {
             'Saturday-11:00am': {
                 title1: 'Barricade Babe',
               
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1E-66tDEoE2NrF4RyhDGj2SpEBHxa1A-2=w2940-h1680-iv1',
                text1: 'Carys is the ultimate Barricade Babe, attending gigs regularly out of pure love for the music. She brings on guests to discuss the live music events that make or break them and highlights the joys of being a fan.',
               
             },
             'Saturday-12:00pm': {
                 title1: 'Out and About',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Nothing..',
+                text1: 'A chance to showcase alternative coverage on LSR, expect something different every week and coverage of off beat events around the city.',
             },
             'Saturday-1:00pm': {
                 title1: 'Fill In The Gaps',
@@ -1523,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title1: 'The Leeds Music Role Call',
                title2: 'Uni Music Library Finds',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                 image2: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                 image2: 'https://lh3.googleusercontent.com/u/0/d/13BoktLuvOAbM9MB-c77OjoHoJ4ZoTcJr=w2940-h1680-iv1',
                 text1: 'Week 1 : Open your eyes to the Leeds Music scene with several guests including bands and label owners who are making waves across the city.',
               text2: 'Week 2 : With a new theme each week, two UML members present the best they can find in LUU’s Union Music Library.',
             },
@@ -1542,12 +1547,12 @@ document.addEventListener('DOMContentLoaded', function () {
             'Saturday-5:00pm': {
                  title1: 'The Emo Hour',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'The Emo Hour',
+                text1: 'Tune in for all things Emo',
             },
             'Saturday-6:00pm': {
                 title1: 'Tinfoil Tales',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/11cA2pasQNk0N8oSRx1U0vwAYA0dolo_F=w2940-h1680-iv1',
                 text1: 'Political conspiracies have been rife in pop culture for longer than we can remember, join the hosts to think critically about the impact of conspiracy theories and how they’ve evolved to be so mainstream today.',
                
             },
@@ -1575,15 +1580,15 @@ document.addEventListener('DOMContentLoaded', function () {
             'Saturday-10:00pm': {
                 title1: 'Rosie & Tom try to DJ',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1u_CPFlRcet2dnb3lnxZWGJVPxekZ-tdo=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
              
             },
             'Saturday-11:00pm': {
-                title1: 'No Show',
+                title1: 'BPM Radio',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Nothing..',
+                image1: 'https://leeds.ams3.digitaloceanspaces.com/media/dVSupksKuOaUaaXVbFCvNECs3rfs0YPiLpNpUhYg.jpg',
+                text1: 'Live Dj Set',
                
             },
 
@@ -1604,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Sunday-11:00am': {
                 title1: 'Witching Hour',
               
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1z8sfhsUSEimYBkArIUxFPIyd0HnGjFur=w2940-h1680-iv1',
                text1: 'Rory’s back in the studio to talk all things witchcraft! From crystals to candles to card readings you’ll learn the history of the practice and look at the modern iterations of witch life.',
               
             },
@@ -1658,27 +1663,27 @@ document.addEventListener('DOMContentLoaded', function () {
                title1: 'ALBUM REVIEW',
                title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Album Review',
+                text1: 'On this show we listen to an entire album from artist and review , discuss and critique.',
                
             },
             'Sunday-8:00pm': {
                 title1: 'Box! Box! Box!',
                 title2: null,
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Box! Box! Box!',
+                text1: 'All things Formula one.',
              
             },
             'Sunday-9:00pm': {
                 title1: 'Alien Invasion',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
-                text1: 'Alien Invasion',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1MriMZ1Z78UzWtgnHkWOjMopP9HXLQTN9=w2940-h1680-iv1',
+                text1: 'All things alien and electronic.',
               
             },
             'Sunday-10:00pm': {
                 title1: 'Jems Jamborees',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv2',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/16t3Raz0-vsSub7JEKXOsWgdP6qpKB4f4=w2940-h1680-iv1',
                 text1: 'Live Dj Set',
              
             },
