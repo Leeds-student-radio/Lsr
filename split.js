@@ -593,7 +593,7 @@ scheduleGrids.forEach(grid => {
         ["12:00 PM", "1:00 PM", "I'm just a Girl/The Heart-beat"],
         ["1:00 PM", "2:00 PM", "Black Girls Gone Alt/Birth of the Beat"],
         ["2:00 PM", "3:00 PM", "Sounds Like Team Spirit"],
-        ["3:00 PM", "4:00 PM", "SAFE SPACE"],
+        ["3:00 PM", "4:00 PM", "'BUT WHERE ARE YOU REALLY FROM?'"],
         ["4:00 PM", "5:00 PM", "Last Days of Disco"],
         ["5:00 PM", "6:00 PM", "HOMETIME"],
         ["6:00 PM", "7:00 PM", "HOMETIME"],
@@ -610,7 +610,7 @@ scheduleGrids.forEach(grid => {
         ["12:00 PM", "1:00 PM", "Golden Hour/Space  Station"],
         ["1:00 PM", "2:00 PM", "NEWS OF THE WEEK"],
         ["2:00 PM", "3:00 PM", "SPORT"],
-        ["3:00 PM", "4:00 PM", "'BUT WHERE ARE YOU REALLY FROM?'"],
+        ["3:00 PM", "4:00 PM", "SAFE SPACE"],
         ["4:00 PM", "5:00 PM", "M&P Megamix"],
         ["5:00 PM", "6:00 PM", "HOMETIME"],
         ["6:00 PM", "7:00 PM", "HOMETIME"],
@@ -1383,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', function () {
                
             },
             
-                'Friday-9:00am': {
+            'Friday-9:00am': {
                 title1: 'Breakfast',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1Td5FYnJ0GIFE__FyFONecegEFzowGoYM=w2940-h1680-iv1',
                 text1: 'Every week day 9-11am, four presenters wake up the students of Leeds with pop music, culture round-ups and blind rankings of the things that really matter first thing in the morning!',
