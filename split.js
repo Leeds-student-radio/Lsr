@@ -1094,13 +1094,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 text1: '(Bi-Weekly) As we are very close to the Oscars, there are so many twists, turns, conflicts and dramas to talk about and wed love to dive into this with listeners on LSR to share our passion for it. Well also get into the practical elements of filmmaking to ascertain if the nominees are deserving!',
                 
             },
+            
+
             'Tuesday-3:00pm': {
-                title1: 'Womens Hour',
+                title1: 'Safe Space',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/17Psc3lr03AhwhXw_ZtyvfQ-sbN_PXZ9f=w2940-h1680-iv1',
-                text1: 'Highlighting the work of women in Leeds and beyond. AN empowering discussion each week centred on women’s issues and celebrating women’s achievements.',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/1lZ5C6ASy_WkEBRrNTTlI93-9g-XF0-0V=w2940-h1680-iv1',
+                text1: 'Exactly that! These presenters discuss the importance of mindfulness and taking care of your mental health at university as well as discussing how neurodiversity impacts student life.',
               
             },
+            
             'Tuesday-4:00pm': {
                 title1: 'Whats Poppin',
                 title2: null,
@@ -1318,6 +1321,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 
                 text1: 'Incorporating sport and music as one, the boys explore historical and modern sporting events and play the tunes which accompany them. Tune in for chants and culture on air.',
                      },
+            
             'Thursday-3:00pm': {
                 title1: 'But where are you really from?',
                 title2: null,
@@ -1426,13 +1430,14 @@ document.addEventListener('DOMContentLoaded', function () {
              
             },
             
-            'Fridy-3:00pm': {
-                title1: 'Safe Space',
+           'Friday-3:00pm': {
+                title1: 'Womens Hour',
                 title2: null,
-                image1: 'https://lh3.googleusercontent.com/u/0/d/1lZ5C6ASy_WkEBRrNTTlI93-9g-XF0-0V=w2940-h1680-iv1',
-                text1: 'Exactly that! These presenters discuss the importance of mindfulness and taking care of your mental health at university as well as discussing how neurodiversity impacts student life.',
+                image1: 'https://lh3.googleusercontent.com/u/0/d/17Psc3lr03AhwhXw_ZtyvfQ-sbN_PXZ9f=w2940-h1680-iv1',
+                text1: 'Highlighting the work of women in Leeds and beyond. AN empowering discussion each week centred on women’s issues and celebrating women’s achievements.',
               
             },
+            
             'Friday-4:00pm': {
                 title1: 'M&P Megamix',
                 title2: null,
