@@ -558,7 +558,7 @@ scheduleGrids.forEach(grid => {
         ["11:00 AM", "12:00 PM", "R-Kid Radio"],
         ["12:00 PM", "1:00 PM", "Top Of the Pops/ Continental Buffet"],
         ["1:00 PM", "2:00 PM", "The Tea Party/Archive to Airwaves"],
-        ["2:00 PM", "3:00 PM", "Vanity Unfair's Oscar Party"],
+        ["2:00 PM", "3:00 PM", "Vanity Unfair's Oscar Party/Your Leedslist"],
         ["3:00 PM", "4:00 PM", "WOMEN'S HOUR"],
         ["4:00 PM", "5:00 PM", ""],
         ["5:00 PM", "6:00 PM", "HOMETIME"],
@@ -1087,7 +1087,9 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             'Tuesday-2:00pm': {
                 title1: 'Vanity Unfair’s Oscar Party',
-                title2: null,
+                title2: 'Your Leedslist',
+                image2: 'https://lh3.googleusercontent.com/u/0/d/1bG31bW3AK2qIraF428n33EsU6eUh1F_P=w2940-h1680-iv1',
+                text2: 'Your Leedslist is a play on everyones favourite spotify feature, the daylist!',
                 image1: 'https://lh3.googleusercontent.com/u/0/d/1xsBh4dZQwrBh09eFKZtmvNoJGcw6XlpZ=w2940-h1680-iv1',
                 text1: '(Bi-Weekly) As we are very close to the Oscars, there are so many twists, turns, conflicts and dramas to talk about and we’d love to dive into this with listeners on LSR to share our passion for it. We’ll also get into the practical elements of filmmaking to ascertain if the nominees are deserving!',
                 
