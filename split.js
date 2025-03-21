@@ -1205,7 +1205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 
             },
             'Wednesday-3:00pm': {
-                title1: 'LST.MP3',
+                title1: 'LSTV.MP3',
                  title2: 'Gryph on Air',
                
                 image1: 'https://leeds.ams3.digitaloceanspaces.com/media/u9jj8X7eVxFC0rYoOcEAus65HIcxfSeeWgJXHRjN.png',
