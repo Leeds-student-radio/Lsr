@@ -276,9 +276,21 @@ right: 0;
 z-index: 999;
 padding-bottom: 40px;
   }
-       #dropdown-menufull {
-        display: none;
- }
+       /* Initial hidden state */
+#dropdown-menufull {
+    display: none;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Shown state */
+#dropdown-menufull.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
   #dropdown-menu a {
     display: block;
     color: white;
