@@ -49,7 +49,7 @@ if ('mediaSession' in navigator) {
         y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "j1xid1iq0r");
       
-  document.getElementById('menu-toggle').addEventListener('click', function (e) {
+ document.getElementById('menu-toggle').addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
     const normalIcon = this.querySelector('.menu-icon.normal');
     const rotatedIcon = this.querySelector('.menu-icon.rotated');
@@ -57,22 +57,18 @@ if ('mediaSession' in navigator) {
     normalIcon.classList.toggle('hidden');
     rotatedIcon.classList.toggle('show');
 
-    if (!dropdownMenu.classList.contains('active')) {
-        dropdownMenu.classList.add('active');
-    } else {
-        dropdownMenu.classList.remove('active');
-    }
+    dropdownMenu.classList.toggle('active');
 
     e.stopPropagation();
 });
 
-// Close dropdown on outside click
 document.addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     if (!menuToggleBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
         dropdownMenu.classList.remove('active');
+
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
         const rotatedIcon = menuToggleBtn.querySelector('.menu-icon.rotated');
 
@@ -81,14 +77,13 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// Close dropdown on clicking menu items
 document.getElementById('dropdown-menufull').addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
-    const isClickable = e.target.tagName === 'BUTTON' || 
-                        e.target.tagName === 'A' || 
-                        e.target.hasAttribute('onclick') || 
+    const isClickable = e.target.tagName === 'BUTTON' ||
+                        e.target.tagName === 'A' ||
+                        e.target.hasAttribute('onclick') ||
                         e.target.getAttribute('role') === 'button';
 
     if (isClickable) {
@@ -100,6 +95,7 @@ document.getElementById('dropdown-menufull').addEventListener('click', function 
         rotatedIcon.classList.remove('show');
     }
 });
+
 
 
 document.querySelectorAll('.audio-button').forEach(button => {
