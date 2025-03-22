@@ -49,33 +49,28 @@ if ('mediaSession' in navigator) {
         y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "j1xid1iq0r");
       
-      document.getElementById('menu-toggle').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
-    const normalIcon = this.querySelector('.menu-icon.normal');  // Normal icon (☰)
-    const rotatedIcon = this.querySelector('.menu-icon.rotated'); // Rotated icon (x)
+     document.getElementById('menu-toggle').addEventListener('click', function (e) {
+    const dropdownMenuFull = document.getElementById('dropdown-menufull');
+    const normalIcon = this.querySelector('.menu-icon.normal');
+    const rotatedIcon = this.querySelector('.menu-icon.rotated');
 
     // Toggle visibility of the menu icons
     normalIcon.classList.toggle('hidden');
     rotatedIcon.classList.toggle('show');
 
-    // Toggle the visibility of the dropdown menu
-    dropdownMenu.style.display =
-        dropdownMenu.style.display === 'none' || dropdownMenu.style.display === ''
-            ? 'block'
-            : 'none';
-
-    // Prevent the click event from propagating to avoid immediate closure of the menu
+    // Toggle the 'open' class to trigger the animation
+    dropdownMenuFull.classList.toggle('open');
     e.stopPropagation();
 });
 
 // Close the dropdown menu and reset icons when clicking outside the menu
 document.addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
+    const dropdownMenuFull = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
-    if (!menuToggleBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    if (!menuToggleBtn.contains(e.target) && !dropdownMenuFull.contains(e.target)) {
         // Close the menu
-        dropdownMenu.style.display = 'none';
+        dropdownMenuFull.classList.remove('open');
 
         // Reset the icons
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
@@ -88,18 +83,18 @@ document.addEventListener('click', function (e) {
 
 // Close the menu only when clicking on clickable elements inside the dropdown
 document.getElementById('dropdown-menufull').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
+    const dropdownMenuFull = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     // Check if the clicked element is a clickable element
-    const isClickable = e.target.tagName === 'BUTTON' || 
-                        e.target.tagName === 'A' || 
-                        e.target.hasAttribute('onclick') || 
-                        e.target.getAttribute('role') === 'button';
+    const isClickable = e.target.tagName === 'BUTTON' ||
+        e.target.tagName === 'A' ||
+        e.target.hasAttribute('onclick') ||
+        e.target.getAttribute('role') === 'button';
 
     if (isClickable) {
         // Close the dropdown menu
-        dropdownMenu.style.display = 'none';
+        dropdownMenuFull.classList.remove('open');
 
         // Reset the icons
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
