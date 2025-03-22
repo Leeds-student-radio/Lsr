@@ -50,7 +50,7 @@ if ('mediaSession' in navigator) {
       })(window, document, "clarity", "script", "j1xid1iq0r");
       
  document.getElementById('menu-toggle').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
+    const dropdownMenu = document.getElementById('dropdown-menu');
     const normalIcon = this.querySelector('.menu-icon.normal');
     const rotatedIcon = this.querySelector('.menu-icon.rotated');
 
@@ -63,7 +63,7 @@ if ('mediaSession' in navigator) {
 });
 
 document.addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
+    const dropdownMenu = document.getElementById('dropdown-menu');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     if (!menuToggleBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
@@ -77,8 +77,8 @@ document.addEventListener('click', function (e) {
     }
 });
 
-document.getElementById('dropdown-menufull').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menufull');
+document.getElementById('dropdown-menu').addEventListener('click', function (e) {
+    const dropdownMenu = document.getElementById('dropdown-menu');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     const isClickable = e.target.tagName === 'BUTTON' ||
