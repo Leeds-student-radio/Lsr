@@ -49,26 +49,35 @@ if ('mediaSession' in navigator) {
         y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "j1xid1iq0r");
       
- document.getElementById('menu-toggle').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menu');
-    const normalIcon = this.querySelector('.menu-icon.normal');
-    const rotatedIcon = this.querySelector('.menu-icon.rotated');
+      document.getElementById('menu-toggle').addEventListener('click', function (e) {
+    const dropdownMenu = document.getElementById('dropdown-menufull');
+    const normalIcon = this.querySelector('.menu-icon.normal');  // Normal icon (☰)
+    const rotatedIcon = this.querySelector('.menu-icon.rotated'); // Rotated icon (x)
 
+    // Toggle visibility of the menu icons
     normalIcon.classList.toggle('hidden');
     rotatedIcon.classList.toggle('show');
 
-    dropdownMenu.classList.toggle('active');
+    // Toggle the visibility of the dropdown menu
+    dropdownMenu.style.display =
+        dropdownMenu.style.display === 'none' || dropdownMenu.style.display === ''
+            ? 'block'
+            : 'none';
 
+    // Prevent the click event from propagating to avoid immediate closure of the menu
     e.stopPropagation();
 });
 
+// Close the dropdown menu and reset icons when clicking outside the menu
 document.addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menu');
+    const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     if (!menuToggleBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.remove('active');
+        // Close the menu
+        dropdownMenu.style.display = 'none';
 
+        // Reset the icons
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
         const rotatedIcon = menuToggleBtn.querySelector('.menu-icon.rotated');
 
@@ -77,17 +86,22 @@ document.addEventListener('click', function (e) {
     }
 });
 
-document.getElementById('dropdown-menu').addEventListener('click', function (e) {
-    const dropdownMenu = document.getElementById('dropdown-menu');
+// Close the menu only when clicking on clickable elements inside the dropdown
+document.getElementById('dropdown-menufull').addEventListener('click', function (e) {
+    const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
-    const isClickable = e.target.tagName === 'BUTTON' ||
-                        e.target.tagName === 'A' ||
-                        e.target.hasAttribute('onclick') ||
+    // Check if the clicked element is a clickable element
+    const isClickable = e.target.tagName === 'BUTTON' || 
+                        e.target.tagName === 'A' || 
+                        e.target.hasAttribute('onclick') || 
                         e.target.getAttribute('role') === 'button';
 
     if (isClickable) {
-        dropdownMenu.classList.remove('active');
+        // Close the dropdown menu
+        dropdownMenu.style.display = 'none';
+
+        // Reset the icons
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
         const rotatedIcon = menuToggleBtn.querySelector('.menu-icon.rotated');
 
@@ -95,8 +109,6 @@ document.getElementById('dropdown-menu').addEventListener('click', function (e) 
         rotatedIcon.classList.remove('show');
     }
 });
-
-
 
 document.querySelectorAll('.audio-button').forEach(button => {
     const audio = button.closest('.audio-container') ? 
