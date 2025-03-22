@@ -2528,7 +2528,8 @@ html {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     overflow-y: scroll;
-    -webkit-text-size-adjust:100%
+    -webkit-text-size-adjust:100%;
+ background-color:rgb(205, 50, 50) !important;
 }
 
 *, :after, :before {
