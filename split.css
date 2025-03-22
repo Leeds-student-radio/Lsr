@@ -265,38 +265,54 @@ z-index: 1000;
 }
 
 
-    /* Dropdown Menu (Hidden by default) */
-    #dropdown-menu {
-        
-  background-color: rgba(144, 38, 38, 0);
-position: absolute;
-top: 46px;
-left: 0;
-right: 0;
-z-index: 999;
-padding-bottom: 40px;
-  }
-       #dropdown-menufull {
-        display: none;
- }
-  #dropdown-menu a {
+   #dropdown-menu {
+    background-color: rgb(205, 50, 50);
+   
+    top: 46px;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 999;
+    padding-bottom: 40px;
+}
+
+#dropdown-menufull {
+    /* Initially hidden and with a height of 0 */
+    height: 0;
+    overflow: hidden; /* Hide content when height is 0 */
+    transition: height 0.3s ease; /* Add a smooth transition */
+    display: block; /*  Important to allow height transition to work */
+
+
+ position: absolute;
+width: 100%;
+top: 6px;
+padding-top: 40px;
+background-color: rgb(205, 50, 50);
+z-index: -1;
+}
+
+#dropdown-menufull.open {
+    /* Set height to full when open */
+    height: 100vh;
+}
+
+#dropdown-menu a {
     display: block;
     color: white;
-    padding: 10px 0;
     text-decoration: none;
-    font-size: 18px;
-    text-align: center; /* Center the text inside the menu */
-  }
+    font-size: 26px;
+    text-align: center;
+}
 
-  #dropdown-menu .header {
-   background-color: #bb0c0c;
-border: solid 4px black;
-/* border-right: solid 1px #fff; */
-/* border-left: solid 1px #fff; */
-padding: 1px;
-margin: 0px;
-border-radius: 10px;
-  }
+#dropdown-menu .header {
+    background-color: #bb0c0c;
+    border-bottom: solid 3px rgb(205, 50, 50);
+    align-content: center;
+    height: 12%;
+    padding: 1px;
+    margin-bottom: 4px;
+}
 
   /* Social Media Row Styling */
   .social-media {
