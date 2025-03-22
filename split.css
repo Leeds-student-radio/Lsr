@@ -282,9 +282,9 @@ padding-bottom: 40px;
   #dropdown-menu a {
     display: block;
     color: white;
-    padding: 10px 0;
+  
     text-decoration: none;
-    font-size: 18px;
+    font-size: 26px;
     text-align: center; /* Center the text inside the menu */
   }
 
@@ -296,6 +296,9 @@ border: solid 4px black;
 padding: 1px;
 margin: 0px;
 border-radius: 10px;
+
+   height: 12%;
+align-content: center;
   }
 
   /* Social Media Row Styling */
