@@ -289,15 +289,14 @@ padding-bottom: 40px;
   }
 
   #dropdown-menu .header {
-   background-color: #bb0c0c;
-border: solid 4px black;
+ background-color: rgb(149, 13, 13);
+border-bottom: solid 2px rgb(205, 50, 50);
 /* border-right: solid 1px #fff; */
 /* border-left: solid 1px #fff; */
 padding: 1px;
-margin: 0px;
-border-radius: 10px;
-
-   height: 12%;
+margin-bottom: 4px;
+/* border-radius: 10px; */
+height: 12%;
 align-content: center;
   }
 
