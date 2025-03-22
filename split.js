@@ -49,35 +49,30 @@ if ('mediaSession' in navigator) {
         y.parentNode.insertBefore(t, y);
       })(window, document, "clarity", "script", "j1xid1iq0r");
       
-      document.getElementById('menu-toggle').addEventListener('click', function (e) {
+  document.getElementById('menu-toggle').addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
-    const normalIcon = this.querySelector('.menu-icon.normal');  // Normal icon (☰)
-    const rotatedIcon = this.querySelector('.menu-icon.rotated'); // Rotated icon (x)
+    const normalIcon = this.querySelector('.menu-icon.normal');
+    const rotatedIcon = this.querySelector('.menu-icon.rotated');
 
-    // Toggle visibility of the menu icons
     normalIcon.classList.toggle('hidden');
     rotatedIcon.classList.toggle('show');
 
-    // Toggle the visibility of the dropdown menu
-    dropdownMenu.style.display =
-        dropdownMenu.style.display === 'none' || dropdownMenu.style.display === ''
-            ? 'block'
-            : 'none';
+    if (!dropdownMenu.classList.contains('active')) {
+        dropdownMenu.classList.add('active');
+    } else {
+        dropdownMenu.classList.remove('active');
+    }
 
-    // Prevent the click event from propagating to avoid immediate closure of the menu
     e.stopPropagation();
 });
 
-// Close the dropdown menu and reset icons when clicking outside the menu
+// Close dropdown on outside click
 document.addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
     if (!menuToggleBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-        // Close the menu
-        dropdownMenu.style.display = 'none';
-
-        // Reset the icons
+        dropdownMenu.classList.remove('active');
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
         const rotatedIcon = menuToggleBtn.querySelector('.menu-icon.rotated');
 
@@ -86,22 +81,18 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// Close the menu only when clicking on clickable elements inside the dropdown
+// Close dropdown on clicking menu items
 document.getElementById('dropdown-menufull').addEventListener('click', function (e) {
     const dropdownMenu = document.getElementById('dropdown-menufull');
     const menuToggleBtn = document.getElementById('menu-toggle');
 
-    // Check if the clicked element is a clickable element
     const isClickable = e.target.tagName === 'BUTTON' || 
                         e.target.tagName === 'A' || 
                         e.target.hasAttribute('onclick') || 
                         e.target.getAttribute('role') === 'button';
 
     if (isClickable) {
-        // Close the dropdown menu
-        dropdownMenu.style.display = 'none';
-
-        // Reset the icons
+        dropdownMenu.classList.remove('active');
         const normalIcon = menuToggleBtn.querySelector('.menu-icon.normal');
         const rotatedIcon = menuToggleBtn.querySelector('.menu-icon.rotated');
 
@@ -109,6 +100,7 @@ document.getElementById('dropdown-menufull').addEventListener('click', function 
         rotatedIcon.classList.remove('show');
     }
 });
+
 
 document.querySelectorAll('.audio-button').forEach(button => {
     const audio = button.closest('.audio-container') ? 
