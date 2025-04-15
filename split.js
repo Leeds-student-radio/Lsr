@@ -653,17 +653,33 @@ scheduleGrids.forEach(grid => {
     };
 
 
-    function getCurrentShow() {
-        const now = new Date(); // Get the current time
-        const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);  //Correctly convert to UTC
+   function getCurrentShow() {
+    const now = new Date();
 
-        const day = utcNow.toLocaleDateString("en-US", { weekday: "long" });
-        const currentTime = utcNow.getHours() * 60 + utcNow.getMinutes();
+    // Get UK date and time
+    const ukDate = new Intl.DateTimeFormat("en-GB", {
+        weekday: "long",
+        timeZone: "Europe/London"
+    }).format(now);
 
-        const todaySchedule = schedule[day] || [];
-        let liveNow = "No show live";
-        let upNext = "No upcoming show";
+    const ukTime = new Intl.DateTimeFormat("en-GB", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+        timeZone: "Europe/London"
+    }).formatToParts(now);
 
+    // Extract hours and minutes from formatted parts
+    const hours = parseInt(ukTime.find(part => part.type === "hour").value, 10);
+    const minutes = parseInt(ukTime.find(part => part.type === "minute").value, 10);
+    const currentTime = hours * 60 + minutes;
+
+    const day = ukDate;
+    const todaySchedule = schedule[day] || [];
+    let liveNow = "No show live";
+    let upNext = "No upcoming show";
+
+   
 
         for (let i = 0; i < todaySchedule.length; i++) {
             const [start, end, showName] = todaySchedule[i];
