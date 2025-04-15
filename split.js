@@ -811,9 +811,34 @@ scheduleGrids.forEach(grid => {
 
   // Get current time and day in GMT
   function updateOnAirStatus() {
-    const now = new Date();
-    const currentHour = now.getUTCHours(); // GMT hour
-    const currentDay = now.getUTCDay(); // GMT day (0 = Sunday, 1 = Monday, ...)
+   const now = new Date();
+
+// Get UK-local hour (0–23)
+const ukHour = new Intl.DateTimeFormat("en-GB", {
+    hour: "numeric",
+    hour12: false,
+    timeZone: "Europe/London"
+}).format(now);
+const currentHour = parseInt(ukHour, 10);
+
+// Get UK-local weekday (0 = Sunday, 1 = Monday, etc.)
+const ukWeekday = new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    timeZone: "Europe/London"
+}).format(now);
+
+// Map UK weekday string to number (0 = Sunday, ..., 6 = Saturday)
+const weekdayMap = {
+    Sun: 0,
+    Mon: 1,
+    Tue: 2,
+    Wed: 3,
+    Thu: 4,
+    Fri: 5,
+    Sat: 6
+};
+const currentDay = weekdayMap[ukWeekday];
+
 
     // Map days of the week to table columns (Monday = 1, ..., Sunday = 7)
     const dayToColumnIndex = [8, 2, 3, 4, 5, 6, 7];
