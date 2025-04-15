@@ -554,7 +554,7 @@ scheduleGrids.forEach(grid => {
         ["12:00 PM", "1:00 PM", "Top Of the Pops/ Continental Buffet"],
         ["1:00 PM", "2:00 PM", "The Tea Party/Archive to Airwaves"],
         ["2:00 PM", "3:00 PM", "Vanity Unfair's Oscar Party/Your Leedslist"],
-        ["3:00 PM", "4:00 PM", "Women's Hour"],
+        ["3:00 PM", "4:00 PM", "SAFE SPACE"],
         ["4:00 PM", "5:00 PM", "What's Poppin"],
         ["5:00 PM", "6:00 PM", "HOMETIME"],
         ["6:00 PM", "7:00 PM", "HOMETIME"],
