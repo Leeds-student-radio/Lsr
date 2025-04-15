@@ -679,8 +679,9 @@ scheduleGrids.forEach(grid => {
     let liveNow = "No show live";
     let upNext = "No upcoming show";
 
+   
 
-  for (let i = 0; i < todaySchedule.length; i++) {
+        for (let i = 0; i < todaySchedule.length; i++) {
             const [start, end, showName] = todaySchedule[i];
             const [startHour, startMin] = parseTime(start);
             const [endHour, endMin] = parseTime(end);
@@ -708,14 +709,6 @@ scheduleGrids.forEach(grid => {
 
         return { liveNow, upNext };
     }
-
-
-
-
-
-
-
-       
 
    function getNextDay(day){   // Helper function to get next day.
        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -818,9 +811,34 @@ scheduleGrids.forEach(grid => {
 
   // Get current time and day in GMT
   function updateOnAirStatus() {
-    const now = new Date();
-    const currentHour = now.getUTCHours(); // GMT hour
-    const currentDay = now.getUTCDay(); // GMT day (0 = Sunday, 1 = Monday, ...)
+   const now = new Date();
+
+// Get UK-local hour (0–23)
+const ukHour = new Intl.DateTimeFormat("en-GB", {
+    hour: "numeric",
+    hour12: false,
+    timeZone: "Europe/London"
+}).format(now);
+const currentHour = parseInt(ukHour, 10);
+
+// Get UK-local weekday (0 = Sunday, 1 = Monday, etc.)
+const ukWeekday = new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    timeZone: "Europe/London"
+}).format(now);
+
+// Map UK weekday string to number (0 = Sunday, ..., 6 = Saturday)
+const weekdayMap = {
+    Sun: 0,
+    Mon: 1,
+    Tue: 2,
+    Wed: 3,
+    Thu: 4,
+    Fri: 5,
+    Sat: 6
+};
+const currentDay = weekdayMap[ukWeekday];
+
 
     // Map days of the week to table columns (Monday = 1, ..., Sunday = 7)
     const dayToColumnIndex = [8, 2, 3, 4, 5, 6, 7];
@@ -891,30 +909,34 @@ scheduleGrids.forEach(grid => {
 
   
   
-   function updateTime() {
-        const timeContainer = document.getElementById('time-text');
-        const currentTime = new Date();
+function updateTime() {
+    const timeContainer = document.getElementById('time-text');
+    const currentTime = new Date();
 
-        // Get GMT hours and minutes
-        let hours = currentTime.getUTCHours();
-        const minutes = String(currentTime.getUTCMinutes()).padStart(2, '0');
+    // Get UK time string
+    const formattedTime = currentTime.toLocaleString('en-GB', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Europe/London'
+    });
 
-        // Determine a.m. or p.m. and adjust hours for 12-hour format
-        const period = hours >= 12 ? 'p.m.' : 'a.m.';
-        hours = hours % 12 || 12; // Convert 0 to 12 for midnight, and keep 12 for noon
+    // Get the timezone abbreviation (GMT or BST)
+    const timeZoneAbbr = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/London',
+        timeZoneName: 'short'
+    }).formatToParts(currentTime).find(part => part.type === 'timeZoneName').value;
 
-        // Format the time as HH:MM a.m./p.m.
-        const formattedTime = `${hours}:${minutes} ${period}`;
+    // Update the full text including time and abbreviation
+    timeContainer.textContent = `${formattedTime} ${timeZoneAbbr}`;
+}
 
-        // Update the text content of the time container
-        timeContainer.textContent = formattedTime;
-    }
+// Optional: call every minute or second
+setInterval(updateTime, 1000);
+updateTime(); // Initial call
 
-    // Update the time every minute (since seconds are not shown)
-    setInterval(updateTime, 60000);
 
-    // Call the function immediately to show the time on load
-    updateTime();
+
 
      });
 
