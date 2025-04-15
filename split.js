@@ -884,31 +884,33 @@ scheduleGrids.forEach(grid => {
 
   
   
- function updateTime() {
+function updateTime() {
     const timeContainer = document.getElementById('time-text');
     const currentTime = new Date();
 
-    // Get UK time parts using toLocaleString with Europe/London timezone
-    const ukTimeParts = currentTime.toLocaleString('en-GB', {
+    // Get UK time string
+    const formattedTime = currentTime.toLocaleString('en-GB', {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
         timeZone: 'Europe/London'
     });
 
-    // Format already includes hour:minute and a.m./p.m.
-    // Example output: "3:45 p.m." — matches your desired format
-    const formattedTime = ukTimeParts;
+    // Get the timezone abbreviation (GMT or BST)
+    const timeZoneAbbr = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/London',
+        timeZoneName: 'short'
+    }).formatToParts(currentTime).find(part => part.type === 'timeZoneName').value;
 
-    // Update the text content of the time container
-    timeContainer.textContent = formattedTime;
+    // Update the full text including time and abbreviation
+    timeContainer.textContent = `${formattedTime} ${timeZoneAbbr}`;
 }
 
-// Update the time every minute (since seconds are not shown)
-setInterval(updateTime, 60000);
+// Optional: call every minute or second
+setInterval(updateTime, 1000);
+updateTime(); // Initial call
 
-// Call the function immediately to show the time on load
-updateTime();
+
 
 
      });
