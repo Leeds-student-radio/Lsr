@@ -652,18 +652,13 @@ scheduleGrids.forEach(grid => {
         // Add the rest of the days here in the same format
     };
 
-  function getCurrentShow() {
-      const now = new Date();
 
-const day = now.toLocaleDateString("en-GB", {
-  timeZone: "UTC",
-  weekday: "long",
-});
+    function getCurrentShow() {
+        const now = new Date(); // Get the current time
+        const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);  //Correctly convert to UTC
 
-const hours = now.getUTCHours();
-const minutes = now.getUTCMinutes();
-const currentTime = hours * 60 + minutes;
-
+        const day = utcNow.toLocaleDateString("en-US", { weekday: "long" });
+        const currentTime = utcNow.getHours() * 60 + utcNow.getMinutes();
 
         const todaySchedule = schedule[day] || [];
         let liveNow = "No show live";
@@ -678,7 +673,6 @@ const currentTime = hours * 60 + minutes;
             const startTime = startHour * 60 + startMin;
             const endTime = endHour * 60 + endMin;
 
-     
             if (currentTime >= startTime && currentTime < endTime) {
                 liveNow = showName;
                 if (i + 1 < todaySchedule.length) {
@@ -874,27 +868,34 @@ const currentTime = hours * 60 + minutes;
 
   
   
-function updateTime() {
+ function updateTime() {
     const timeContainer = document.getElementById('time-text');
     const currentTime = new Date();
 
-    // Format time in UK timezone (Europe/London), 12-hour format
-    const ukTimeString = currentTime.toLocaleTimeString('en-GB', {
+    // Get UK time parts using toLocaleString with Europe/London timezone
+    const ukTimeParts = currentTime.toLocaleString('en-GB', {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
         timeZone: 'Europe/London'
     });
 
+    // Format already includes hour:minute and a.m./p.m.
+    // Example output: "3:45 p.m." — matches your desired format
+    const formattedTime = ukTimeParts;
+
     // Update the text content of the time container
-    timeContainer.textContent = ukTimeString;
+    timeContainer.textContent = formattedTime;
 }
 
-// Update the time every minute
+// Update the time every minute (since seconds are not shown)
 setInterval(updateTime, 60000);
 
-// Call it once immediately
+// Call the function immediately to show the time on load
 updateTime();
+
+
+     });
 
 
 
