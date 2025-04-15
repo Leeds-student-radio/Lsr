@@ -874,32 +874,27 @@ const currentTime = hours * 60 + minutes;
 
   
   
-   function updateTime() {
-        const timeContainer = document.getElementById('time-text');
-        const currentTime = new Date();
+function updateTime() {
+    const timeContainer = document.getElementById('time-text');
+    const currentTime = new Date();
 
-        // Get GMT hours and minutes
-        let hours = currentTime.getUTCHours();
-        const minutes = String(currentTime.getUTCMinutes()).padStart(2, '0');
+    // Format time in UK timezone (Europe/London), 12-hour format
+    const ukTimeString = currentTime.toLocaleTimeString('en-GB', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Europe/London'
+    });
 
-        // Determine a.m. or p.m. and adjust hours for 12-hour format
-        const period = hours >= 12 ? 'p.m.' : 'a.m.';
-        hours = hours % 12 || 12; // Convert 0 to 12 for midnight, and keep 12 for noon
+    // Update the text content of the time container
+    timeContainer.textContent = ukTimeString;
+}
 
-        // Format the time as HH:MM a.m./p.m.
-        const formattedTime = `${hours}:${minutes} ${period}`;
+// Update the time every minute
+setInterval(updateTime, 60000);
 
-        // Update the text content of the time container
-        timeContainer.textContent = formattedTime;
-    }
-
-    // Update the time every minute (since seconds are not shown)
-    setInterval(updateTime, 60000);
-
-    // Call the function immediately to show the time on load
-    updateTime();
-
-     });
+// Call it once immediately
+updateTime();
 
 
 
