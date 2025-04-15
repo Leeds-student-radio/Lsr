@@ -652,71 +652,53 @@ scheduleGrids.forEach(grid => {
         // Add the rest of the days here in the same format
     };
 
+  function getCurrentShow() {
+      const now = new Date();
 
-   function getCurrentShow() {
-    const now = new Date();
+const day = now.toLocaleDateString("en-GB", {
+  timeZone: "UTC",
+  weekday: "long",
+});
 
-    // Get current time in UK timezone
-    const ukTime = new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Europe/London',
-        hour12: false, // Use 24-hour format for consistency
-        hour: 'numeric',
-        minute: 'numeric',
-        weekday: 'long',
-    }).formatToParts(now).reduce((acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-    }, {});
-
-    const day = ukTime.weekday;
-    const currentTime = parseInt(ukTime.hour) * 60 + parseInt(ukTime.minute); // Convert to minutes since midnight
+const hours = now.getUTCHours();
+const minutes = now.getUTCMinutes();
+const currentTime = hours * 60 + minutes;
 
 
-      const todaySchedule = schedule[day] || [];
-    let liveNow = "No show live";
-    let upNext = "No upcoming show";
-
-    function parseTime(timeString) {
-        const [hour, minute] = timeString.split(":").map(Number);
-        return [hour, minute];
-    }
-
-    function getNextDay(day) {
-        const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const currentIndex = days.indexOf(day);
-        return days[(currentIndex + 1) % 7]; // Cycle through the days
-    }
+        const todaySchedule = schedule[day] || [];
+        let liveNow = "No show live";
+        let upNext = "No upcoming show";
 
 
+        for (let i = 0; i < todaySchedule.length; i++) {
+            const [start, end, showName] = todaySchedule[i];
+            const [startHour, startMin] = parseTime(start);
+            const [endHour, endMin] = parseTime(end);
 
-    for (let i = 0; i < todaySchedule.length; i++) {
-        const [start, end, showName] = todaySchedule[i];
-        const [startHour, startMin] = parseTime(start);
-        const [endHour, endMin] = parseTime(end);
+            const startTime = startHour * 60 + startMin;
+            const endTime = endHour * 60 + endMin;
 
-        const startTime = startHour * 60 + startMin;
-        const endTime = endHour * 60 + endMin;
+     
+            if (currentTime >= startTime && currentTime < endTime) {
+                liveNow = showName;
+                if (i + 1 < todaySchedule.length) {
+                    upNext = todaySchedule[i + 1][2];
+                } else if (day !== "Sunday"){ // Handle Saturday -> Sunday transition.
+                    const nextDay = getNextDay(day);
+                    if (schedule[nextDay]){
+                        upNext = schedule[nextDay][0][2]; // First show of next day.
+                    }
 
-        if (currentTime >= startTime && currentTime < endTime) {
-            liveNow = showName;
-            if (i + 1 < todaySchedule.length) {
-                upNext = todaySchedule[i + 1][2];
-            } else if (day !== "Sunday") { // Handle Saturday -> Sunday transition.
-                const nextDay = getNextDay(day);
-                if (schedule[nextDay]) {
-                    upNext = schedule[nextDay][0][2]; // First show of next day.
                 }
-
+                break;
+            } else if (currentTime < startTime){  //Handle upNext when no live show.
+                upNext = showName;
+                break;
             }
-            break;
-        } else if (currentTime < startTime) {  //Handle upNext when no live show.
-            upNext = showName;
-            break;
         }
-    }
 
-    return { liveNow, upNext };
-}
+        return { liveNow, upNext };
+    }
 
    function getNextDay(day){   // Helper function to get next day.
        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
