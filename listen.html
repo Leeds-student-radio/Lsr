@@ -4456,6 +4456,75 @@ z-index: 1;
      align-items: start;
      }
   }
+
+
+    @media  (min-width: 850px) {
+.top-row {
+ display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 1.25rem;
+    z-index: 4;
+    border: solid 2px black;
+    border-radius: 14px;
+    padding: 10px;
+    margin-top: -20px;
+    background-color: rgb(205, 50, 50);
+       }
+
+     .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px;
+    display: flex
+;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+     .hero-img-wrapper {
+         border: none;
+  }
+    .hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.0) 0%, transparent 35%), linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 25%);
+    z-index: 1;
+    border-radius: 14px;
+    pointer-events: none;
+}
+     .hero-img-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.0) 0%, transparent 35%), linear-gradient(to bottom, rgba(0, 0, 0, 0.0) 0%, transparent 25%);
+    z-index: 1;
+    border-radius: 14px;
+    pointer-events: none;
+}
+     .hero-section {
+    position: relative;
+    height: auto;
+    margin: 30px 28px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: solid 2px black;
+    padding: 10px;
+    /* margin-top: 40px; */
+}
+     .sliding-menu  {
+    display: none;
+        }
+    
+    }
+  .player {
+     background-color: rgb(205, 50, 50);
+        }
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
