@@ -3645,7 +3645,7 @@ function normalizeRows(rows) {
 }
 
 function findCurrentShow(rows) {
-  const now = new Date();
+  const now = nowInLondon();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   const weekType = getWeekTypeAB(now);
   return rows.find(show => {
@@ -3659,7 +3659,7 @@ function findCurrentShow(rows) {
 }
 
 function findNextShow(rows) {
-  const now = new Date();
+ const now = nowInLondon();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
   const weekType = getWeekTypeAB(now);
   const candidates = rows.filter(show => {
@@ -3828,6 +3828,31 @@ if (next) {
     navigator.mediaSession.setActionHandler('play', () => audio.play());
     navigator.mediaSession.setActionHandler('pause', () => audio.pause());
   });
+}
+function nowInLondon() {
+  // Returns a Date object that represents the *current London local time*,
+  // automatically adjusting for British Summer Time (BST)
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+
+  const parts = formatter.formatToParts(new Date());
+  const get = t => parseInt(parts.find(p => p.type === t)?.value || 0, 10);
+
+  return new Date(
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour'),
+    get('minute'),
+    get('second')
+  );
 }
 
  
