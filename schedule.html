@@ -2752,7 +2752,8 @@ margin-top: -16px;
    
     body{color:whitesmoke;}
 
-    .week-toggle{display:flex;gap:6px;margin-bottom:12px}
+    .week-toggle{display:flex;gap:6px;margin-bottom:12px;     position: relative;
+    z-index: 1000;}
     .week-toggle button{padding:8px 12px;border-radius:8px;border:none;cursor:pointer; border: solid 1px black; color:white; font-size:1em}
     .week-toggle button.active{background:white;color:rgb(148 14 14)}
 
@@ -2915,6 +2916,8 @@ display:none;
   <div class="week-toggle" role="tablist" aria-label="Week type">
     <button id="weekA" class="btn" data-week="A">Week A</button>
     <button id="weekB" class="btn" data-week="B">Week B</button>
+    <button style="border:none"><p id="currentWeekDisplay" class="current-week">(Current: Week …)</p></button>
+
   </div>
 
  
@@ -3323,6 +3326,8 @@ fetchCSV(defaultCsvUrl);
     }
   `;
   document.head.appendChild(style);
+  
+  
 </script>
 
 </div>
@@ -3567,7 +3572,7 @@ function isoWeekNumber(d) {
 function getWeekTypeAB(date) {
   const wk = isoWeekNumber(date);
   const isEven = wk % 2 === 0;
-  return (A_IS_EVEN_ISO_WEEK ? (isEven ? "B" : "A") : (isEven ? "A" : "B"));
+  return (A_IS_EVEN_ISO_WEEK ? (isEven ? "A" : "B") : (isEven ? "B" : "A"));
 }
 
 function timeToMinutes(t) {
@@ -3862,6 +3867,24 @@ function updateMediaSession(show) {
 
 fetchAndUpdate();
 setInterval(fetchAndUpdate, 60000);
+
+
+
+function updateCurrentWeekDisplay() {
+  const now = new Date();
+  const weekType = getWeekTypeAB(now);
+  const displayElem = document.getElementById("currentWeekDisplay");
+  if (displayElem) {
+    displayElem.textContent = `(Current: Week ${weekType})`;
+  }
+}
+
+// Run once on load
+updateCurrentWeekDisplay();
+
+// Optional: re-check weekly (or daily) in case it crosses into a new week
+setInterval(updateCurrentWeekDisplay, 60 * 60 * 1000); // every hour
+
 </script>
 <script>
   // Set --vh to the initial viewport height and don't update it again
