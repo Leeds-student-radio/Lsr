@@ -4359,9 +4359,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const playButtons = document.querySelectorAll('.play-btn');
 
   // Function to update all buttons' icons
-  function updateButtons() {
+   function updateButtons() {
     playButtons.forEach(btn => {
-      btn.textContent = playing ? '⏸' : '▶';
+      btn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
     });
   }
 
@@ -4529,6 +4529,29 @@ z-index: 1;
   .player {
      background-color: rgb(205, 50, 50);
         }
+
+
+ @media (max-width: 480px) {
+    .playerzz {
+        margin-top: 110px !important;
+    }
+    
+   }
+ @media (max-width: 457px) {
+    .hero-img-wrapper {
+        height: 1180px !important;
+    }
+}
+ @media (max-width: 407px) {
+    .hero-img-wrapper {
+        height: 1150px !important;
+    }
+}
+ @media (max-width: 386px) {
+    .hero-img-wrapper {
+        height: 1120px !important;
+    }
+}
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
