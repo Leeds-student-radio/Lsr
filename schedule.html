@@ -4451,11 +4451,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Play/Pause toggle
-    if (playBtn) {
+     if (playBtn) {
       let playing = false;
       playBtn.addEventListener('click', () => {
         playing = !playing;
-        playBtn.textContent = playing ? '⏸' : '▶';
+      playBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+
       });
     }
   });
@@ -4471,9 +4472,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const playButtons = document.querySelectorAll('.play-btn');
 
   // Function to update all buttons' icons
-  function updateButtons() {
+   function updateButtons() {
     playButtons.forEach(btn => {
-      btn.textContent = playing ? '⏸' : '▶';
+      btn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
     });
   }
 
