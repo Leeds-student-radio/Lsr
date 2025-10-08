@@ -4808,11 +4808,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Play/Pause toggle
-    if (playBtn) {
+   if (playBtn) {
       let playing = false;
       playBtn.addEventListener('click', () => {
         playing = !playing;
-        playBtn.textContent = playing ? '⏸' : '▶';
+      playBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+
       });
     }
   });
