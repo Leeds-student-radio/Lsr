@@ -2153,7 +2153,7 @@ z-index: 1000;
     <!-- TOP ROW -->
     <div class="pill-top-row">
       <span class="pill-title">...Loading</span>
-      <span class="on-air"><span class="pulse-dot"></span>On Air</span>
+      <span class="on-air" style="margin-right:5px;"><span class="pulse-dot"></span>On Air</span>
      
     </div>
 
@@ -2238,7 +2238,7 @@ const menuBtn = document.getElementById("menuMOB");
       <!-- TOP ROW -->
       <div class="pill-top-row">
         <span class="pill-title">...Loading</span>
-        <span class="on-air"><span class="pulse-dot"></span>On Air</span>
+        <span class="on-air" ><span class="pulse-dot"></span>On Air</span>
       </div>
 
       <!-- BOTTOM ROW -->
@@ -2271,15 +2271,7 @@ const menuBtn = document.getElementById("menuMOB");
 </div>
 
 
-  <div class="hero-section">
-<div class="hero-img-wrapper">
-  
-    
-   
-
-   
-</div>
-    <div class="overlay">
+ 
      <div class="top-row"> 
   <div class="menu" id="menuButton" aria-haspopup="true" aria-expanded="false">☰</div>
   <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">LEEDS STUDENT RADIO</div>
@@ -3328,6 +3320,7 @@ margin-top: -16px;
 }
  
      </style>
+       <div class="boxboxbon">
       <div class="bottom-right">
         <p class="bottom-righter">Get Involved</p>
       <p style="font-size:1.2em" class="atexta"> Are you a student in Leeds? Want to get involved with the UK's best student radio? Why not apply to be on one of our shows! Choose from our range of existing core shows below or pitch an idea for your very own.<span class="h2h"><br><br>Applications for Semester 1 are now closed. Check again soon for Sem 2!</span>
@@ -3379,7 +3372,7 @@ margin-top: -16px;
 
   <img class="aimga1" src="https://media.licdn.com/dms/image/v2/D4E22AQGsejrn6XIy7g/feedshare-shrink_800/B4EZPzXIQYHAAg-/0/1734954748562?e=2147483647&v=beta&t=U6X6iV1LqAtesa-WnwKQM5wOZCT_2xubA9KNuNoR5aw" alt="Image 2">
 </div>
-
+</div>
     </div>
   </div>
   
@@ -4271,7 +4264,7 @@ function fetchAndUpdate() {
       // First banner (original, current show)
 const current1 = findCurrentShow(rows);
 if (current1) {
-  applyShowToSection("#pillBanner", current1, "On Air", true);
+  applyShowToSection("#pillBanner", current1, "", true);
   // Update Media Session ONLY for current show
   updateMediaSession(current1);
 } else {
@@ -5360,6 +5353,52 @@ line-height:1.1rem;
     position: relative;
     z-index: 10000;
 }
+
+
+.top-row {
+   
+    margin-top:2px;
+    margin-left:20px;
+       margin-right:20px;
+       background: rgb(160 43 43) !important;
+
+}
+.boxboxbon  {
+position:relative !important;
+   width:100% !important;
+   height:auto;
+    padding-left:24px;
+       padding-right:24px;
+       
+       }
+.playerzz {
+  width:auto;
+    margin-top:15px;
+    
+}
+  @media (max-width: 849px) {
+.boxboxbon {
+  width:auto;
+    margin-top:40px !important;
+    
+}
+@media (max-width: 480px) {
+.boxboxbon {
+    padding-right:14px;
+     padding-left:14px;
+}}
+@media (max-width: 438px) {
+.boxboxbon {
+    padding-right:8px;
+     padding-left:14px;
+}}
+
+@media (min-width: 769px and max-width: 999px) {
+
+ .footer1 {
+
+     margin-left: 24px !important;
+}}
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
