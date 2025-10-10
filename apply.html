@@ -13,7 +13,9 @@
   <meta property="og:image" content="https://github.com/Stepzach/leedstestradio/blob/main/IMG_4527.jpeg?raw=true">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=BBH+Sans+Bogle&family=Bitcount+Single+Ink:wght@100..900&family=Caveat:wght@400..700&family=Indie+Flower&family=Noto+Sans:wdth,wght@62.5..100,100..900&family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
  <meta property="og:title" content="Leeds Student Radio">
     <meta property="og:description" content="Officially the UK's Best Student Station 2024">
     <meta property="og:url" content="https://thisislsr.com">
@@ -31,6 +33,21 @@
       padding: 0;
       box-sizing: border-box;
     }
+
+     @font-face {
+    font-family: 'Kola'; /* Name you will use in CSS */
+    src: url('/Kola-Regular.woff') format('woff'); /* Path to your font file */
+    font-weight: normal; /* Optional: specify weight */
+    font-style: normal;  /* Optional: specify style */
+}
+ @font-face {
+    font-family: 'Oswald'; /* Name you will use in CSS */
+    src: url('/Oswald-Variable.woff') format('woff'); /* Path to your font file */
+    font-weight: normal; /* Optional: specify weight */
+  
+}
+
+ 
 
     body, html {
       height: auto;
@@ -2157,7 +2174,7 @@ z-index: 1000;
    <div class="pill-top-row">
   <div class="title" style="font-size:20px; cursor:pointer;" 
        onclick="window.location.href='https://thisislsr.com'">
-    <b>Leeds Student Radio</b>
+    <b>LEEDS STUDENT RADIO</b>
   </div>
  <div class="menu" id="menuMOB" aria-haspopup="true" aria-expanded="false">
   <span></span>
@@ -2265,7 +2282,7 @@ const menuBtn = document.getElementById("menuMOB");
     <div class="overlay">
      <div class="top-row"> 
   <div class="menu" id="menuButton" aria-haspopup="true" aria-expanded="false">☰</div>
-  <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">Leeds Student Radio</div>
+  <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">LEEDS STUDENT RADIO</div>
 
   <!-- Desktop Navigation -->
   <div class="desktop-nav">
@@ -3312,7 +3329,7 @@ margin-top: -16px;
  
      </style>
       <div class="bottom-right">
-        <p>Get Involved</p>
+        <p class="bottom-righter">Get Involved</p>
       <p style="font-size:1.2em" class="atexta"> Are you a student in Leeds? Want to get involved with the UK's best student radio? Why not apply to be on one of our shows! Choose from our range of existing core shows below or pitch an idea for your very own.<span class="h2h"><br><br>Find out more about our core music shows on Instagram: @thisislsr_music.</span>
       
       
@@ -5182,7 +5199,167 @@ document.addEventListener('DOMContentLoaded', () => {
       background-color: rgba(255, 255, 255, 0.9);
   
     } }
+      .footer-section1 h4 {
+  font-family: 'Kola', sans-serif;
+
+    
+   }
+  .footer-section10 h4 {
+  font-family: 'Kola', sans-serif;
+
+    
+   }
+
+  .pill-title {
+    font-family: 'Oswald', sans-serif;
+     }
+
+  .footer-section h4 {
+    font-family: 'Oswald', sans-serif;
+     }
+
+   .title {
+     font-family: "rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* choose 100–900 */
+  font-style: normal;
+  letter-spacing: 0px;
+  font-variation-settings: "wdth" 100;
+     }
+
+
+   @media (min-width: 850px) {
+       .title {
+      font-family: "rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700; /* choose 100–900 */
+  line-height:1em;
+  font-style: normal;
+  letter-spacing: -1px;
+  font-variation-settings: "wdth" 100;
+     }
+   }
+   
+   
+    @media (min-width: 999px) {
+    
+      .desktop-nav {
+       font-family: "rubik", sans-serif;
+   font-size:1.1em;
+     }
+   }
+    
+   
+   
+   .fullscreen-menu li  {
+  
+     font-family: "rubik", sans-serif;
+     text-transform: uppercase;
+  font-optical-sizing: auto;
+  font-weight: 300 !important; /* choose 100–900 */
+  line-height:0.7em;
+
+  letter-spacing: 0px;
+  font-variation-settings: "wdth" 800;
+     }
      
+      .bottom-righter
+       {
+  
+    font-family: "Indie Flower", sans-serif !important;
+     text-transform: uppercase;
+  font-optical-sizing: auto;
+  font-weight: 700 !important; /* choose 100–900 */
+line-height:1.2rem;
+
+
+
+     }
+     
+      
+   @media (max-width: 768px) {
+      
+     .maybehidesome  {
+ 
+  display: none;
+     }
+   }
+   
+   
+     .footer-section,
+    .podcast-links {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+  font-optical-sizing: auto;
+  font-weight: 400 !important; /* choose 100–900 */
+line-height:1.1rem;
+
+
+ 
+     }
+     
+    .text {
+  
+   font-family: "Indie Flower", sans-serif !important;
+     
+  font-optical-sizing: auto;
+  font-weight: 400 !important; /* choose 100–900 */
+line-height:1.1rem;
+font-size:1.2em;
+
+ 
+     }
+       @media (min-width: 1100px) {
+      .text {
+  
+  
+font-size:1.4em;
+
+ 
+     }
+     
+     #careerss p,
+     .pill-description {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+  font-optical-sizing: auto;
+  font-weight: 300 !important; /* choose 100–900 */
+line-height:1.1rem;
+
+
+ 
+     }
+     
+   .footer-bottom p {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+ 
+  font-weight: 200 !important; /* choose 100–900 */
+
+
+
+ 
+     }
+    }
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+        .desktop-nav {
+       margin-top:0px;
+     
+   }
+   
+  .scheduleRootdiv {
+   
+    position: relative;
+    z-index: 10000;
+}
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
