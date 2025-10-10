@@ -1843,7 +1843,7 @@ position: absolute !important;
     <!-- TOP ROW -->
     <div class="pill-top-row">
       <span class="pill-title">...Loading</span>
-      <span class="on-air"><span class="pulse-dot"></span>On Air</span>
+      <span class="on-air" style=" font-family: 'Roboto Mono', sans-serif; margin-right: 5px;"><span class="pulse-dot"></span>On Air</span>
      
     </div>
 
@@ -3837,7 +3837,7 @@ function fetchAndUpdate() {
      // First banner (original, current show)
 const current1 = findCurrentShow(rows);
 if (current1) {
-  applyShowToSection("#pillBanner", current1, "On Air", true);
+  applyShowToSection("#pillBanner", current1, "", true);
   // Update Media Session ONLY for current show
   updateMediaSession(current1);
 } else {
@@ -6853,14 +6853,11 @@ line-height:1.1rem;
  
      }
      
-    .text {
+    .scheduleRootdiv h1{
   
    font-family: "Indie Flower", sans-serif !important;
      
-  font-optical-sizing: auto;
-  font-weight: 400 !important; /* choose 100–900 */
-line-height:1.1rem;
-font-size:1.2em;
+
 
  
      }
