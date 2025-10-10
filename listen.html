@@ -1744,13 +1744,21 @@ position: absolute !important;
    margin-top: 0 !important;
   }
 }
+@media (min-width: 655px) {
+ 
+  .footer1 {
+  margin-left:14px !important;
+  margin-right:14px !important;
+}
+}
 @media (min-width: 769px) {
  
   .footer1 {
-  margin-left:-5px !important;
+  margin-left:24px !important;
   margin-right:24px !important;
 }
 }
+
 
 
 .bottom-rightb {
@@ -2127,7 +2135,7 @@ z-index: 1000;
     <!-- TOP ROW -->
     <div class="pill-top-row">
       <span class="pill-title">...Loading</span>
-      <span class="on-air"><span class="pulse-dot"></span>On Air</span>
+      <span class="on-air" style="margin-right:5px;"><span class="pulse-dot"></span>On Air</span>
      
     </div>
 
@@ -2246,15 +2254,8 @@ const menuBtn = document.getElementById("menuMOB");
 
 
 
-  <div class="hero-section">
-<div class="hero-img-wrapper">
-  
-    
-   
+ 
 
-   
-</div>
-    <div class="overlay">
      <div class="top-row"> 
   <div class="menu" id="menuButton" aria-haspopup="true" aria-expanded="false">☰</div>
   <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">LEEDS STUDENT RADIO</div>
@@ -3094,13 +3095,10 @@ margin-top: -16px;
      
    
      </style>
-      <div class="bottom-right">
-        <p>Listen Live</p>
      
-      </div>
        
       
-     
+   <div class="playerzzc">  
 <div class="playerzz">
 <div class="player main-player">
  <div class="album-cover">
@@ -3171,7 +3169,7 @@ margin-top: -16px;
     </div>
     
   </div>
-  
+  </div>
 
 
  
@@ -3817,7 +3815,7 @@ function fetchAndUpdate() {
       // First banner (original)
       const current1 = findCurrentShow(rows);
       if (current1) {
-        applyShowToSection("#pillBanner", current1, "On Air", true);
+        applyShowToSection("#pillBanner", current1, "", true);
       } else {
           applyShowToSection("#pillBanner", FALLBACK_SHOW, "Off Air", false);
       }
@@ -4734,6 +4732,50 @@ line-height:1.1rem;
     position: relative;
     z-index: 10000;
 }
+
+
+.top-row {
+   
+    margin-top:2px;
+    margin-left:20px;
+       margin-right:20px;
+}
+.playerzzc  {
+
+   width:100% !important;
+    padding-left:20px;
+       padding-right:22px;
+       
+       }
+.playerzz {
+  width:auto;
+    margin-top:15px;
+    
+}
+  @media (max-width: 480px) {
+.playerzzc {
+  width:auto;
+    margin-top:125px !important;
+    
+}
+@media (max-width: 480px) {
+.playerzzc {
+    padding-right:14px;
+     padding-left:14px;
+}}
+@media (max-width: 438px) {
+.playerzzc {
+    padding-right:8px;
+     padding-left:14px;
+}}
+
+@media (min-width: 769px and max-width: 999px) {
+
+ .footer1 {
+
+     margin-left: 24px !important;
+}}
+
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
