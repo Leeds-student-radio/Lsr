@@ -32,9 +32,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  
-
-  <style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=BBH+Sans+Bogle&family=Bitcount+Single+Ink:wght@100..900&family=Caveat:wght@400..700&family=Indie+Flower&family=Noto+Sans:wdth,wght@62.5..100,100..900&family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<style>
     * { 
       margin: 0;
       padding: 0;
@@ -61,6 +62,10 @@
     font-weight: normal; /* Optional: specify weight */
   
 }
+
+ 
+
+
 
 
 
@@ -2203,7 +2208,7 @@ const menuBtn = document.getElementById("menuMOB");
     <div class="overlay">
      <div class="top-row"> 
   
-  <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">Leeds Student Radio</div>
+  <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">LEEDS STUDENT RADIO</div>
        <div class="menu" id="menuButton" aria-haspopup="true" aria-expanded="false">☰</div>
 
   <!-- Desktop Navigation -->
@@ -2257,7 +2262,7 @@ const menuBtn = document.getElementById("menuMOB");
 
 
       <div class="bottom-right">
-        <p>Officially the UK's best <br> student radio 2023 & 2024!</p>
+        <p>Officially the UK's  <br>best student radio <br><span class="maybehidesome">2023 & 2024!</span></p>
       
 
       </div>
@@ -2274,7 +2279,7 @@ const menuBtn = document.getElementById("menuMOB");
     <div class="tag" style=" font-family: 'Roboto Mono', sans-serif;">See more on Insta <i class="fab fa-instagram" style="width:11px"></i></div>
     <div class="text">
      
-      <p  style="font-variation-settings: 'wght' 20, 'wdth' 60;" >Our 2025/26 committee officially announced on Instagram!</p>
+      <p   >Our 2025/26 committee officially announced on Instagram!</p>
     </div>
    
   </div>
@@ -2288,7 +2293,7 @@ const menuBtn = document.getElementById("menuMOB");
 </svg></span></div>
     <div class="text">
     
-      <p  style="font-variation-settings: 'wght' 20, 'wdth' 60;">BBC Radio 1 Suprises Leeds Student Radio with JADE</p>
+      <p >BBC Radio 1 Suprises Leeds Student Radio with JADE</p>
     </div>
    
   </div>
@@ -2299,7 +2304,7 @@ const menuBtn = document.getElementById("menuMOB");
     <div class="tag" style=" font-family: 'Roboto Mono', sans-serif;">Every Friday 1-2pm</div>
     <div class="text">
     
-      <p  style="font-variation-settings: 'wght' 20, 'wdth' 60;">Weekly rundown of the world's biggest stories, every friday 1-2pm</p>
+      <p  >Weekly rundown of the world's biggest stories, every friday 1-2pm</p>
     </div>
    
   </div>
@@ -3590,6 +3595,130 @@ document.addEventListener('DOMContentLoaded', () => {
   .footer-section h4 {
     font-family: 'Oswald', sans-serif;
      }
+
+   .title {
+     font-family: "rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* choose 100–900 */
+  font-style: normal;
+  letter-spacing: 0px;
+  font-variation-settings: "wdth" 100;
+     }
+
+
+   @media (min-width: 850px) {
+       .title {
+      font-family: "rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700; /* choose 100–900 */
+  line-height:1em;
+  font-style: normal;
+  letter-spacing: -1px;
+  font-variation-settings: "wdth" 100;
+     }
+   }
+   
+   
+    @media (min-width: 999px) {
+    
+      .desktop-nav {
+       font-family: "rubik", sans-serif;
+   font-size:1.1em;
+     }
+   }
+    
+   
+   
+   .fullscreen-menu li  {
+  
+     font-family: "rubik", sans-serif;
+     text-transform: uppercase;
+  font-optical-sizing: auto;
+  font-weight: 300 !important; /* choose 100–900 */
+  line-height:0.7em;
+
+  letter-spacing: 0px;
+  font-variation-settings: "wdth" 800;
+     }
+     
+      .bottom-right  {
+  
+    font-family: "Indie Flower", sans-serif !important;
+     text-transform: uppercase;
+  font-optical-sizing: auto;
+  font-weight: 900 !important; /* choose 100–900 */
+line-height:1.3rem;
+
+
+  font-variation-settings: "wdth" 200;
+     }
+     
+       @media (min-width: 769px) {
+       .bottom-right  {
+  
+    font-family: "Indie Flower", sans-serif !important;
+     text-transform: uppercase;
+  font-optical-sizing: auto;
+  font-weight: 900 !important; /* choose 100–900 */
+line-height:1.6em;
+
+
+  font-variation-settings: "wdth" 200;
+     }
+   }
+   @media (max-width: 768px) {
+       .bottom-right p  {
+ 
+   font-size: 1.5rem !important;
+     }
+     
+     .maybehidesome  {
+ 
+  display: none;
+     }
+   }
+   
+   
+    .text,
+    .footer-section,
+    .podcast-links {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+  font-optical-sizing: auto;
+  font-weight: 400 !important; /* choose 100–900 */
+line-height:1.1rem;
+
+
+ 
+     }
+     
+     #careerss p,
+     .pill-description {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+  font-optical-sizing: auto;
+  font-weight: 300 !important; /* choose 100–900 */
+line-height:1.1rem;
+
+
+ 
+     }
+     
+   .footer-bottom p {
+  
+    font-family: "Noto Sans", sans-serif;
+     
+ 
+  font-weight: 200 !important; /* choose 100–900 */
+
+
+
+ 
+     }
+
+
   
 </style>
 
