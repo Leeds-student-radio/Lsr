@@ -3743,22 +3743,7 @@ function applyShowToSection(sectionSelector, show, labelText, isLive, labelSelec
   }
 
   // Media Session API (lock-screen title + artwork)
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: title,
-      artist: 'Leeds Student Radio',
-      album: '',
-      artwork: [
-        { src: img, sizes: '96x96',   type: 'image/jpeg' },
-        { src: img, sizes: '128x128', type: 'image/jpeg' },
-        { src: img, sizes: '256x256', type: 'image/jpeg' },
-        { src: img, sizes: '512x512', type: 'image/jpeg' }
-      ]
-    });
-
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-  }
+ 
 }
 
 function normalizeRows(rows) {
