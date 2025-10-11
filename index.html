@@ -1321,7 +1321,7 @@ pill-link {
 }
 
 .pill-banner.shrink .pill-description {
-  max-height: 0;
+
   opacity: 0;
   overflow: hidden;
 }
@@ -1399,7 +1399,7 @@ pill-link {
 }
 
 .pill-banner.shrink .pill-description {
-  max-height: 0;
+ 
   opacity: 0;
   overflow: hidden;
 }
@@ -3977,11 +3977,9 @@ line-height:1.1rem;
   }
 
   // run on DOMContentLoaded in case the script is placed earlier; if script placed at end, this still works
-  if (document.readyState === 'loading') {
+
     document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+ 
 
 })();
 </script>
