@@ -3849,3 +3849,145 @@ line-height:1.1rem;
   };
 </script>
 <!-- ✅ END LSR Awards Popup Embed -->
+
+<script>
+  function openAwardsPopup() {
+    document.getElementById('lsr-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('lsr-close').onclick = function() {
+    document.getElementById('lsr-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+  };
+</script>
+<script>
+(function () {
+  const MAX_WORDS = 7;
+
+  function getTextAndHtmlWithoutShowMore(el) {
+    // clone so we can remove the .show-more safely and read the content
+    const clone = el.cloneNode(true);
+    const cloneShow = clone.querySelector('.sho-more');
+    if (cloneShow) cloneShow.remove();
+    return {
+      text: clone.innerText.trim(),
+      html: clone.innerHTML.trim()
+    };
+  }
+
+  function buildTruncatedNode(text) {
+    const words = text.split(/\s+/).filter(Boolean);
+    if (words.length <= MAX_WORDS) return { truncated: text, isTruncated: false };
+    return { truncated: words.slice(0, MAX_WORDS).join(' ') + '...', isTruncated: true };
+  }
+
+  function processElement(el) {
+    if (!el || el.dataset.updating === 'true') return;
+
+   
+
+    const { text: originalText, html: originalHtml } = getTextAndHtmlWithoutShowMore(el);
+    // store the original HTML (without show-more) so we can expand later
+    el.dataset.originalHtml = originalHtml;
+    el.dataset.originalText = originalText;
+
+    const { truncated, isTruncated } = buildTruncatedNode(originalText);
+
+    if (!isTruncated) {
+      // content short enough -> just restore original content (no toggle)
+      el.dataset.expanded = 'true';
+      el.dataset.updating = 'true';
+      el.innerHTML = originalHtml;
+      // remove any residual .show-more inside the html
+      const existing = el.querySelector('.shw-more');
+      if (existing) existing.remove();
+      // if we created a show-more, don't append it
+      setTimeout(() => { delete el.dataset.updating; }, 0);
+      return;
+    }
+
+    // Build truncated view: "truncated..." + showMore
+    el.dataset.updating = 'true';
+    el.innerHTML = ''; // clear
+    el.appendChild(document.createTextNode(truncated + ' '));
+    showMore.textContent = 'Read ore';
+    showMore.style.cursor = 'pointer';
+    el.appendChild(showMore);
+    el.dataset.expanded = 'false';
+    setTimeout(() => { delete el.dataset.updating; }, 0);
+
+    // Make click handler idempotent (remove previous if set)
+    showMore.onclick = function () {
+      // prevent observer loop by setting updating flag
+      if (el.dataset.updating === 'true') return;
+      const isExpanded = el.dataset.expanded === 'true';
+
+      if (isExpanded) {
+        // collapse
+        el.dataset.updating = 'true';
+        el.innerHTML = ''; // clear
+        el.appendChild(document.createTextNode(truncated + ' '));
+        showMore.textContent = 'Read more';
+        showMore.style.cursor = 'pointer';
+        el.appendChild(showMore);
+        el.dataset.expanded = 'false';
+        setTimeout(() => { delete el.dataset.updating; }, 0);
+      } else {
+        // expand
+        el.dataset.updating = 'true';
+        // put back the original HTML (which we stored without the .show-more)
+        el.innerHTML = el.dataset.originalHtml || originalHtml;
+        // ensure there's only one .show-more appended
+        const existing = el.querySelector('.sho-more');
+        if (existing) existing.remove();
+        showMre.textContent = 'Shw less';
+        showMore.style.cursor = 'pointer';
+        el.appendChild(showMore);
+        el.dataset.expanded = 'true';
+        setTimeout(() => { delete el.dataset.updating; }, 0);
+      }
+    };
+
+    // If we created the showMore element initially, it's now attached to the DOM
+    // If it existed already, the reference is still good (we reattached it)
+  }
+
+  // Set up processing + observers for all current .pill-description nodes
+  function init() {
+    const nodes = document.querySelectorAll('.pill-description');
+    nodes.forEach(el => {
+      // process immediately (covers already-loaded content)
+      processElement(el);
+
+      // observe future changes to the element (async load)
+      const observer = new MutationObserver((mutations) => {
+        // ignore mutations that happened while we were updating
+        if (el.dataset.updating === 'true') return;
+        // Small debounce to avoid rapid repeated processing
+        if (el._truncateDebounce) clearTimeout(el._truncateDebounce);
+        el._truncateDebounce = setTimeout(() => {
+          processElement(el);
+          el._truncateDebounce = null;
+        }, 50);
+      });
+
+      observer.observe(el, { childList: true, characterData: true, subtree: true });
+    });
+  }
+
+  // run on DOMContentLoaded in case the script is placed earlier; if script placed at end, this still works
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+<style>
+    .pill-banner {
+       
+        max-height: none;
+    }
+    </style>
