@@ -17,15 +17,30 @@
  <meta property="og:title" content="Leeds Student Radio">
     <meta property="og:description" content="Officially the UK's Best Student Station 2024">
     <meta property="og:url" content="https://thisislsr.com">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=BBH+Sans+Bogle&family=Bitcount+Single+Ink:wght@100..900&family=Caveat:wght@400..700&family=Indie+Flower&family=Noto+Sans:wdth,wght@62.5..100,100..900&family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-   <link rel="icon" href="https://github.com/Stepzach/leedstestradio/blob/main/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.ico?raw=true" type="image/x-icon">
+    <link rel="icon" href="https://github.com/Stepzach/leedstestradio/blob/main/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.ico?raw=true" type="image/x-icon">
     <link rel="icon" href="https://github.com/Stepzach/leedstestradio/blob/main/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg?raw=true" type="image/jpeg">
     <link rel="apple-touch-icon" href="https://github.com/Stepzach/leedstestradio/blob/main/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg?raw=true">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" as="style" onload="this.rel='stylesheet'">
+   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.rel='stylesheet'">
+ 
+<noscript>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</noscript>
+
+
+<!-- Preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+<!-- Fallback for older browsers -->
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+</noscript>
+ 
  
   <style>
     * {
@@ -34,17 +49,21 @@
       box-sizing: border-box;
     }
   @font-face {
-    font-family: 'Kola'; /* Name you will use in CSS */
-    src: url('/Kola-Regular.woff') format('woff'); /* Path to your font file */
-    font-weight: normal; /* Optional: specify weight */
-    font-style: normal;  /* Optional: specify style */
+    font-family: 'Kola';
+    src: url('/Kola-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* <-- crucial for async rendering */
 }
- @font-face {
-    font-family: 'Oswald'; /* Name you will use in CSS */
-    src: url('/Oswald-Variable.woff') format('woff'); /* Path to your font file */
-    font-weight: normal; /* Optional: specify weight */
-  
+
+@font-face {
+    font-family: 'Oswald';
+    src: url('/Oswald-Variable.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* <-- crucial for async rendering */
 }
+
 
     body, html {
       height: auto;
@@ -2162,7 +2181,6 @@ z-index: 1000;
   <span></span>
 </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <!-- Fullscreen Menu -->
 <div id="fullscreenMenu" class="fullscreen-menu">
   <ul>
@@ -3272,7 +3290,7 @@ margin-top: -16px;
     <div class="footer-section1" style="height:400px">
       <h4>BOOK STUDIO 2</h4>
       <div class="image-container2" style="height:400px">
-        <img src="https://lh3.googleusercontent.com/u/0/d/17uovn0s5rAa14vC9GfKN23FlvdsuBQn5=w2940-h1680-iv1" alt="Podcast" style="height:400px">
+        <img src="https://github.com/Leeds-student-radio/Lsr/blob/main/IMG_8848%20(1).webp?raw=true" alt="Podcast" style="height:400px">
       </div>
 
       <div class="podcast-links" style="margin-top: 10px; width:90%;">
