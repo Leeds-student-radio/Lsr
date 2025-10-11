@@ -4311,6 +4311,43 @@ const description = document.getElementById('pillDescription');
 const toggleBtn = document.getElementById('toggleDescription');
 const playBtn = document.getElementById('playBtn');
 
+let lastScrollTop = 0;
+let expanded = false;
+const fullText = description.childNodes[0].textContent.trim();
+
+function updateDescription() {
+  if (window.innerWidth <= 600 && !expanded) {
+    const words = fullText.split(' ');
+    if (words.length > 12) {
+      description.childNodes[0].textContent = words.slice(0, 12).join(' ') + '...';
+      toggleBtn.textContent = 'More';
+    } else {
+      toggleBtn.textContent = '';
+    }
+  } else {
+    description.childNodes[0].textContent = fullText;
+    toggleBtn.textContent = expanded ? 'Less' : '';
+  }
+}
+
+toggleBtn.addEventListener('click', () => {
+  expanded = !expanded;
+  updateDescription();
+});
+
+updateDescription();
+window.addEventListener('resize', updateDescription);
+
+// Scroll shrink effect
+window.addEventListener('scroll', () => {
+  const st = window.scrollY || document.documentElement.scrollTop;
+  if (st > lastScrollTop + 10) {
+    banner.classList.add('shrink');
+  } else if (st < lastScrollTop - 10) {
+    banner.classList.remove('shrink');
+  }
+  lastScrollTop = st <= 0 ? 0 : st;
+});
 
 // Play/Pause
 let playing = false;
@@ -4318,7 +4355,19 @@ playBtn.addEventListener('click', () => {
   playing = !playing;
   playBtn.textContent = playing ? '⏸' : '▶';
 });
+document.addEventListener("DOMContentLoaded", function () {
+  const pillBanner = document.querySelector(".pill-banner");
+  const heroSection = document.querySelector(".hero-section");
 
+  if (pillBanner && heroSection) {
+    // Get the height of .pill-banner
+    const pillHeight = pillBanner.offsetHeight;
+    const extraSpace = 20; // Fixed value in px you want to add
+
+    // Apply margin-top to .hero-section
+    heroSection.style.marginTop = (pillHeight + extraSpace) + "px";
+  }
+});
 const slides = document.querySelectorAll('.hero-img');
 const prevBtn = document.querySelector('.arrow.left');
 const nextBtn = document.querySelector('.arrow.right');
@@ -4390,7 +4439,44 @@ function resetAutoPlay() {
     }
   });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const banners = document.querySelectorAll('.pill-banner');
 
+  banners.forEach(banner => {
+    const descriptionEl = banner.querySelector('.pill-description');
+    const toggleBtn = banner.querySelector('.show-more');
+    const playBtn = banner.querySelector('.play-btn');
+
+   
+
+   
+
+    // Scroll shrink effect
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      const st = window.scrollY || document.documentElement.scrollTop;
+      if (st > lastScrollTop + 10) {
+        banner.classList.add('shrink');
+      } else if (st < lastScrollTop - 10) {
+        banner.classList.remove('shrink');
+      }
+      lastScrollTop = st <= 0 ? 0 : st;
+    });
+
+    // Play/Pause toggle
+     if (playBtn) {
+      let playing = false;
+      playBtn.addEventListener('click', () => {
+        playing = !playing;
+      playBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+
+      });
+    }
+  });
+});
+
+</script>
 <script>
     const streamUrl = "https://streamer.radio.co/s986435880/listen";
   const audio = new Audio(streamUrl);
@@ -6900,46 +6986,3 @@ line-height:1.1rem;
   };
 </script>
 <!-- ✅ END LSR Awards Popup Embed -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const banners = document.querySelectorAll('.pill-banner');
-
-  banners.forEach(banner => {
-    const descriptionEl = banner.querySelector('.pill-description');
-    const toggleBtn = banner.querySelector('.show-more');
-    const playBtn = banner.querySelector('.play-btn');
-
-    let isShrunk = false; // track current shrink state
-
-    // Scroll shrink effect based on 20px threshold
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-
-      if (scrollTop > 20) {
-        if (!isShrunk) {
-          banner.classList.add('shrink');
-          isShrunk = true;
-        }
-      } else {
-        if (isShrunk) {
-          banner.classList.remove('shrink');
-          isShrunk = false;
-          // Scroll to top when unshrinking
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }
-    });
-
-    // Play/Pause toggle
-    if (playBtn) {
-      let playing = false;
-      playBtn.addEventListener('click', () => {
-        playing = !playing;
-        playBtn.innerHTML = playing
-          ? '<i class="fa-solid fa-pause"></i>'
-          : '<i class="fa-solid fa-play"></i>';
-      });
-    }
-  });
-});
-</script>
