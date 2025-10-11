@@ -2273,15 +2273,7 @@ const menuBtn = document.getElementById("menuMOB");
 </div>
 
 
-  <div class="hero-section">
-<div class="hero-img-wrapper">
-  
-    
-   
-
-   
-</div>
-    <div class="overlay">
+ 
      <div class="top-row"> 
   <div class="menu" id="menuButton" aria-haspopup="true" aria-expanded="false">☰</div>
   <div class="title" onclick="window.location.href='https://thisislsr.com'" style="cursor:pointer">LEEDS STUDENT RADIO</div>
@@ -3072,30 +3064,161 @@ margin-top: -16px;
 }
  
      </style>
-      <div class="bottom-right">
-        <p class="bottom-righter">About</p>
-      <p style="font-size:1.2em" class="atexta"> Leeds Student Radio is a student radio station broadcasting every day during term time from Leeds University Union at the University of Leeds. The station is run by an elected committee of student volunteers, and the management of the station is overseen by a full-time station manager employed by Leeds University Union. <span class="h2h">The station also provides live DJs for venues within Leeds University Union and the City of Leeds.</span></p>
+     
+
+ <section class="about-section">
+  <div class="content-wrapper">
+    <!-- Left Column: About -->
+    <div class="left-column">
+      <div class="text-block">
+        <h2 class="section-title">About</h2>
+        <p class="section-text">
+          Leeds Student Radio is a student radio station broadcasting every day during term time 
+          from Leeds University Union at the University of Leeds. The station is run by an elected 
+          committee of student volunteers, and the management of the station is overseen by a full-time 
+          station manager employed by Leeds University Union.
+        </p>
+        <p class="section-text">
+          The station also provides live DJs for venues within Leeds University Union and the City of Leeds.
+        </p>
       </div>
-        <div class="bottom-right2">
-        <span class="h4h"><p>Formation</p>
-      <p style="font-size:1.2em" class="atexta">In the 1960s a group of students formed 'Network 4' and broadcast black-and-white programmes on a closed circuit around the university.</span>
-<span class="h3h"><br><br></span><span class="h4h">
-In 1968, Leeds University Union built a radio studio with an adjoining control room on the top floor of the students' union building.</span>
-<span class="h3h"><Br><br>
-It was built so that 'Network 4' could produce programmes for BBC Radio Leeds, with student productions including concerts, debates and dramas as well as a weekly 30-minute news programme called 'University City'.
-<br></span><span class="h1h">
-In the late 1990s, TV presenter Anita Rani worked at the radio station.</span>
+
+      <!-- Image Gallery (under About) -->
+      <div class="image-gallery">
+        <img class="gallery-image" src="https://lh3.googleusercontent.com/u/0/d/18Tg2OocMQiJBQoRyVNegp6GFcqocijv7=w2940-h1680-iv1" alt="LSR Studio">
+        <img class="gallery-image" id="gallery-image22" src="https://climate.leeds.ac.uk/wp-content/uploads/2019/04/Bianca-_Paloma_ClimatePress-e1556043224490.jpg" alt="LSR Team">
+      </div>
+    </div>
+
+    <!-- Right Column: Formation -->
+    <div class="right-column">
+      <div class="text-block">
+        <h2 class="section-title">Formation</h2>
+        <p class="section-text">
+          In the 1960s, a group of students formed <strong>‘Network 4’</strong> and broadcast 
+          black-and-white programmes on a closed circuit around the university.
+        </p>
+        <p class="section-text">
+          In 1968, Leeds University Union built a radio studio with an adjoining control room 
+          on the top floor of the students' union building.
+        </p>
+        <p class="section-text">
+          It was built so that 'Network 4' could produce programmes for BBC Radio Leeds, with student 
+          productions including concerts, debates, and dramas, as well as a weekly 30-minute news 
+          programme called <strong>‘University City’</strong>.
+        </p>
+        <p class="section-text">
+          In the late 1990s, TV presenter <strong>Anita Rani</strong> worked at the radio station.
+        </p>
+        <p class="section-text" id="section-text22">
+  <strong>More about us on:</strong>
+  <ul id="section-text22">
+    <li><a href="https://en.wikipedia.org/wiki/Leeds_Student_Radio#:~:text=Leeds%20Student%20Radio%20is%20a,at%20the%20University%20of%20Leeds.&text=It%20is%20also%20the%20official,broadcasts%20online%20through%20its%20website." target="_blank" rel="noopener noreferrer" style="color:white;"><strong>WIKIPEDIA</strong></a></li>
+   
+    <li style="margin-top:8px;"><a href="https://engage.luu.org.uk/groups/VFG/leeds-student-radio" target="_blank" rel="noopener noreferrer" style="color:white;"><strong>LEEDS UNIVERSITY UNION</strong></a></li>
+  </ul>
 </p>
+
       </div>
-      <div class="image-row">
-  <img class="aimga" src="https://lh3.googleusercontent.com/u/0/d/18Tg2OocMQiJBQoRyVNegp6GFcqocijv7=w2940-h1680-iv1" alt="Image 1">
-
-  <img class="aimga1" src="https://climate.leeds.ac.uk/wp-content/uploads/2019/04/Bianca-_Paloma_ClimatePress-e1556043224490.jpg" alt="Image 2">
-</div>
-
     </div>
   </div>
+</section>
+
+
   <style>
+  .about-section {
+ padding: 2rem;
+ 
+  color: white;
+
+  margin: 0 auto;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.left-column,
+.right-column {
+    flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-title {
+   font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+  line-height:0.9rem;
+  font-family: "Indie Flower", sans-serif !important;
+}
+
+.section-text {
+  font-size: 1.1rem;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+.image-gallery {
+   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: -0.2rem;
+}
+
+.gallery-image {
+  width: 100%;
+  max-height: 270px;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position:bottom;
+}
+
+/* Responsive layout */
+@media (min-width: 900px) {
+  .content-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .left-column {
+    flex: 1.2;
+  }
+
+  .right-column {
+    flex: 1;
+  }
+
+  /* Keep images below left text only */
+  .left-column .image-gallery {
+    margin-top: 0.2rem;
+  }
+}
+
+@media (min-width: 529px) {
+  #gallery-image22 {
+   display:none !important
+  }
+    }
+    
+    @media (max-width: 600px) {
+  #section-text22 {
+   display:none !important
+  }
+    }
+   
+  
+@media (max-width: 849px) {
+    .content-wrapper {
+        margin-top: 108px;
+    }
+}
   @media (min-width: 769px) {
   #behjbdjbje {
   margin-left:45px !important;
@@ -3107,7 +3230,8 @@ In the late 1990s, TV presenter Anita Rani worked at the radio station.</span>
       <div class="footer-section"  >
         <h4 id="behjbdjbje" style="margin-top: -10px; margin-left:24px;">2025/26 Commitee:</h4>
         
-        <p class="atexta" id="behjbdjbje" style="margin-bottom:20px; margin-left:24px; width:88%">Whatever you’re interested in, there’s a space here for you: presenting, producing, DJing, design, tech, event management, marketing. The list goes on.</p>
+        <p class="atexta" id="behjbdjbje" style="margin-bottom:20px; margin-left:24px; width:88%; font-size: 1.1rem;
+  line-height: 1.3;">Whatever you’re interested in, there’s a space here for you: presenting, producing, DJing, design, tech, event management, marketing. The list goes on.</p>
       </div>
     </div>
     <div class="carousel-container" id="nocarohide2">
@@ -4854,6 +4978,52 @@ line-height:1.1rem;
     position: relative;
     z-index: 10000;
 }
+
+
+.top-row {
+   
+    margin-top:2px;
+    margin-left:20px;
+       margin-right:20px;
+       background: rgb(160 43 43) !important;
+
+}
+.playerzzc  {
+
+   width:100% !important;
+    padding-left:24px;
+       padding-right:24px;
+       
+       }
+.playerzz {
+  width:auto;
+    margin-top:15px;
+    
+}
+  @media (max-width: 480px) {
+.playerzzc {
+  width:auto;
+    margin-top:125px !important;
+    
+}
+@media (max-width: 480px) {
+.playerzzc {
+    padding-right:14px;
+     padding-left:14px;
+}}
+@media (max-width: 438px) {
+.playerzzc {
+    padding-right:8px;
+     padding-left:14px;
+}}
+
+@media (min-width: 769px and max-width: 999px) {
+
+ .footer1 {
+
+     margin-left: 24px !important;
+}}
+
 </style>
    <!-- ✅ BEGIN LSR Awards Popup Embed -->
 <div id="lsr-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:99999999;">
