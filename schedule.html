@@ -3147,13 +3147,18 @@ function makeShowElement(show) {
   el.className = 'show-card';
   el.style.position = 'relative';
 
+  // Apply background colour if defined
+  if (show.colour && show.colour.trim() !== '') {
+    el.style.background = show.colour;
+  }
+
   const thumb = document.createElement('img');
   thumb.className = 'show-thumb';
   thumb.src = show.cover_image_url;
   thumb.alt = show.title;
   thumb.onerror = () => {
-    thumb.style.background = show.colour;
-    thumb.src = '';
+    thumb.remove(); // remove broken image
+    el.style.background = show.colour || '#b33'; // fallback colour if any
   };
 
   const body = document.createElement('div');
@@ -3161,7 +3166,9 @@ function makeShowElement(show) {
   body.innerHTML = `
     <div class='show-title'>${show.title}</div>
     <div class='show-meta'>
-      <span class='time-pill' style='background:${show.colour}'>${show.start_time}—${show.end_time}</span> 
+      <span class='time-pill' style='background:${show.colour || '#b33'}'>
+        ${show.start_time}—${show.end_time}
+      </span> 
     </div>
   `;
 
@@ -3173,6 +3180,7 @@ function makeShowElement(show) {
 
   return el;
 }
+
 
 // Keep resize listener so layout adapts if window changes size
 window.addEventListener('resize', adjustPopupLayout);
