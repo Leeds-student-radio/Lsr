@@ -2273,6 +2273,18 @@ const menuBtn = document.getElementById("menuMOB");
  <div class="carousel-container">
   <div class="carousel-track" id="carouselTrack">
   
+   <div class="image-card"  style="cursor: pointer;" onclick="window.open('https://www.studentradio.org.uk/awards/', '_blank')">
+    <img src="https://github.com/Stepzach/pdesport/blob/main/IMG_3645.jpeg?raw=true" style="object-fit:cover !important; filter: brightness(0.99);" alt="LSR" class="default-img">
+   
+    <div class="tag" style=" font-family: 'Roboto Mono', sans-serif;">SRA Awards </div>
+    <div class="text">
+     
+      <p   >Officially the UK's best student radio 2023 & 2024!</p>
+    </div>
+   
+  </div>
+  
+  
    <div class="image-card"  style="cursor: pointer;" onclick="window.open('https://www.instagram.com/p/DMYTWofNNZ1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==', '_blank')">
     <img src="https://github.com/Stepzach/pdesport/blob/main/Screenshot%202025-09-16%20at%2021.52.58.png?raw=true" style="object-fit:cover !important; filter: brightness(0.7);" alt="LSR" class="default-img">
    
@@ -2298,16 +2310,7 @@ const menuBtn = document.getElementById("menuMOB");
    
   </div>
 
-  <div class="image-card" >
-    <img src="https://lh3.googleusercontent.com/u/0/d/1LlFqrd-zYd523gDWh0IXQkvDPfA_uGWK=w2940-h1680-iv1" alt="Image 2" class="default-img">
-    
-    <div class="tag" style=" font-family: 'Roboto Mono', sans-serif;">Every Friday 1-2pm</div>
-    <div class="text">
-    
-      <p  >Weekly rundown of the world's biggest stories, every friday 1-2pm</p>
-    </div>
-   
-  </div>
+ 
 
  
   
@@ -3776,6 +3779,42 @@ line-height:1.1rem;
    font-size:1.6em;
 }
 }
+
+@media (min-width: 850px) {
+    .hero-section {
+        
+        margin-bottom: 20px;
+        margin-top: 2px;
+        margin-left: 20px;
+        margin-right: 20px;
+        height: 60px !important;
+      
+    }
+     .top-row {
+        margin-top: -11px;
+    }
+}
+
+
+@media (min-width: 956px) {
+   
+     .top-row {
+        margin-top: -15px;
+    }
+}
+@media (max-width: 849px) {
+   
+     .hero-section {
+        display:none !important
+    }
+    .carousel-container {
+       margin-top:120px;
+    }
+    
+}
+
+
+
 </style>
 
 <script>
