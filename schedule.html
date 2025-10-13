@@ -2976,13 +2976,22 @@ display:none;
     return DAY_ORDER[(new Date().getDay() + 6) % 7]; // Monday=0, Sunday=6
   }
 
-  function getCurrentWeekType() {
-    const start = new Date(new Date().getFullYear(), 0, 1); // Jan 1
-    const now = new Date();
-    const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    const weekNum = Math.floor(daysSinceStart / 7) + 1; // Week number (1-based)
-    return weekNum % 2 === 0 ? 'B' : 'A';
-  }
+ function getCurrentWeekType() {
+  const now = new Date();
+  const year = now.getFullYear();
+
+  // Define the first "Week A" start date manually or find the first Monday
+  const start = new Date(year, 0, 1);
+  const day = start.getDay(); // 0 = Sunday, 1 = Monday, ...
+  const diff = (day === 0 ? 1 : 8 - day); // days to next Monday
+  start.setDate(start.getDate() + diff - 7); // Move to Monday of the first week
+
+  const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  const weekNum = Math.floor(daysSinceStart / 7);
+
+  return weekNum % 2 === 0 ? 'B' : 'A';
+}
+
 
   function parseCSV(text){
     const rows=[]; const lines=text.split(/\r?\n/);
