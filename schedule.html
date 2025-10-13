@@ -2981,7 +2981,7 @@ display:none;
     const now = new Date();
     const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
     const weekNum = Math.floor(daysSinceStart / 7) + 1; // Week number (1-based)
-    return weekNum % 2 === 0 ? 'A' : 'B';
+    return weekNum % 2 === 0 ? 'B' : 'A';
   }
 
   function parseCSV(text){
