@@ -4524,10 +4524,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Play/Pause toggle
      if (playBtn) {
-      let playing = false;
-      playBtn.addEventListener('click', () => {
-        playing = !playing;
-      playBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+  let playing = false;
+  let firstPlay = true;
+  const audio = new Audio("https://streamer.radio.co/s986435880/listen");
+  audio.preload = "none";
+
+  playBtn.addEventListener('click', () => {
+    if (!playing) {
+      // Start streaming immediately
+      audio.play().catch(err => console.error("Playback failed:", err));
+
+      // On first play, show spinner for 2.5 seconds
+      if (firstPlay) {
+        firstPlay = false;
+       playBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
+        setTimeout(() => {
+          playing = true;
+          playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        }, 2500);
+      } else {
+        playing = true;
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+      }
+
+    } else {
+      // Pause
+      audio.pause();
+      playing = false;
+      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+    }
+  });
+
+  // Reset icon when stream ends
+  audio.addEventListener('ended', () => {
+    playing = false;
+    playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+  });
+}
 
       });
     }
@@ -4537,38 +4570,61 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script>
     const streamUrl = "https://streamer.radio.co/s986435880/listen";
-  const audio = new Audio(streamUrl);
-   audio.preload = "none"; 
-  let playing = false;
+const audio = new Audio(streamUrl);
+audio.preload = "none";
+let playing = false;
+let firstPlay = true;
 
-  // Select all play buttons
-  const playButtons = document.querySelectorAll('.play-btn');
+// Select all play buttons
+const playButtons = document.querySelectorAll('.play-btn');
 
-  // Function to update all buttons' icons
-   function updateButtons() {
-    playButtons.forEach(btn => {
-      btn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-    });
-  }
-
-  // Add click event to each button
+// Function to update all buttons' icons
+function updateButtons(iconHtml) {
   playButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!playing) {
-        audio.play().catch(err => console.error("Playback failed:", err));
-      } else {
-        audio.pause();
-      }
-      playing = !playing;
-      updateButtons();
-    });
+    btn.innerHTML = iconHtml;
   });
+}
 
-  // Sync buttons if audio ends
-  audio.addEventListener('ended', () => {
-    playing = false;
-    updateButtons();
+// Default icon setup
+updateButtons('<i class="fa-solid fa-play"></i>');
+
+// Add click event to each button
+playButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!playing) {
+      // Start audio immediately
+      audio.play().catch(err => console.error("Playback failed:", err));
+      
+      // On first play, show spinner for 2.5s before pause icon
+      if (firstPlay) {
+        firstPlay = false;
+        updateButtons('<i class="fa-solid fa-spinner fa-spin"></i>');
+        setTimeout(() => {
+          playing = true;
+          updateButtons('<i class="fa-solid fa-pause"></i>');
+        }, 2500);
+      } else {
+        playing = true;
+        updateButtons('<i class="fa-solid fa-pause"></i>');
+      }
+
+    } else {
+      // Pause the audio
+      audio.pause();
+      playing = false;
+      updateButtons('<i class="fa-solid fa-play"></i>');
+    }
   });
+});
+
+// Sync buttons if audio ends
+audio.addEventListener('ended', () => {
+  playing = false;
+  updateButtons('<i class="fa-solid fa-play"></i>');
+});
+
+  
+  
 </script>
 
 
