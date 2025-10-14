@@ -4393,17 +4393,65 @@ function resetAutoPlay() {
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const banners = document.querySelectorAll('.pill-banner');
+  const streamUrl = "https://streamer.radio.co/s986435880/listen";
+  const audio = new Audio(streamUrl);
+  audio.preload = "none";
 
+  let playing = false;
+  let firstPlay = true;
+
+  // Select all play buttons (both banners)
+  const playButtons = document.querySelectorAll('.play-btn');
+
+  // Function to update all buttons' icons at once
+  function updateButtons(iconHtml) {
+    playButtons.forEach(btn => {
+      btn.innerHTML = iconHtml;
+    });
+  }
+
+  // Initial icon
+  updateButtons('<i class="fa-solid fa-play"></i>');
+
+  // Add click event to all play buttons
+  playButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!playing) {
+        // Start streaming immediately
+        audio.play().catch(err => console.error("Playback failed:", err));
+
+        // On first play, show spinner for 2.5 seconds
+        if (firstPlay) {
+          firstPlay = false;
+          updateButtons('<i class="fa-solid fa-spinner fa-spin"></i>');
+          setTimeout(() => {
+            if (playing) {
+              updateButtons('<i class="fa-solid fa-pause"></i>');
+            }
+          }, 2500);
+        } else {
+          updateButtons('<i class="fa-solid fa-pause"></i>');
+        }
+
+        playing = true;
+
+      } else {
+        // Pause audio
+        audio.pause();
+        playing = false;
+        updateButtons('<i class="fa-solid fa-play"></i>');
+      }
+    });
+  });
+
+  // Reset icons when stream ends
+  audio.addEventListener('ended', () => {
+    playing = false;
+    updateButtons('<i class="fa-solid fa-play"></i>');
+  });
+
+  // Optional: Scroll shrink effect (from your original code)
   banners.forEach(banner => {
-    const descriptionEl = banner.querySelector('.pill-description');
-    const toggleBtn = banner.querySelector('.show-more');
-    const playBtn = banner.querySelector('.play-btn');
-
-   
-
-   
-
-    // Scroll shrink effect
     let lastScrollTop = 0;
     window.addEventListener('scroll', () => {
       const st = window.scrollY || document.documentElement.scrollTop;
@@ -4414,54 +4462,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       lastScrollTop = st <= 0 ? 0 : st;
     });
-
-    // Play/Pause toggle
-    if (playBtn) {
-      let playing = false;
-      playBtn.addEventListener('click', () => {
-        playing = !playing;
-      playBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-
-      });
-    }
   });
 });
 </script>
-<script>
-    const streamUrl = "https://streamer.radio.co/s986435880/listen";
-  const audio = new Audio(streamUrl);
- audio.preload = "none"; 
-  let playing = false;
 
-  // Select all play buttons
-  const playButtons = document.querySelectorAll('.play-btn');
-
-  // Function to update all buttons' icons
-   function updateButtons() {
-    playButtons.forEach(btn => {
-      btn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-    });
-  }
-
-  // Add click event to each button
-  playButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!playing) {
-        audio.play().catch(err => console.error("Playback failed:", err));
-      } else {
-        audio.pause();
-      }
-      playing = !playing;
-      updateButtons();
-    });
-  });
-
-  // Sync buttons if audio ends
-  audio.addEventListener('ended', () => {
-    playing = false;
-    updateButtons();
-  });
-</script>
 
 
 
