@@ -4923,14 +4923,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const banners = document.querySelectorAll('.pill-banner');
 
   banners.forEach(banner => {
-    const descriptionEl = banner.querySelector('.pill-description');
-    const toggleBtn = banner.querySelector('.show-more');
-    const playBtn = banner.querySelector('.play-btn');
-
-   
-
-   
-
     // Scroll shrink effect
     let lastScrollTop = 0;
     window.addEventListener('scroll', () => {
@@ -4942,49 +4934,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       lastScrollTop = st <= 0 ? 0 : st;
     });
-
-    // Play/Pause toggle
-   if (playBtn) {
-  let playing = false;
-  let firstPlay = true;
-  const audio = new Audio("https://streamer.radio.co/s986435880/listen");
-  audio.preload = "none";
-
-  playBtn.addEventListener('click', () => {
-    if (!playing) {
-      // Start streaming immediately
-      audio.play().catch(err => console.error("Playback failed:", err));
-
-      // On first play, show spinner for 2.5 seconds
-      if (firstPlay) {
-        firstPlay = false;
-       playBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
-        setTimeout(() => {
-          playing = true;
-          playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        }, 2500);
-      } else {
-        playing = true;
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-      }
-
-    } else {
-      // Pause
-      audio.pause();
-      playing = false;
-      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-    }
-  });
-
-  // Reset icon when stream ends
-  audio.addEventListener('ended', () => {
-    playing = false;
-    playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-  });
-}
-
-      });
-    }
   });
 });
 </script>
