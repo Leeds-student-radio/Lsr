@@ -3205,7 +3205,8 @@ margin-top: -16px;
   </div>
 </div>
 
-<audio id="alt-audio" src="https://s2.radio.co/seb5cdba5b/listen"></audio>
+<!-- Fixed Code -->
+<audio id="alt-audio" src="https://s2.radio.co/seb5cdba5b/listen" preload="none"></audio>
 
 <script>
   const audioPPP = document.getElementById('alt-audio');
@@ -4429,6 +4430,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     const streamUrl = "https://streamer.radio.co/s986435880/listen";
   const audio = new Audio(streamUrl);
+ audio.preload = "none"; 
   let playing = false;
 
   // Select all play buttons
