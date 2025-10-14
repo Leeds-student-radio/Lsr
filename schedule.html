@@ -4538,6 +4538,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script>
     const streamUrl = "https://streamer.radio.co/s986435880/listen";
   const audio = new Audio(streamUrl);
+   audio.preload = "none"; 
   let playing = false;
 
   // Select all play buttons
