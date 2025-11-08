@@ -3003,7 +3003,7 @@ display:none;
   </div>
    </div>
     
- <script>
+<script>
   const defaultCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv';
 
   const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -3019,19 +3019,19 @@ display:none;
   }
 
  function getCurrentWeekType() {
-  const now = new Date();
-  const year = now.getFullYear();
+   const now = new Date();
+   const year = now.getFullYear();
 
-  // Define the first "Week A" start date manually or find the first Monday
-  const start = new Date(year, 0, 1);
-  const day = start.getDay(); // 0 = Sunday, 1 = Monday, ...
-  const diff = (day === 0 ? 1 : 8 - day); // days to next Monday
-  start.setDate(start.getDate() + diff - 7); // Move to Monday of the first week
+   // Define the first "Week A" start date manually or find the first Monday
+   const start = new Date(year, 0, 1);
+   const day = start.getDay(); // 0 = Sunday, 1 = Monday, ...
+   const diff = (day === 0 ? 1 : 8 - day); // days to next Monday
+   start.setDate(start.getDate() + diff - 7); // Move to Monday of the first week
 
-  const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-  const weekNum = Math.floor(daysSinceStart / 7);
+   const daysSinceStart = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+   const weekNum = Math.floor(daysSinceStart / 7);
 
-  return weekNum % 2 === 0 ? 'B' : 'A';
+   return weekNum % 2 === 0 ? 'B' : 'A';
 }
 
 
@@ -3063,7 +3063,7 @@ localStorage.setItem('activeWeek', activeWeek);
     updateWeekButtons(); 
     renderAll(); 
   }
-  
+ 
   function updateWeekButtons(){ 
     document.querySelectorAll('.week-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.week===activeWeek)); 
   }
@@ -3084,8 +3084,31 @@ localStorage.setItem('activeWeek', activeWeek);
     return h*60+m;
   }
 
+  // === NEW FUNCTION ===
+  // Calculates the duration of a show in hours
+  function getShowDurationInHours(show) {
+    if (!show.start_time || !show.end_time) {
+      return 1; // Default to 1 hour if data is missing
+    }
+    try {
+      let startMinutes = timeToMinutes(show.start_time);
+      let endMinutes = timeToMinutes(show.end_time);
+
+      // Handle shows crossing midnight (e.g., 23:00 - 01:00)
+      if (endMinutes <= startMinutes) {
+        endMinutes += 24 * 60; // Add 24 hours in minutes
+      }
+
+      const durationMinutes = endMinutes - startMinutes;
+      return durationMinutes / 60; // Return duration in hours (e.g., 1.5, 2)
+    } catch (e) {
+      console.error('Error parsing time for show:', show.title, e);
+      return 1; // Default to 1 hour on error
+    }
+  }
+  
   function isLive(show){
- const now = nowInLondon();
+  const now = nowInLondon();
 
     const dayName = getTodayName();
     if(normalizeDay(show.day_of_week) !== dayName) return false;
@@ -3116,23 +3139,23 @@ function createPopup(){
 
     popup.id = 'showPopup';
     popup.innerHTML = `
-     <div id="popupContent" style="
-       position: relative;
-       width: 95%;
-       max-width: 700px;
-       padding: 20px;
-       border-radius: 14px;
-       background: rgb(205, 50, 50);
-       color: whitesmoke;
-       text-align: center;
-       border: solid 2px black;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       max-height: 85vh; /* keep inside viewport */
-       overflow-y: auto; /* scroll inner content if too tall */
-     ">
-   
+      <div id="popupContent" style="
+        position: relative;
+        width: 95%;
+        max-width: 700px;
+        padding: 20px;
+        border-radius: 14px;
+        background: rgb(205, 50, 50);
+        color: whitesmoke;
+        text-align: center;
+        border: solid 2px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-height: 85vh; /* keep inside viewport */
+        overflow-y: auto; /* scroll inner content if too tall */
+      ">
+ 
 
 
   <button id="closePopup" style="
@@ -3149,11 +3172,11 @@ function createPopup(){
     max-height: 320px;
     max-width: 320px;
   ">
-   <div id="popupText" style="text-align: left;">
-    <h2 id="popupTitle" style="margin-top: 0; margin-bottom: 8px; color: whitesmoke;"></h2>
-    <p id="popupHosts" style="font-weight: 600; margin-top: 0; margin-bottom: 12px; color: whitesmoke;"></p>
-    <p id="popupDescription" style="white-space: pre-wrap; line-height: 1.4; color: whitesmoke;"></p>
-  </div>
+    <div id="popupText" style="text-align: left;">
+     <h2 id="popupTitle" style="margin-top: 0; margin-bottom: 8px; color: whitesmoke;"></h2>
+     <p id="popupHosts" style="font-weight: 600; margin-top: 0; margin-bottom: 12px; color: whitesmoke;"></p>
+     <p id="popupDescription" style="white-space: pre-wrap; line-height: 1.4; color: whitesmoke;"></p>
+   </div>
 </div>
     `;
     document.body.appendChild(popup);
@@ -3171,29 +3194,29 @@ function createPopup(){
   }
 
  function adjustPopupLayout() {
-  const popupContent = document.getElementById('popupContent');
-  const popupImage = document.getElementById('popupImage');
-  const popupText = document.getElementById('popupText');
+   const popupContent = document.getElementById('popupContent');
+   const popupImage = document.getElementById('popupImage');
+   const popupText = document.getElementById('popupText');
 
-  if (!popupContent || !popupImage || !popupText) return; // Avoid errors if popup not built yet
+   if (!popupContent || !popupImage || !popupText) return; // Avoid errors if popup not built yet
 
-  if (window.innerWidth >= 920) {
-    popupContent.style.display = 'flex';
-    popupContent.style.flexDirection = 'row';
-    popupContent.style.alignItems = 'flex-start';
-    popupContent.style.textAlign = 'left';
-    popupImage.style.marginBottom = '0';
-    popupImage.style.marginRight = '20px';
-    popupText.style.flex = '1';
-  } else {
-    popupContent.style.display = 'flex';
-    popupContent.style.flexDirection = 'column';
-    popupContent.style.alignItems = 'center';
-    popupContent.style.textAlign = 'center';
-    popupImage.style.marginBottom = '15px';
-    popupImage.style.marginRight = '0';
-    popupText.style.flex = 'unset';
-  }
+   if (window.innerWidth >= 920) {
+     popupContent.style.display = 'flex';
+     popupContent.style.flexDirection = 'row';
+     popupContent.style.alignItems = 'flex-start';
+     popupContent.style.textAlign = 'left';
+     popupImage.style.marginBottom = '0';
+     popupImage.style.marginRight = '20px';
+     popupText.style.flex = '1';
+   } else {
+     popupContent.style.display = 'flex';
+     popupContent.style.flexDirection = 'column';
+     popupContent.style.alignItems = 'center';
+     popupContent.style.textAlign = 'center';
+     popupImage.style.marginBottom = '15px';
+     popupImage.style.marginRight = '0';
+     popupText.style.flex = 'unset';
+   }
 }
 
 function showPopup(show) {
@@ -3214,41 +3237,104 @@ function showPopup(show) {
   popup.style.opacity = 1;
 }
 
+ // === MODIFIED FUNCTION ===
 function makeShowElement(show) {
   const el = document.createElement('div');
   el.className = 'show-card';
   el.style.position = 'relative';
 
-  // Apply background colour if defined
+  // --- Dynamic Height Calculation ---
+  const baseHeight = 70; // From .show-card { height: 70px; }
+  const gap = 6;       // From .show-card { margin-bottom: 6px; }
+  
+  const durationHours = getShowDurationInHours(show);
+  
+  const newHeight = (baseHeight * durationHours) + (gap * (durationHours - 1));
+  el.style.height = `${newHeight}px`;
+  // --- End of Dynamic Height ---
+
+  // Apply background colour
   if (show.colour && show.colour.trim() !== '') {
     el.style.background = show.colour;
   }
 
-  const thumb = document.createElement('img');
-  thumb.className = 'show-thumb';
-  thumb.src = show.cover_image_url;
-  thumb.alt = show.title;
-  thumb.onerror = () => {
-    thumb.remove(); // remove broken image
-    el.style.background = show.colour || '#b33'; // fallback colour if any
-  };
+  // === NEW: Single check for valid title ===
+  const hasTitle = (show.title && show.title.trim() !== '');
 
-  const body = document.createElement('div');
-  body.className = 'show-body';
-  body.innerHTML = `
-    <div class='show-title'>${show.title}</div>
-    <div class='show-meta'>
-      <span class='time-pill' style='background:${show.colour || '#b33'}'>
-        ${show.start_time}—${show.end_time}
-      </span> 
-    </div>
-  `;
+  // === Logic to build different layouts ===
+  if (durationHours >= 1.5) { 
+    el.classList.add('show-card-long');
 
-  el.append(thumb, body);
-  el.onclick = (e) => {
-    e.stopPropagation();
-    showPopup(show);
-  };
+    // --- Build LONG SHOW layout (Title, Image, Time) ---
+    const title = document.createElement('div');
+    title.className = 'show-title';
+    title.textContent = hasTitle ? show.title : '[No Title]';
+
+    const thumb = document.createElement('img');
+    thumb.className = 'show-thumb';
+    thumb.src = show.cover_image_url;
+    thumb.alt = show.title || 'Show image';
+    thumb.onerror = () => {
+      thumb.remove();
+      el.style.background = show.colour || '#b33';
+    };
+
+    const meta = document.createElement('div');
+    meta.className = 'show-meta';
+    
+    // MODIFIED: Only add time if title exists
+    if (hasTitle) {
+      meta.innerHTML = `
+        <span class='time-pill' style='background:${show.colour || '#b33'}'>
+          ${show.start_time}—${show.end_time}
+        </span>
+      `;
+    }
+    // If no title, meta.innerHTML remains empty
+    
+    el.append(title, thumb, meta);
+
+  } else {
+    // --- Build REGULAR SHOW layout (Image, Body) ---
+    const thumb = document.createElement('img');
+    thumb.className = 'show-thumb';
+    thumb.src = show.cover_image_url;
+    thumb.alt = show.title || 'Show image';
+    thumb.onerror = () => {
+      thumb.remove();
+      el.style.background = show.colour || '#b33';
+    };
+
+    const body = document.createElement('div');
+    body.className = 'show-body';
+    
+    // MODIFIED: Use ternary operator to show time only if title exists
+    body.innerHTML = `
+      <div class='show-title'>${hasTitle ? show.title : ''}</div>
+      <div class='show-meta'>
+        ${hasTitle ? 
+          `<span class='time-pill' style='background:${show.colour || '#b33'}'>
+            ${show.start_time}—${show.end_time}
+          </span>` : 
+          '' // Otherwise, show nothing
+        }
+      </div>
+    `;
+    
+    el.append(thumb, body);
+  }
+
+  // === Common logic ---
+  // Only make the card clickable if it has a valid title
+  if (hasTitle) {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      showPopup(show);
+    };
+  } else {
+    // Add a class to style non-clickable shows
+    el.classList.add('non-clickable');
+  }
 
   return el;
 }
@@ -3313,7 +3399,7 @@ function highlightLiveShows(){
       const header = document.createElement('div');
       header.className = 'day-header';
       if(day === today) header.classList.add('today');
-      header.innerHTML = `<div>${day}</div><div class='day-sub'>${byDay[day].length} shows</div>`;
+      header.innerHTML = `<div>${day}</div>`;
       col.appendChild(header);
       if(!byDay[day].length) col.innerHTML+='<div class="muted">No shows</div>';
       byDay[day].forEach(s=>col.appendChild(makeShowElement(s)));
@@ -3338,7 +3424,7 @@ function highlightLiveShows(){
     const header = document.createElement('div');
     header.className = 'day-header';
     if(day === today) todayIndex = i;
-    header.innerHTML = `<div>${day}</div><div class='day-sub'>${byDay[day].length} shows</div>`;
+    header.innerHTML = `<div>${day}</div>`;
     col.appendChild(header);
     byDay[day].forEach(s => col.appendChild(makeShowElement(s)));
     scroller.appendChild(col);
@@ -3397,23 +3483,30 @@ fetchCSV(defaultCsvUrl);
 
 
 
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes pulse {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.7; }
+const style = document.createElement('style');
+  style.textContent = `
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .day-header.today {
+     
+    }
+    .week-toggle button.active {
+      background: gold;
+      color: black;
+      font-weight: bold;
+    }
+    
+    /* --- ADDED RULE --- */
+    @media (max-width: 900px) {
+      .show-card.non-clickable {
+        display: none;
+      }
     }
-    .day-header.today {
-     
-    }
-    .week-toggle button.active {
-      background: gold;
-      color: black;
-      font-weight: bold;
-    }
-  `;
-  document.head.appendChild(style);
+  `;
+  document.head.appendChild(style);
   
   
 </script>
@@ -3423,6 +3516,7 @@ fetchCSV(defaultCsvUrl);
 
 
 <style>
+ 
 .footer {
   position: relative; /* needed for ::before to be positioned correctly */
   background: transparent !important;
@@ -3472,7 +3566,48 @@ padding-right: 12px;
    padding-right:32px;
 }
 }
-
+/* --- NEW CSS for 2-Hour Show Layout --- */
+    
+    .show-card-long {
+      /* Override default row layout */
+      flex-direction: column;   /* Stack items vertically */
+      justify-content: center; /* Pushes title to top, meta to bottom */
+      align-items: start;     
+      
+      /* Adjust padding and gap for vertical layout */
+   
+      gap: 0; 
+      text-align: left;
+    }
+    
+    .show-card-long .show-title {
+      /* Override defaults */
+   
+      width: 100%;
+       padding-bottom:4px;
+      margin: 0px 4px; 
+     
+      /* Sits at the top due to flex space-between */
+    }
+    
+    .show-card-long .show-thumb {
+      /* Override default thumb size and flex */
+      width: 70px; /* Make image larger */
+      height: auto;
+       padding-bottom:4px;
+     
+    
+      margin: 0px 4px; /* Add vertical space around image */
+    }
+    
+    .show-card-long .show-meta {
+      /* Override defaults */
+  
+    
+     
+    }
+    
+    /* --- End of New CSS --- */
 </style>
 
 
