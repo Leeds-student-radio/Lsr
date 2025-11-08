@@ -3193,426 +3193,444 @@ margin-top: -16px;
 
 <!-- Alternate Player -->
 <div class="player alt-player"  >
-  <style>
- .chat-container {
-            width: 100%;
-           
-          
-          height:100%;
-        }
-
-        /* --- Chat Header --- */
-        .chat-header {
-       
-            padding: 0.5rem; /* p-4 */
-             padding-top:0px;
-            border-bottom: 2px solid black; /* border-b border-gray-200 */
-        }
-        .chat-title {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 700; /* font-bold */
-            text-align: center;
-            color: whitesmoke; /* text-gray-800 */
-        }
-
-        /* --- Chat Messages Area --- */
-        #chat-messages {
-            padding: 1rem; /* p-4 */
-           height:350px;
-            max-height:800px;
-            min-height:200px;
-            overflow-y: auto;
+  <head>
+    <style>
+     .chat-container {
+             width: 100%;
             
-        }
-        
-        @media (max-width:438px)  {
+           
+           height:100%;
+         }
+
+         /* --- Chat Header --- */
+         .chat-header {
+         
+             padding: 0.5rem; /* p-4 */
+               padding-top:0px;
+             border-bottom: 2px solid black; /* border-b border-gray-200 */
+         }
+         .chat-title {
+             font-size: 1.25rem; /* text-xl */
+             font-weight: 700; /* font-bold */
+             text-align: center;
+             color: whitesmoke; /* text-gray-800 */
+         }
+
+         /* --- Chat Messages Area --- */
          #chat-messages {
-           
-            height: 300px;
-           
-            
-        }
+             padding: 1rem; /* p-4 */
+            height:350px;
+             max-height:800px;
+             min-height:200px;
+             overflow-y: auto;
+             
          }
          
+         @media (max-width:438px)  {
+           #chat-messages {
+            
+             height: 300px;
+            
+             
+         }
+           }
+         
            @media (min-width:768px)  {
-         #chat-messages {
-           
-            height: 300px;
-           
+           #chat-messages {
             
-        }
+             height: 300px;
+            
+             
          }
-        
-            @media (min-width:1000px)  {
-         #chat-messages {
-           
-            height: 200px;
-           
+           }
+         
+           @media (min-width:1000px)  {
+           #chat-messages {
             
-        }
+             height: 200px;
+            
+             
          }
-        /* Simulates space-y-3 */
-        #chat-messages > * + * {
-            margin-top: 0.75rem;
-        }
-        
-        /* Custom scrollbar (from original) */
-        #chat-messages::-webkit-scrollbar {
-            width: 5px;
-        }
-        #chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+           }
+         /* Simulates space-y-3 */
+         #chat-messages > * + * {
+             margin-top: 0.75rem;
+         }
+         
+         /* Custom scrollbar (from original) */
+         #chat-messages::-webkit-scrollbar {
+             width: 5px;
+         }
+         #chat-messages::-webkit-scrollbar-track {
+             background: #f1f1f1;
+             border-radius: 10px;
+             
+         }
+         #chat-messages::-webkit-scrollbar-thumb {
+             background: #c5c5c5;
+             border-radius: 10px;
+         }
+         #chat-messages::-webkit-scrollbar-thumb:hover {
+             background: #a8a8a8;
+         }
+
+         /* --- Loading Spinner --- */
+         #loading-spinner {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             height: 100%;
+         }
+         .spinner-svg {
+             animation: spin 1s linear infinite;
+             height: 2rem; /* h-8 */
+             width: 2rem; /* w-8 */
+             color: #3b82f6; /* text-blue-500 */
+         }
+         .spinner-circle {
+             opacity: 0.25;
+         }
+         .spinner-path {
+             opacity: 0.75;
+         }
+
+         /* --- Input Area --- */
+         .chat-input-area {
+             padding: 0.5rem; /* p-4 */
+             border-top: 2px solid black; /* border-t border-gray-200 */
+             
+         }
+
+         #chat-form {
+             display: flex;
+             align-items: center;
+         }
+         /* Simulates space-x-2 */
+         #chat-form > * + * {
+             margin-left: 0.3rem;
+         }
+
+         /* Common input styles */
+         .chat-input {
+             font-size: 0.775rem; /* text-sm */
+             padding: 0.4rem; /* p-2 */
+             border: 1px solid #d1d5db; /* border-gray-300 */
+             border-radius: 0.5rem; /* rounded-lg */
+             background: rgb(243 180 180);
+             color:white;
+         }
+         .chat-input:focus {
+             outline: none;
+             /* Replicates focus:ring-2 focus:ring-blue-500 */
+             box-shadow: 0 0 0 2px #3b82f6;
+         }
+         
+         #display-name {
+             flex-shrink: 1; /* flex-shrink */
+             
+             max-width:120px;
+             min-width:50px;
+         }
+         #message-input {
+             flex-grow: 1; /* flex-grow */
+               min-width:180px;
+         }
+
+         .send-button {
+             flex-shrink: 0;
+             font-size: 0.875rem; /* text-sm */
+             font-weight: 600; /* font-semibold */
+             color: white; /* text-blue-500 */
+             border-radius: 0.5rem; /* rounded-lg */
+             padding: 0.5rem; /* p-2 */
+             background: none;
+             border: solid white;
+             cursor: pointer;
+         }
+         
+
+         /* --- Dynamically Added Message Styles --- */
+         .message-entry {
+             display: flex;
+             align-items: flex-start;
+             animation: fade-in 0.3s ease-out;
+         }
+         /* Simulates space-x-2 for message icon + text */
+         .message-entry > * + * {
+             margin-left: 0.5rem;
+         }
+
+         .message-icon {
+             display:none;
+             width: 0rem; /* w-8 */
+             height: 0rem; /* h-8 */
             
-        }
-        #chat-messages::-webkit-scrollbar-thumb {
-            background: #c5c5c5;
-            border-radius: 10px;
-        }
-        #chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-
-        /* --- Loading Spinner --- */
-        #loading-spinner {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-        }
-        .spinner-svg {
-            animation: spin 1s linear infinite;
-            height: 2rem; /* h-8 */
-            width: 2rem; /* w-8 */
-            color: #3b82f6; /* text-blue-500 */
-        }
-        .spinner-circle {
-            opacity: 0.25;
-        }
-        .spinner-path {
-            opacity: 0.75;
-        }
-
-        /* --- Input Area --- */
-        .chat-input-area {
-            padding: 0.5rem; /* p-4 */
-            border-top: 2px solid black; /* border-t border-gray-200 */
             
+             font-size: 0rem; /* text-sm */
+         }
+         .message-text-container {
+             flex-grow: 1;
+         }
+         .message-text {
+             font-size: 0.875rem; /* text-sm */
+             color: whitesmoke; /* text-gray-700 */
+             /* Added for better line-breaking */
+             word-break: break-word;
+         }
+         .message-author {
+           font-size: 0.975rem; 
+             font-weight: 700; /* font-semibold */
+            
+             color: white; /* text-gray-900 */
+         }
+
+        /* --- NEW: Timestamp Style --- */
+        .message-timestamp {
+            font-size: 0.8rem; /* Smaller */
+            color: #c7c7c7; /* Lighter/faded color */
+            margin-right: 0.35rem; /* space before name */
         }
 
-        #chat-form {
-            display: flex;
-            align-items: center;
-        }
-        /* Simulates space-x-2 */
-        #chat-form > * + * {
-            margin-left: 0.3rem;
-        }
-
-        /* Common input styles */
-        .chat-input {
-            font-size: 0.775rem; /* text-sm */
-            padding: 0.4rem; /* p-2 */
-            border: 1px solid #d1d5db; /* border-gray-300 */
-            border-radius: 0.5rem; /* rounded-lg */
-            background: rgb(243 180 180);
-        }
-        .chat-input:focus {
-            outline: none;
-            /* Replicates focus:ring-2 focus:ring-blue-500 */
-            box-shadow: 0 0 0 2px #3b82f6;
-        }
-        
-        #display-name {
-            flex-shrink: 1; /* flex-shrink */
-            width: 3rem; /* w-24 */
-            max-width:120px;
-        }
-        #message-input {
-            flex-grow: 1; /* flex-grow */
-        }
-
-        .send-button {
-            flex-shrink: 0;
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 600; /* font-semibold */
-            color: white; /* text-blue-500 */
-            border-radius: 0.5rem; /* rounded-lg */
-            padding: 0.5rem; /* p-2 */
-            background: none;
-            border: solid white;
-            cursor: pointer;
-        }
-       
-
-        /* --- Dynamically Added Message Styles --- */
-        .message-entry {
-            display: flex;
-            align-items: flex-start;
-            animation: fade-in 0.3s ease-out;
-        }
-        /* Simulates space-x-2 for message icon + text */
-        .message-entry > * + * {
-            margin-left: 0.5rem;
-        }
-
-        .message-icon {
-            flex-shrink: 0;
-            width: 2rem; /* w-8 */
-            height: 2rem; /* h-8 */
-            border-radius: 9999px; /* rounded-full */
-            background-color: #d1d5db; /* bg-gray-300 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280; /* text-gray-500 */
-            font-weight: 600; /* font-semibold */
-            font-size: 0.875rem; /* text-sm */
-        }
-        .message-text-container {
-            flex-grow: 1;
-        }
-        .message-text {
-            font-size: 0.875rem; /* text-sm */
-            color: whitesmoke; /* text-gray-700 */
-            /* Added for better line-breaking */
-            word-break: break-word;
-        }
-        .message-author {
-         font-size: 0.975rem; 
-            font-weight: 700; /* font-semibold */
-           
-            color: white; /* text-gray-900 */
-        }
-
-        /* --- Status/Notice Text Styles --- */
-        .chat-notice {
-            text-align: center;
-            color: #6b7280; /* text-gray-500 */
-            font-size: 0.875rem; /* text-sm */
-        }
-        .chat-error {
-            text-align: center;
-            color: #ef4444; /* text-red-500 */
-            font-size: 0.875rem; /* text-sm */
-        }
+         /* --- Status/Notice Text Styles --- */
+         .chat-notice {
+             text-align: center;
+             color: #6b7280; /* text-gray-500 */
+             font-size: 0.875rem; /* text-sm */
+         }
+         .chat-error {
+             text-align: center;
+             color: #ef4444; /* text-red-500 */
+             font-size: 0.875rem; /* text-sm */
+         }
 
     </style>
 </head>
 <body class=""> <div class="chat-container">
-        <div class="chat-header">
-            <h1 class="chat-title">Live Chat</h1>
-        </div>
+     <div class="chat-header">
+         <h1 class="chat-title">Live Chat</h1>
+     </div>
 
-        <div id="chat-messages">
-            <div id="loading-spinner">
-                <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </div>
-        </div>
+     <div id="chat-messages">
+         <div id="loading-spinner">
+             <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                 <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                 <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+             </svg>
+         </div>
+     </div>
 
-        <div class="chat-input-area">
-            <form id="chat-form">
-                <input type="text" id="display-name" placeholder="Name" class="chat-input">
-                <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
-                <button type="submit" class="send-button">
-                    Send
-                </button>
-            </form>
-        </div>
-    </div>
+     <div class="chat-input-area">
+         <form id="chat-form">
+             <input type="text" id="display-name" placeholder="Name" class="chat-input">
+             <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
+             <button type="submit" class="send-button">
+                 Send
+             </button>
+         </form>
+     </div>
+ </div>
 
-   <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInAnonymously, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc, 
-            onSnapshot, 
-            query, 
-            orderBy, 
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script type="module">
+         // Import Firebase modules
+         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+         import { 
+             getAuth, 
+             signInAnonymously, 
+             onAuthStateChanged 
+         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+         import { 
+             getFirestore, 
+             collection, 
+             addDoc, 
+             onSnapshot, 
+             query, 
+             orderBy, 
+             serverTimestamp
+         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase Configuration ---
-        const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
-        
-        // --- Global Variables ---
-        let db, auth, userId;
-        let messagesCollection; 
+         // --- Firebase Configuration ---
+         const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
+         
+         // --- Global Variables ---
+         let db, auth, userId;
+         let messagesCollection; 
 
-        // --- UI Elements ---
-        const chatMessages = document.getElementById('chat-messages');
-        const chatForm = document.getElementById('chat-form');
-        const displayNameInput = document.getElementById('display-name');
-        const messageInput = document.getElementById('message-input');
-        const loadingSpinner = document.getElementById('loading-spinner');
+         // --- UI Elements ---
+         const chatMessages = document.getElementById('chat-messages');
+         const chatForm = document.getElementById('chat-form');
+         const displayNameInput = document.getElementById('display-name');
+         const messageInput = document.getElementById('message-input');
+         const loadingSpinner = document.getElementById('loading-spinner');
 
-        // --- Functions ---
+         // --- Functions ---
 
-        /**
-         * Renders a single message to the chat window.
-         */
-        function displayMessage(messageData) {
-            const name = messageData.name || 'Anonymous';
-            const text = messageData.text || '';
+         /**
+          * Renders a single message to the chat window.
+          */
+         function displayMessage(messageData) {
+             const name = messageData.name || 'Anonymous';
+             const text = messageData.text || '';
+             const createdAt = messageData.createdAt; // Get the Firebase Timestamp
 
-            const msgDiv = document.createElement('div');
-            // MODIFIED: Use new semantic class
-            msgDiv.className = 'message-entry';
+             // --- NEW: Format Timestamp ---
+             let timestampString = '';
+             if (createdAt && typeof createdAt.toDate === 'function') {
+                 const date = createdAt.toDate(); // Convert Firebase Timestamp to JS Date
+                 const hours = String(date.getHours()).padStart(2, '0');
+                 const minutes = String(date.getMinutes()).padStart(2, '0');
+                 timestampString = `[${hours}:${minutes}]`;
+             }
+             // --- END: New Code ---
 
-            const iconDiv = document.createElement('div');
-            // MODIFIED: Use new semantic class
-            iconDiv.className = 'message-icon';
-            iconDiv.textContent = name.charAt(0).toUpperCase() || 'A';
-            
-            const textDiv = document.createElement('div');
-            // MODIFIED: Use new semantic class
-            textDiv.className = 'message-text-container';
-            
-            const p = document.createElement('p');
-            // MODIFIED: Use new semantic class
-            p.className = 'message-text';
-            
-            const strong = document.createElement('strong');
-            // MODIFIED: Use new semantic class
-            strong.className = 'message-author';
-            strong.textContent = name;
-            
-            p.appendChild(strong);
-            p.appendChild(document.createTextNode(` ${text}`));
+             const msgDiv = document.createElement('div');
+             msgDiv.className = 'message-entry';
 
-            textDiv.appendChild(p);
-            msgDiv.appendChild(iconDiv);
-            msgDiv.appendChild(textDiv);
+             const iconDiv = document.createElement('div');
+             iconDiv.className = 'message-icon';
+             iconDiv.textContent = name.charAt(0).toUpperCase() || 'A';
+             
+             const textDiv = document.createElement('div');
+             textDiv.className = 'message-text-container';
+             
+             const p = document.createElement('p');
+             p.className = 'message-text';
+             
+             const strong = document.createElement('strong');
+             strong.className = 'message-author';
+             strong.textContent = name;
 
-            chatMessages.appendChild(msgDiv);
-        }
+             // --- NEW: Create Timestamp Span ---
+             const timeSpan = document.createElement('span');
+             timeSpan.className = 'message-timestamp';
+             timeSpan.textContent = timestampString;
+             
+             // --- MODIFIED: Append nodes in new order ---
+             if (timestampString) {
+                p.appendChild(timeSpan); // Add [HH:MM]
+             }
+             p.appendChild(strong); // Add Name
+             p.appendChild(document.createTextNode(`: ${text}`)); // Add : Text
 
-        /**
-         * Scrolls the chat window to the bottom.
-         */
-        function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+             textDiv.appendChild(p);
+             msgDiv.appendChild(iconDiv);
+             msgDiv.appendChild(textDiv);
 
-        /**
-         * Handles the chat form submission.
-         */
-        async function handleSendMessage(e) {
-            e.preventDefault();
-            const messageText = messageInput.value.trim();
-            const displayName = displayNameInput.value.trim() || 'Anonymous';
+             chatMessages.appendChild(msgDiv);
+         }
 
-            if (messageText === '' || !messagesCollection) {
-                return;
-            }
+         /**
+          * Scrolls the chat window to the bottom.
+          */
+         function scrollToBottom() {
+             chatMessages.scrollTop = chatMessages.scrollHeight;
+         }
 
-            try {
-                await addDoc(messagesCollection, {
-                    name: displayName,
-                    text: messageText,
-                    createdAt: serverTimestamp()
-                });
-                messageInput.value = '';
-            } catch (error) {
-                console.error("Error sending message: ", error);
-            }
-        }
+         /**
+          * Handles the chat form submission.
+          */
+         async function handleSendMessage(e) {
+             e.preventDefault();
+             const messageText = messageInput.value.trim();
+             const displayName = displayNameInput.value.trim() || 'Anonymous';
 
-        /**
-         * Sets up the real-time listener for chat messages.
-         */
-        function setupMessageListener() {
-            if (!db) {
-                return;
-            }
+             if (messageText === '' || !messagesCollection) {
+                 return;
+             }
 
-            console.log("Setting up message listener...");
-            
-            messagesCollection = collection(db, "messages");
-            const q = query(messagesCollection, orderBy("createdAt", "asc"));
+             try {
+                 await addDoc(messagesCollection, {
+                     name: displayName,
+                     text: messageText,
+                     createdAt: serverTimestamp()
+                 });
+                 messageInput.value = '';
+             } catch (error) {
+                 console.error("Error sending message: ", error);
+             }
+         }
 
-            onSnapshot(q, (querySnapshot) => {
-                if (loadingSpinner) {
-                    loadingSpinner.style.display = 'none';
-                }
+         /**
+          * Sets up the real-time listener for chat messages.
+          */
+         function setupMessageListener() {
+             if (!db) {
+                 return;
+             }
 
-                chatMessages.innerHTML = ''; // Clear existing messages
+             console.log("Setting up message listener...");
+             
+             messagesCollection = collection(db, "messages");
+             const q = query(messagesCollection, orderBy("createdAt", "asc"));
 
-                if (querySnapshot.empty) {
-                    // MODIFIED: Use new semantic class
-                    chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
-                    return;
-                }
+             onSnapshot(q, (querySnapshot) => {
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                 }
 
-                querySnapshot.forEach((doc) => {
-                    displayMessage(doc.data());
-                });
+                 chatMessages.innerHTML = ''; // Clear existing messages
 
-                scrollToBottom();
+                 if (querySnapshot.empty) {
+                     chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
+                     return;
+                 }
 
-            }, (error) => {
-                console.error("Error getting messages: ", error);
-                if (loadingSpinner) {
-                    loadingSpinner.style.display = 'none';
-                }
-                // MODIFIED: Use new semantic class
-                chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
-            });
-        }
-        
-        /**
-         * Initializes the Firebase app and services.
-         */
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                
-                console.log("Firebase initialized. Waiting for auth...");
+                 querySnapshot.forEach((doc) => {
+                     displayMessage(doc.data());
+                 });
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        console.log("User is authenticated:", user.uid);
-                        userId = user.uid;
-                        setupMessageListener();
-                    } else {
-                        console.log("User is signed out.");
-                        userId = null;
-                    }
-                });
+                 scrollToBottom();
+
+             }, (error) => {
+                 console.error("Error getting messages: ", error);
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                 }
+                 chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
+             });
+         }
+         
+         /**
+          * Initializes the Firebase app and services.
+          */
+         async function initializeFirebase() {
+             try {
+                 const app = initializeApp(firebaseConfig);
+                 db = getFirestore(app);
+                 auth = getAuth(app);
+                 
+                 console.log("Firebase initialized. Waiting for auth...");
+
+                 onAuthStateChanged(auth, (user) => {
+                     if (user) {
+                         console.log("User is authenticated:", user.uid);
+                         userId = user.uid;
+                         setupMessageListener();
+                     } else {
+                         console.log("User is signed out.");
+                         userId = null;
+                     }
+                 });
  
-                console.log("Signing in anonymously...");
-                await signInAnonymously(auth);
+                 console.log("Signing in anonymously...");
+                 await signInAnonymously(auth);
 
-            } catch (error) {
-                console.error("Firebase initialization failed:", error);
-                if (loadingSpinner) {
-                    loadingSpinner.style.display = 'none';
-                }
-                // MODIFIED: Use new semantic class
-                chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
-            }
-        }
+             } catch (error) {
+                 console.error("Firebase initialization failed:", error);
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                 }
+                 chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
+             }
+         }
 
-        // --- Event Listeners ---
-        chatForm.addEventListener('submit', handleSendMessage);
+         // --- Event Listeners ---
+         chatForm.addEventListener('submit', handleSendMessage);
 
-        // --- Start the App ---
-        initializeFirebase();
+         // --- Start the App ---
+         initializeFirebase();
 
-   </script>
-
+    </script>
+</body>
     
 
 
