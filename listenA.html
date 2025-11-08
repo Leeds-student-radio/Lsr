@@ -3298,12 +3298,14 @@ margin-top: -16px;
          .chat-input-area {
              padding: 0.5rem; /* p-4 */
              border-top: 2px solid black; /* border-t border-gray-200 */
+              color:black;
              
          }
 
          #chat-form {
              display: flex;
              align-items: center;
+             
          }
          /* Simulates space-x-2 */
          #chat-form > * + * {
@@ -3317,7 +3319,7 @@ margin-top: -16px;
              border: 1px solid #d1d5db; /* border-gray-300 */
              border-radius: 0.5rem; /* rounded-lg */
              background: rgb(243 180 180);
-             color:white;
+             color:black;
          }
          .chat-input:focus {
              outline: none;
@@ -3354,6 +3356,7 @@ margin-top: -16px;
              display: flex;
              align-items: flex-start;
              animation: fade-in 0.3s ease-out;
+             
          }
          /* Simulates space-x-2 for message icon + text */
          .message-entry > * + * {
@@ -3370,6 +3373,7 @@ margin-top: -16px;
          }
          .message-text-container {
              flex-grow: 1;
+             
          }
          .message-text {
              font-size: 0.875rem; /* text-sm */
@@ -3403,6 +3407,32 @@ margin-top: -16px;
              font-size: 0.875rem; /* text-sm */
          }
 
+
+/* --- Standard (Modern Browsers) --- */
+.chat-input::placeholder {
+  color: black;
+  font-style: italic;
+  opacity: 1; /* Ensures full opacity */
+}
+
+/* --- WebKit (Safari, Chrome, iOS) --- */
+.chat-input::-webkit-input-placeholder {
+  color: black;
+  font-style: italic;
+}
+
+/* --- Mozilla Firefox --- */
+.chat-input::-moz-placeholder {
+  color: black;
+  font-style: italic;
+  opacity: 1; /* Firefox has a default opacity, so we reset it */
+}
+
+/* --- Internet Explorer / Edge (Older) --- */
+.chat-input:-ms-input-placeholder {
+  color: black;
+  font-style: italic;
+}
     </style>
 </head>
 <body class=""> <div class="chat-container">
