@@ -3268,7 +3268,7 @@ function makeShowElement(show) {
     // --- Build LONG SHOW layout (Title, Image, Time) ---
     const title = document.createElement('div');
     title.className = 'show-title';
-    title.textContent = hasTitle ? show.title : '[No Title]';
+    title.textContent = hasTitle ? show.title : '';
 
     const thumb = document.createElement('img');
     thumb.className = 'show-thumb';
