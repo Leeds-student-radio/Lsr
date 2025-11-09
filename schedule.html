@@ -3888,34 +3888,46 @@ function normalizeRows(rows) {
 }
 
 function findCurrentShow(rows) {
- const now = nowInLondon();
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const weekType = getWeekTypeAB(now);
-  return rows.find(show => {
-    const dayOK = matchesDay(show.day_of_week, now);
-    if (!dayOK) return false;
-    const wt = (show.week_type || "").toUpperCase();
-    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
-    if (!weekOK) return false;
-    return withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
-  });
+  return rows.find(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+  	if (!dayOK) return false;
+
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+  	if (!weekOK) return false;
+
+    const inSlot = withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
+  	if (!inSlot) return false;
+
+    // **MODIFIED:** Only return true if all checks pass AND the title is not empty.
+  	// normalizeRows() ensures show.title is a trimmed string, so !!show.title
+  	// correctly checks for an empty string ("").
+  	return !!show.title;
+  });
 }
 
 function findNextShow(rows) {
- const now = nowInLondon();
+const now = nowInLondon();
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const weekType = getWeekTypeAB(now);
-  const candidates = rows.filter(show => {
-    const dayOK = matchesDay(show.day_of_week, now);
-    if (!dayOK) return false;
-    const wt = (show.week_type || "").toUpperCase();
-    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
-    if (!weekOK) return false;
-    return timeToMinutes(show.start_time) > nowMinutes;
-  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
-  return candidates[0] || null;
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+  const candidates = rows.filter(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+  	if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+  	if (!weekOK) return false;
+
+    // **MODIFIED:** Also ensure next shows have a title
+    if (!show.title) return false; 
+    
+    return timeToMinutes(show.start_time) > nowMinutes;
+  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
+  return candidates[0] || null;
 }
 
 /** ====== Description Toggle for Banner 1 ====== **/
