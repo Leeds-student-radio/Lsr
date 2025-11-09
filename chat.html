@@ -2171,18 +2171,17 @@ z-index: 1000;
 
 
 
-
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
-   
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+    
   
   const firebaseConfig = {
     apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
     authDomain: "lsrlivecount.firebaseapp.com",
     databaseURL: "https://lsrlivecount-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "lsrlivecount",
-     storageBucket: "lsrlivecount.firebasestorage.app",
+      storageBucket: "lsrlivecount.firebasestorage.app",
     messagingSenderId: "540310303767",
     appId: "1:540310303767:web:82125bd428eaee173c1852"
   };
@@ -2190,27 +2189,53 @@ import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // Persistent session ID across pages
-  const id = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
-  sessionStorage.setItem('liveId', id);
+  // --- ⬇️ ADD THIS LOGIC ⬇️ ---
 
-  const userRef = ref(db, 'active/' + id);
-  set(userRef, Date.now());
+  // 1. Define an array of page paths you want to exclude.
+  //    (Make sure to include the leading '/' and .html if it's there)
+  const excludedPages = [
+    '/chat.html',
+    '/awards.html',
 
-  // Optional: refresh timestamp every 30 seconds to show activity
-  setInterval(() => set(userRef, Date.now()), 30 * 1000);
+  ];
 
-  window.addEventListener("beforeunload", () => remove(userRef));
+  // 2. Get the current page's path
+  const currentPagePath = window.location.pathname;
 
+  // 3. Only run the "counting" code if the current page is NOT in the excluded list
+  if (!excludedPages.includes(currentPagePath)) {
+
+    // Persistent session ID across pages
+    const id = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
+    sessionStorage.setItem('liveId', id);
+
+    const userRef = ref(db, 'active/' + id);
+    set(userRef, Date.now());
+
+    // Optional: refresh timestamp every 30 seconds to show activity
+    setInterval(() => set(userRef, Date.now()), 30 * 1000);
+
+    window.addEventListener("beforeunload", () => remove(userRef));
+  
+  } // --- ⬆️ End of new 'if' block ⬆️ ---
+
+
+  // This part reads the count and displays it.
+  // It can stay outside the 'if' block if you still want to *see*
+  // the count on your admin/excluded pages.
   const activeRef = ref(db, 'active');
   onValue(activeRef, snap => {
     const data = snap.val() || {};
     const activeUsers = Object.values(data)
       .filter(ts => Date.now() - ts < 5 * 60 * 1000).length;
-    document.getElementById("live-count").textContent = activeUsers;
+    
+    // Added a check to prevent errors if the element doesn't exist on the page
+    const countElement = document.getElementById("live-count");
+    if (countElement) {
+      countElement.textContent = activeUsers;
+    }
   });
 </script>
- 
 <script>
 const menuBtn = document.getElementById("menuMOB");
   const fullscreenMenu = document.getElementById("fullscreenMenu");
