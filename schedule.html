@@ -3173,7 +3173,7 @@ function createPopup(){
     max-width: 320px;
   ">
     <div id="popupText" style="text-align: left;">
-     <h2 id="popupTitle" style="margin-top: 0; margin-bottom: 8px; color: whitesmoke;"></h2>
+     <h2 id="popupTitle" style="margin-top: 0; margin-bottom: 8px; color: whitesmoke; max-width: 260px;"></h2>
      <p id="popupHosts" style="font-weight: 600; margin-top: 0; margin-bottom: 12px; color: whitesmoke;"></p>
      <p id="popupDescription" style="white-space: pre-wrap; line-height: 1.4; color: whitesmoke;"></p>
    </div>
@@ -7103,6 +7103,13 @@ line-height:1.1rem;
  
      }
     }
+
+
+@media (min-width: 920px) {
+  #popupTitle {
+    max-width: 260px !important;
+  }
+}
     .top-row {
         display: flex;
         justify-content: space-between;
