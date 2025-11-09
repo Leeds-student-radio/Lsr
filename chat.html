@@ -3698,203 +3698,232 @@ section          }
  </div>
 
     <script type="module">
-         // Import Firebase modules
-         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-         import { 
-             getAuth, 
-             signInAnonymously, 
-             onAuthStateChanged 
-         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-         import { 
-             getFirestore, 
-             collection, 
-             addDoc, 
-             onSnapshot, 
-             query, 
-             orderBy, 
-             serverTimestamp
-         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            onSnapshot, 
+            query, 
+            orderBy, 
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-         // --- Firebase Configuration ---
-         const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
-         
-         // --- Global Variables ---
-         let db, auth, userId;
-         let messagesCollection; 
+        // --- Firebase Configuration ---
+        const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
+        
+        // --- Global Variables ---
+        let db, auth, userId;
+        let messagesCollection; 
+        let isInitialLoad = true; // <-- NEW: To prevent sound on first load
 
-         // --- UI Elements ---
-         const chatMessages = document.getElementById('chat-messages');
-         const chatForm = document.getElementById('chat-form');
-         const displayNameInput = document.getElementById('display-name');
-         const messageInput = document.getElementById('message-input');
-         const loadingSpinner = document.getElementById('loading-spinner');
+        // --- UI Elements ---
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const displayNameInput = document.getElementById('display-name');
+        const messageInput = document.getElementById('message-input');
+        const loadingSpinner = document.getElementById('loading-spinner');
 
-         // --- Functions ---
+        // --- NEW: Audio Element for NEW messages ---
+        const newMessageSound = new Audio('https://www.thisislsr.com/sharp-pop-328170.mp3');
+        newMessageSound.preload = 'auto';
+        // --- END: New Code ---
 
-         /**
-          * Renders a single message to the chat window.
-          */
-         function displayMessage(messageData) {
-             const name = messageData.name || 'Anonymous';
-             const text = messageData.text || '';
-             const createdAt = messageData.createdAt; // Get the Firebase Timestamp
+        // --- Functions ---
 
-             // --- NEW: Format Timestamp ---
-             let timestampString = '';
-             if (createdAt && typeof createdAt.toDate === 'function') {
-                 const date = createdAt.toDate(); // Convert Firebase Timestamp to JS Date
-                 const hours = String(date.getHours()).padStart(2, '0');
-                 const minutes = String(date.getMinutes()).padStart(2, '0');
-                 timestampString = `[${hours}:${minutes}]`;
-             }
-             // --- END: New Code ---
+        /**
+         * Renders a single message to the chat window.
+         */
+        function displayMessage(messageData) {
+            const name = messageData.name || 'Anonymous';
+            const text = messageData.text || '';
+            const createdAt = messageData.createdAt; 
 
-             const msgDiv = document.createElement('div');
-             msgDiv.className = 'message-entry';
+            let timestampString = '';
+            if (createdAt && typeof createdAt.toDate === 'function') {
+                const date = createdAt.toDate(); 
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                timestampString = `[${hours}:${minutes}]`;
+            }
 
-             const iconDiv = document.createElement('div');
-             iconDiv.className = 'message-icon';
-             iconDiv.textContent = name.charAt(0).toUpperCase() || 'A';
-             
-             const textDiv = document.createElement('div');
-             textDiv.className = 'message-text-container';
-             
-             const p = document.createElement('p');
-             p.className = 'message-text';
-             
-             const strong = document.createElement('strong');
-             strong.className = 'message-author';
-             strong.textContent = name;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message-entry';
 
-             // --- NEW: Create Timestamp Span ---
-             const timeSpan = document.createElement('span');
-             timeSpan.className = 'message-timestamp';
-             timeSpan.textContent = timestampString;
-             
-             // --- MODIFIED: Append nodes in new order ---
-             if (timestampString) {
-                p.appendChild(timeSpan); // Add [HH:MM]
-             }
-             p.appendChild(strong); // Add Name
-             p.appendChild(document.createTextNode(`: ${text}`)); // Add : Text
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'message-icon';
+            iconDiv.textContent = name.charAt(0).toUpperCase() || 'A';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text-container';
+            
+            const p = document.createElement('p');
+            p.className = 'message-text';
+            
+            const strong = document.createElement('strong');
+            strong.className = 'message-author';
+            strong.textContent = name;
 
-             textDiv.appendChild(p);
-             msgDiv.appendChild(iconDiv);
-             msgDiv.appendChild(textDiv);
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'message-timestamp';
+            timeSpan.textContent = timestampString;
+            
+            if (timestampString) {
+                p.appendChild(timeSpan); 
+            }
+            p.appendChild(strong); 
+            p.appendChild(document.createTextNode(`: ${text}`)); 
 
-             chatMessages.appendChild(msgDiv);
-         }
+            textDiv.appendChild(p);
+            msgDiv.appendChild(iconDiv);
+            msgDiv.appendChild(textDiv);
 
-         /**
-          * Scrolls the chat window to the bottom.
-          */
-         function scrollToBottom() {
-             chatMessages.scrollTop = chatMessages.scrollHeight;
-         }
+            // --- NEW: Remove "No messages" text if it's there ---
+            const notice = chatMessages.querySelector('.chat-notice');
+            if (notice) {
+                notice.remove();
+            }
+            // --- END: New Code ---
 
-         /**
-          * Handles the chat form submission.
-          */
-         async function handleSendMessage(e) {
-             e.preventDefault();
-             const messageText = messageInput.value.trim();
-             const displayName = displayNameInput.value.trim() || 'Anonymous';
+            chatMessages.appendChild(msgDiv);
+        }
 
-             if (messageText === '' || !messagesCollection) {
-                 return;
-             }
+        /**
+         * Scrolls the chat window to the bottom.
+         */
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
-             try {
-                 await addDoc(messagesCollection, {
-                     name: displayName,
-                     text: messageText,
-                     createdAt: serverTimestamp()
-                 });
-                 messageInput.value = '';
-             } catch (error) {
-                 console.error("Error sending message: ", error);
-             }
-         }
+        /**
+         * Handles the chat form submission.
+         * (Sound code is REMOVED from here)
+         */
+        async function handleSendMessage(e) {
+            e.preventDefault();
+            const messageText = messageInput.value.trim();
+            const displayName = displayNameInput.value.trim() || 'Anonymous';
 
-         /**
-          * Sets up the real-time listener for chat messages.
-          */
-         function setupMessageListener() {
-             if (!db) {
-                 return;
-             }
+            if (messageText === '' || !messagesCollection) {
+                return;
+            }
 
-             console.log("Setting up message listener...");
-             
-             messagesCollection = collection(db, "messages");
-             const q = query(messagesCollection, orderBy("createdAt", "asc"));
+            try {
+                await addDoc(messagesCollection, {
+                    name: displayName,
+                    text: messageText,
+                    createdAt: serverTimestamp()
+                });
+                
+                messageInput.value = '';
+            } catch (error) {
+                console.error("Error sending message: ", error);
+            }
+        }
 
-             onSnapshot(q, (querySnapshot) => {
-                 if (loadingSpinner) {
-                     loadingSpinner.style.display = 'none';
-                 }
+        /**
+         * Sets up the real-time listener for chat messages.
+         */
+        function setupMessageListener() {
+            if (!db) {
+                return;
+            }
 
-                 chatMessages.innerHTML = ''; // Clear existing messages
+            console.log("Setting up message listener...");
+            
+            messagesCollection = collection(db, "messages");
+            const q = query(messagesCollection, orderBy("createdAt", "asc"));
 
-                 if (querySnapshot.empty) {
-                     chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
-                     return;
-                 }
+            // --- THIS IS THE MAIN CHANGE ---
+            onSnapshot(q, (querySnapshot) => {
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
 
-                 querySnapshot.forEach((doc) => {
-                     displayMessage(doc.data());
-                 });
+                // Show "no messages" text only on the first load if empty
+                if (querySnapshot.empty && isInitialLoad) {
+                    chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
+                }
 
-                 scrollToBottom();
+                // Process *only* the documents that were added
+                querySnapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        // Display the new message
+                        displayMessage(change.doc.data());
 
-             }, (error) => {
-                 console.error("Error getting messages: ", error);
-                 if (loadingSpinner) {
-                     loadingSpinner.style.display = 'none';
-                 }
-                 chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
-             });
-         }
-         
-         /**
-          * Initializes the Firebase app and services.
-          */
-         async function initializeFirebase() {
-             try {
-                 const app = initializeApp(firebaseConfig);
-                 db = getFirestore(app);
-                 auth = getAuth(app);
-                 
-                 console.log("Firebase initialized. Waiting for auth...");
+                        // --- NEW: Play sound, but NOT on the initial load ---
+                        if (!isInitialLoad) {
+                            try {
+                                newMessageSound.currentTime = 0;
+                                newMessageSound.play(); // 'await' is not needed here
+                            } catch (playError) {
+                                console.warn("Could not play sound.", playError);
+                            }
+                        }
+                    }
+                });
 
-                 onAuthStateChanged(auth, (user) => {
-                     if (user) {
-                         console.log("User is authenticated:", user.uid);
-                         userId = user.uid;
-                         setupMessageListener();
-                     } else {
-                         console.log("User is signed out.");
-                         userId = null;
-                     }
-                 });
- 
-                 console.log("Signing in anonymously...");
-                 await signInAnonymously(auth);
+                // After the first batch, any new message is "live"
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                }
 
-             } catch (error) {
-                 console.error("Firebase initialization failed:", error);
-                 if (loadingSpinner) {
-                     loadingSpinner.style.display = 'none';
-                 }
-                 chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
-             }
-         }
+                scrollToBottom(); // Always scroll to bottom on new message
 
-         // --- Event Listeners ---
-         chatForm.addEventListener('submit', handleSendMessage);
+            }, (error) => {
+                console.error("Error getting messages: ", error);
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
+                chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
+            });
+        }
+        
+        /**
+         * Initializes the Firebase app and services.
+         */
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                console.log("Firebase initialized. Waiting for auth...");
 
-         // --- Start the App ---
-         initializeFirebase();
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        console.log("User is authenticated:", user.uid);
+                        userId = user.uid;
+                        setupMessageListener();
+                    } else {
+                        console.log("User is signed out.");
+                        userId = null;
+                    }
+                });
+
+                console.log("Signing in anonymously...");
+                await signInAnonymously(auth);
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                if (loadingSpinner) {
+                    loadingSpinner.style.display = 'none';
+                }
+                chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
+            }
+        }
+
+        // --- Event Listeners ---
+        chatForm.addEventListener('submit', handleSendMessage);
+
+        // --- Start the App ---
+        initializeFirebase();
 
     </script>
 </body>
