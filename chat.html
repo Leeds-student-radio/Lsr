@@ -2893,9 +2893,7 @@ margin-top: -16px;
 
     height: 37px !important;
 }
- .playerzz {
-    margin-top:80px;
-}
+
  .player {
         background-color: transparent;
         border-radius: 14px;
@@ -2998,12 +2996,7 @@ margin-top: -16px;
         height: 220px;
     }
     
-    .playerzz {
-    width:100%;
-    display:flex;
-     gap:15px;
-      flex-direction: row;
-}
+    
     }
     
      @media (min-width: 1000px) {
@@ -3057,13 +3050,7 @@ margin-top: -16px;
     }
      }
     
-      @media (max-width: 438px) {
-         .playerzz {
-    width:100%;
-    
-     gap:15px;
      
-}
 .player {
             width: calc(100% - 0.5rem);
            
@@ -3665,16 +3652,59 @@ section          }
         display: none;
     }
    
-
+   @media (min-width: 1200px)  {
+    .chat-header {
+       width: 370px !important;
+       border-right: solid 2px white;
+        }
+        
+         }
+ @media (min-width: 1200px)  {
+   
+    .album-cover,
+    .player,
+    .playerzz {
+       width: 320px !important;
+       margin-left:-3px;
+        }
+        
+        .activee {
+       text-align: left;
+       padding-top:10px;
+      
+        }
+        .chat-title {
+       text-align: left;
+       margin-left:6px;
+       
+        }
+         }
     </style> 
     
 </head>
 <body class=""> <div class="chat-container">
      <div class="chat-header">
          <h1 class="chat-title">Live Chat</h1>
-          <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
-  Active: <span id="live-count"> </span>
+          <div class="activee" style="height:0px; position:relative; top:-25px; margin-left:10px; font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
+   Active: <span id="live-count"> </span>
 </div>
+ 
+  
+  
+<div class="playerzz" style="width:200px; padding:0; border:none !important; margin-top:50px;">
+<div class="player main-player" style="width:200px; padding:0; border:none !important;">
+ <div class="album-cover">
+    <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" alt="Main Stream Cover Art">
+        
+     </div>
+    <div class="player-content">
+       
+      
+      
+    </div>
+</div>
+
+ </div>
      </div> 
 
      <div id="chat-messages">
@@ -3695,8 +3725,17 @@ section          }
              </button>
          </form>
      </div>
+     
  </div>
 
+  <!-- CURRENT SHOW -->
+
+  
+
+   
+    <!-- Play Button (moved out for alignment control) -->
+   
+ 
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -4961,9 +5000,7 @@ document.addEventListener('DOMContentLoaded', () => {
 position: absolute;
 top: 30px
   }
-   .playerzz {
-margin-top: 130px !important;
-}
+  
   }
 
    
@@ -5088,9 +5125,7 @@ z-index: 1;
 
 
  @media (max-width: 480px) {
-    .playerzz {
-        margin-top: 110px !important;
-    }
+  
     
    }
  @media (max-width: 849px) {
@@ -5292,11 +5327,7 @@ line-height:1.1rem;
        padding-right:24px;
        
        }
-.playerzz {
-  width:auto;
-    margin-top:15px;
-    
-}
+
   @media (max-width: 480px) {
 .playerzzc {
   width:auto;
