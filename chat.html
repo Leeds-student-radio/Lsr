@@ -2146,6 +2146,30 @@ z-index: 1000;
   
   </style>
 </head>
+ <div class="container">
+        <div class="stars">
+            <span class="star" style="top: 84%; left: 10%;"></span>
+            <span class="star" style="top: 25%; left: 5%;"></span>
+             <span class="star" id="star99" style="top: 35%; left: 85%;"></span>
+              <span class="star" id="star99" style="top: 73%; left: 78%;"></span> 
+              
+              <span class="star" id="star999" style="top: 7%; left: 90%;">
+              </span>
+              
+               <span class="star" id="star999" style="top: 88%; left: 20%;"></span>
+                     <span class="star" id="star999" style="top: 55%; left: 15%;"></span>
+            <span class="star" id="starwe2" style="top: 50%; left: 12%;"></span>
+            <span class="star" id="starwe" style="top: 80%; right: 10%;"></span>
+            <span class="star" style="top: 30%; right: 5%;"></span>
+            <span class="star" id="starwe21" style="top: 50%; right: 15%;"></span>
+            <div class="circle" id="starwe211" style="top: 65%; left: 6%;"></div>
+            <div class="circle" id="star99" style="top: 94%; left: 88%;"></div>
+            <div class="circle" id="star99" style="top: 15%; left: 25%;"></div>
+                    <div class="circle" id="star9991" style="top: 45%; left: 20%;"></div>        <div class="circle" id="star9991" style="top: 90%; left: 10%;"></div>
+             <div class="circle" id="starwe2" style="top: 40%; left: 25%;"></div>
+    <div class="circle" style="top: 15%; left: 85%;"></div>
+        </div>
+        
 <body style="    max-width: 1500px;
     margin-left: auto;
     margin-right: auto;">
@@ -3682,7 +3706,10 @@ section          }
     </style> 
     
 </head>
-<body class=""> <div class="chat-container">
+ 
+    
+
+<body class=""> <div class="chat-container" style="z-index:100000000;">
      <div class="chat-header">
          <h1 class="chat-title">Live Chat</h1>
           <div class="activee" style="height:0px; position:relative; top:-25px; margin-left:10px; font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
@@ -3697,14 +3724,17 @@ section          }
     <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" alt="Main Stream Cover Art">
         
      </div>
+     
     <div class="player-content">
        
       
       
     </div>
+    
 </div>
 
  </div>
+ 
      </div> 
 
      <div id="chat-messages">
@@ -3727,11 +3757,11 @@ section          }
      </div>
      
  </div>
+ 
 
   <!-- CURRENT SHOW -->
 
   
-
    
     <!-- Play Button (moved out for alignment control) -->
    
@@ -5394,8 +5424,33 @@ line-height:1.1rem;
             
              
          }
+         #star99 {
+            
+             height: 20px !important;
+             width:20px !important;
+            
+             
+         }
+          #star999 {
+            
+             height: 25px !important;
+             width:25px !important;
+            
+             
+         }
            
            }
+             @media (max-width:1199px)  {
+          
+          #star999,
+          #star9991 {
+            
+            display:none !important;
+             
+         }
+           
+           }
+           
 
    @media (max-width:850px)  {
     .chat-header,
@@ -5427,6 +5482,172 @@ line-height:1.1rem;
    
     height: 100vh;
    
+}
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #d82c2c;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+    
+}
+
+
+
+        /* --- STAR STYLING (From your request) --- */
+        .star {
+        opacity:0.6;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            z-index: 0;
+            
+            /* Initial rotation */
+            transform: rotate(20deg);
+
+            /* 1. Apply the border (shadow) to the PARENT container */
+            filter: drop-shadow(1px 0 0 black) 
+                   drop-shadow(-1px 0 0 black) 
+                   drop-shadow(0 1px 0 black) 
+                   drop-shadow(0 -1px 0 black);
+            
+            /* Animation applied here */
+            animation: wanderStar 10s ease-in-out infinite;
+        }
+
+        .star::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+
+            /* 2. Apply the shape to the CHILD (Pseudo-element) */
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+        }
+
+        /* --- CIRCLE STYLING (From your request) --- */
+        .circle {
+        opacity:0.6;
+            position: absolute;
+            width: 10px;  
+            height: 10px;
+            background-color: white;
+            border: 1px solid black; 
+            border-radius: 50%;      
+            z-index: 0;
+
+            /* Animation applied here (different because circles don't rotate) */
+            animation: wanderCircle 10s ease-in-out infinite;
+        }
+
+        /* --- ANIMATIONS --- */
+        
+        /* Animation for Stars: Must include rotate(20deg) to maintain the star's angle */
+        @keyframes wanderStar {
+            0%   { transform: translate(0, 0) rotate(20deg); }
+            20%  { transform: translate(10px, -5px) rotate(20deg); }
+            40%  { transform: translate(5px, 10px) rotate(20deg); }
+            60%  { transform: translate(-10px, 5px) rotate(20deg); }
+            80%  { transform: translate(-5px, -10px) rotate(20deg); }
+            100% { transform: translate(0, 0) rotate(20deg); }
+        }
+
+        /* Animation for Circles: No rotation needed */
+        @keyframes wanderCircle {
+            0%   { transform: translate(0, 0); }
+            20%  { transform: translate(-8px, 8px); }
+            40%  { transform: translate(8px, 4px); }
+            60%  { transform: translate(-4px, -8px); }
+            80%  { transform: translate(5px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- RANDOMIZING SPEEDS --- */
+        /* This makes them look like they are moving randomly by offsetting their timing */
+
+        /* Odd numbered items take 12 seconds */
+        .stars span:nth-child(odd), 
+        .stars div:nth-child(odd) {
+            animation-duration: 12s;
+            animation-delay: -2s;
+        }
+
+        /* Even numbered items take 15 seconds */
+        .stars span:nth-child(even), 
+        .stars div:nth-child(even) {
+            animation-duration: 15s;
+            animation-delay: -5s;
+        }
+
+        /* Every 3rd item is faster (9s) */
+        .stars span:nth-child(3n), 
+        .stars div:nth-child(3n) {
+            animation-duration: 9s;
+            animation-delay: -1s;
+        }
+        
+        /* Every 5th item moves in reverse direction for more variety */
+        .stars span:nth-child(5n), 
+        .stars div:nth-child(5n) {
+            animation-direction: reverse;
+        }
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 0px;
+    box-sizing: border-box;
+}
+
+.box {
+    background-color: white;
+    color: black;
+    padding: 1vw 2vw;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    text-align: center !important;
+    flex: 0 1 auto;
+    white-space: nowrap;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    border: solid 3px black;
+}
+
+
+.chat-title {
+    font-size: clamp(1.5rem, 4vw, 4rem);
+    color: white;
+   
+   
+    font-weight: bold;
+   
+
+    /* Animation Settings */
+    /* 4s = duration (slow), infinite = loops forever */
+    animation: light-pulse 12s ease-in-out infinite;
+}
+
+/* The Animation Logic */
+@keyframes light-pulse {
+    0%, 100% {
+        /* Normal State: Standard drop shadow, slightly lower opacity */
+        text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+        opacity: 0.88;
+    }
+    50% {
+        /* Brighter State: Drop shadow + White Glow, full opacity */
+        text-shadow: 
+            5px 5px 0px rgba(0, 0, 0, 0.3), /* Keep original shadow */
+            0 0 20px rgba(255, 255, 255, 0.8), /* Outer soft glow */
+            0 0 10px rgba(255, 255, 255, 0.6); /* Inner intense glow */
+        opacity: 1;
+    }
 }
 </style>
   <!-- ✅ BEGIN LSR Awards Popup Embed -->
