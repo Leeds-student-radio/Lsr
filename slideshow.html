@@ -460,11 +460,11 @@ function findNextShow(rows) {
 
 /** ====== Main Update Function ====== **/
 function fetchAndUpdate() {
-  Papa.parse(SHEET_CSV_URL, {
-    download: true,
-    header: true,
-    skipEmptyLines: "greedy",
-    complete: function(res) {
+  Papa.parse(SHEET_CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: "greedy",
+    complete: function(res) {
       if (!res || !res.data || !res.data.length) return;
       const rows = normalizeRows(res.data);
 
@@ -496,5 +496,18 @@ function fetchAndUpdate() {
 
 // Run immediately, then every 60 seconds
 fetchAndUpdate();
-setInterval(fetchAndUpdate, 60000);
+
+// 2. Schedule the update logic every minute (60,000 milliseconds)
+// This ensures your content is up-to-date within the hour
+setInterval(fetchAndUpdate, 60000); 
+
+// 3. Schedule the FULL PAGE RELOAD every hour (3,600,000 milliseconds)
+// This is your safety net to prevent the display from freezing
+// 60 minutes * 60 seconds * 1000 milliseconds = 3,600,000 ms
+const ONE_HOUR_MS = 3600000;
+
+setInterval(() => {
+    // This command tells the browser to refresh the entire page
+    window.location.reload(true); 
+}, ONE_HOUR_MS);
 </script>
