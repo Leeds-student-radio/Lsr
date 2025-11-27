@@ -5358,15 +5358,15 @@ line-height:1.1rem;
 
           @media (min-width:1200px)  {
            .album-cover {
-             height: 300px !important;
-             width:300px !important;
+             height: 300px ;
+             width:300px ;
             
              
          }
            .album-cover img {
             
              height: 300px !important;
-             width:300px !important;
+             width:300px ;
             
              
          }
@@ -5448,7 +5448,12 @@ line-height:1.1rem;
     border-radius: 14px;
 }
 
-
+@media (max-width: 438px) {
+    #num {
+        width: calc(100% - 0.5rem);
+        flex-direction: row !important;
+    }
+}
  @media (min-width: 769px) {
  
  #num {
