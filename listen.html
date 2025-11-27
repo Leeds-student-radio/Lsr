@@ -3060,10 +3060,7 @@ margin-top: -16px;
         width: 220px;
         height: 220px;
     }
-        .alt-player img {
-        width: 220px;
-        height: 220px;
-    }
+       
     
     .playerzz {
     width:100%;
@@ -3189,8 +3186,9 @@ margin-top: -16px;
     </div>
 </div>
 
+
 <!-- Alternate Player -->
-<div class="player alt-player"  >
+<div class="player alt-player" id="muds"  >
   <head>
     <style>
      .chat-container {
@@ -3651,7 +3649,7 @@ margin-top: -16px;
                  console.error("Firebase initialization failed:", error);
                  if (loadingSpinner) {
                      loadingSpinner.style.display = 'none';
-                 }
+                  }
                  chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
              }
          }
@@ -3672,8 +3670,38 @@ margin-top: -16px;
       
 
     </div>
-    
+     <div class="player alt-player" id="num">
+  <div class="album-cover">
+    <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" 
+         alt="Alternate Stream Cover Art" 
+         style="aspect-ratio: 1 / 1; object-fit: cover;">
+    <button class="play-btn1">▶</button>
   </div>
+  <div class="player-content">
+    <div class="player-title">Alternate Stream</div>
+    <div class="player-description">LSR alternate live stream runs 24/7 with a chilled mix of hand-picked tracks. Expect smooth, relaxing tunes all day.
+</div>
+  </div>
+</div>
+
+<audio id="alt-audio" src="https://s2.radio.co/seb5cdba5b/listen"></audio>
+
+<script>
+  const audioPPP = document.getElementById('alt-audio');
+  const btnPPP = document.querySelector('.play-btn1');
+
+  btnPPP.addEventListener('click', () => {
+    if (audioPPP.paused) {
+      audioPPP.play();
+      btnPPP.textContent = '⏸';
+    } else {
+      audioPPP.pause();
+      btnPPP.textContent = '▶';
+    }
+  });
+</script>
+  </div>
+  
   </div>
 
 
@@ -5369,4 +5397,67 @@ line-height:1.1rem;
     document.body.style.overflow = '';
   };
 </script>
+
+
+<style>
+
+ .player.alt-player .player-content {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: column !important;
+        justify-content: center !important;
+        flex: 1 !important;
+    }
+
+     .player.alt-player .player-title {
+        font-size: 1.2rem !important;
+        font-weight: bold;
+        color: whitesmoke
+    }
+
+     .player.alt-player .player-description {
+        font-size: 1rem !important;
+         color: whitesmoke;
+     font-weight: 300;
+    }
+
+   
+    /* Play button styling */
+   
+     .player.alt-player .play-btn:hover {
+        background-color: #ff9800;
+    }
+
+    /* Different image sizes for main/alt */
+    
+     .player.alt-player .alt-player img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+  .player.alt-player .album-cover {
+    position: relative;
+    display: inline-block;
+}
+
+ .player.alt-player .album-cover img {
+    display: block !important;
+    width: 150px !important;
+    height: 150px; !important;
+    object-fit: cover !important;
+    border-radius: 14px;
+}
+
+
+ @media (min-width: 769px) {
+ 
+ #num {
+       margin-top:16px;
+    }
+    }
+    
+    @media (min-width: 768px) {
+   
+    }
+</style>
 <!-- ✅ END LSR Awards Popup Embed -->
