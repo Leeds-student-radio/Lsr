@@ -2983,6 +2983,8 @@ margin-top: -16px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+     height: 100%;
+    justify-content: space-around !important;
         flex: 1;
     }
 
@@ -3181,7 +3183,7 @@ margin-top: -16px;
     <div class="player-content">
         <div class="player-title">...Loading</div>
         <div class="player-description">...Loading</div>
-      
+      <div class="fullscreenmode" onclick="window.open('https://www.thisislsr.com/fullscreen', '_blank');" style="padding: 0.2rem; border-radius:9px; border:solid 1px black; text-align: center; background: rgb(255 255 255 / 9%); color: White; font-weight:300; align-self:start; justify-self:end;">Fullscreen</div>
       
     </div>
 </div>
@@ -3191,6 +3193,14 @@ margin-top: -16px;
 <div class="player alt-player" id="muds"  >
   <head>
     <style>
+    
+    .fullscreenmode:hover {
+             background: rgb(255 255 255 / 39%) !important; 
+             cursor:pointer;
+         }
+         
+         
+    
      .chat-container {
              width: 100%;
             
@@ -3230,6 +3240,11 @@ margin-top: -16px;
              
          }
            }
+             @media (max-width:799px)  {
+            .fullscreenmode {
+            display:none !important;
+         }
+          }
          
            @media (min-width:768px)  {
            #chat-messages {
