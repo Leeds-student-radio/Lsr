@@ -10,19 +10,24 @@
     --bottom-pad: 90px;
     --overlay-bg: rgba(0,0,0,0.45);
     --text-color: #fff;
-    --accent: #ffcc00;  
-  }
+    --accent: #ffcc00;   
+    --bg-light: url("https://github.com/Stepzach/leedstestradio/blob/main/IMG_4187-2.gif?raw=true");
+  --bg-dark: url("https://github.com/stepzach/leedstestradio/blob/main/IMG_4173.gif?raw=true"); 
+  --current-bg: var(--bg-light);
 
+  }
+ 
   * { margin:0; padding:0; box-sizing:border-box;  }
 
   body {
     font-family: Inter, system-ui, sans-serif;
     height:100vh;
-    background: url("https://github.com/stepzach/leedstestradio/blob/main/IMG_4173.gif?raw=true") center/cover no-repeat fixed;
+   background: var(--current-bg) center/cover no-repeat fixed;
     color: var(--text-color);
     display:flex;
     flex-direction:column;
     justify-content:space-between;
+     transition: background 0.5s ease, color 0.5s ease;
   }
 
   /* Top bar */
@@ -219,17 +224,28 @@
    
         <div class="controls" aria-hidden="false">
           <!-- Play / Pause button -->
-         <button id="playPause" class="play-btn" aria-label="Play" aria-pressed="false">
-      <!-- Play icon initially -->
-      <svg id="playIcon" viewBox="0 0 24 24">
-        <path d="M6 4.5v15l12-7.5L6 4.5z"/>
-      </svg>
-    </button>
+          <button class="tegfyfey" id="toggle-bg" style="  border:1px solid rgba(255,255,255,0.1);
+             border-radius: 0.5rem;  font-size: 0.775rem; /* text-sm */
+             padding: 0.4rem;
+             background: rgba(0,0,0,0.35); color:white;" >Toggle <br>Background</button>
+  
+  
+ 
+        
         </div> 
       </div>  
 
       <!-- optional center content you can remove -->
         <style>
+         
+        
+        .tegfyfey:hover {
+         
+               background: rgba(255,255,255,0.12) !important;
+           
+         }
+        
+        
      .chat-container {
       display: flex;
     flex-direction: column;
@@ -504,7 +520,7 @@
       
            
      </div>  
- <div id="chat-content">
+ <div id="chat-content"> 
      <div id="chat-messages">
          <div id="loading-spinner">
              <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -990,7 +1006,7 @@ function fetchAndUpdate() {
       const imgElem = document.querySelector("#pillBanner .thumbnail");
       const showImg = current.cover_image_url || current.cover_image_url || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
       if (imgElem) imgElem.src = showImg;
-
+ 
       // Update Title
       const titleElem = document.querySelector("#pillBanner .pill-title");
       const showTitle = current.title || current.title || "LSR";
@@ -1026,6 +1042,60 @@ setInterval(() => {
     window.location.reload(true); 
 }, ONE_HOUR_MS);
 </script>
+<script>
+  const toggleButton = document.getElementById("toggle-bg");
+  
+  // We use this variable to track the state, rather than reading the CSS string
+  // which can be unreliable depending on the browser.
+  let isLightMode = true; 
+  let manualOverride = false;
 
+  function setBackground(light) {
+    // Update our state tracker
+    isLightMode = light;
+
+    if (light) {
+      document.documentElement.style.setProperty("--current-bg", "var(--bg-light)");
+      // Only set text color if variables exist in CSS (your CSS didn't have --text-light defined in :root)
+      // document.documentElement.style.setProperty("--current-text", "var(--text-light)");
+    } else {
+      document.documentElement.style.setProperty("--current-bg", "var(--bg-dark)");
+      // document.documentElement.style.setProperty("--current-text", "var(--text-dark)");
+    }
+  }
+
+  // Set background automatically based on UK time
+  function updateBackgroundByTime() {
+    // If the user has manually clicked the button, stop auto-updating
+    if (manualOverride) return;
+
+    const now = new Date();
+    
+    // convert to UK time (simplified)
+    const ukHour = now.getUTCHours(); 
+
+    // Logic: Between 7am and 5pm (17:00), use Light mode
+    if (ukHour >= 7 && ukHour < 17) {
+      setBackground(true); 
+    } else {
+      setBackground(false); 
+    }
+  }
+
+  // Run on page load
+  updateBackgroundByTime();
+
+  // Check time every minute
+  setInterval(updateBackgroundByTime, 60000);
+
+  // Manual toggle button
+  toggleButton.addEventListener("click", () => {
+    // 1. Tell the app the user is now in control, stop the timer from changing it back
+    manualOverride = true; 
+
+    // 2. Flip the state (If true, make false. If false, make true)
+    setBackground(!isLightMode);
+  });
+</script>
 </body>
 </html>
