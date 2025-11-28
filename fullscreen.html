@@ -13,6 +13,7 @@
     --accent: #ffcc00;   
     --bg-light: url("https://github.com/Stepzach/leedstestradio/blob/main/IMG_4187-2.gif?raw=true");
   --bg-dark: url("https://github.com/stepzach/leedstestradio/blob/main/IMG_4173.gif?raw=true"); 
+  --bg-extra: url("https://github.com/Stepzach/leedstestradio/blob/main/IMG_4195.gif?raw=true");
   --current-bg: var(--bg-light);
 
   }
@@ -1045,40 +1046,43 @@ setInterval(() => {
 <script>
   const toggleButton = document.getElementById("toggle-bg");
   
-  // We use this variable to track the state, rather than reading the CSS string
-  // which can be unreliable depending on the browser.
-  let isLightMode = true; 
+  // Define your 3 CSS variable names here in order
+  const bgOptions = ["--bg-light", "--bg-dark", "--bg-extra"];
+  
+  let currentIndex = 0; 
   let manualOverride = false;
 
-  function setBackground(light) {
-    // Update our state tracker
-    isLightMode = light;
+  // Function to apply background based on index number (0, 1, or 2)
+  function setBackground(index) {
+    // Ensure index is within bounds (safety check)
+    if (index < 0 || index >= bgOptions.length) return;
 
-    if (light) {
-      document.documentElement.style.setProperty("--current-bg", "var(--bg-light)");
-      // Only set text color if variables exist in CSS (your CSS didn't have --text-light defined in :root)
-      // document.documentElement.style.setProperty("--current-text", "var(--text-light)");
-    } else {
-      document.documentElement.style.setProperty("--current-bg", "var(--bg-dark)");
-      // document.documentElement.style.setProperty("--current-text", "var(--text-dark)");
-    }
+    currentIndex = index;
+    
+    // Grab the variable name from the array (e.g., "--bg-dark")
+    const cssVarName = bgOptions[currentIndex];
+    
+    // Apply it
+    document.documentElement.style.setProperty("--current-bg", `var(${cssVarName})`);
   }
 
   // Set background automatically based on UK time
   function updateBackgroundByTime() {
-    // If the user has manually clicked the button, stop auto-updating
     if (manualOverride) return;
 
     const now = new Date();
-    
-    // convert to UK time (simplified)
     const ukHour = now.getUTCHours(); 
 
-    // Logic: Between 7am and 5pm (17:00), use Light mode
+    // LOGIC:
+    // 7am - 5pm: Light Mode (Index 0)
+    // 5pm - 7am: Dark Mode (Index 1)
+    // Note: The 3rd image is currently only accessible via the button. 
+    // If you want a specific time for the 3rd image, add an 'else if' below.
+    
     if (ukHour >= 7 && ukHour < 17) {
-      setBackground(true); 
+      setBackground(0); // --bg-light
     } else {
-      setBackground(false); 
+      setBackground(1); // --bg-dark
     }
   }
 
@@ -1090,11 +1094,13 @@ setInterval(() => {
 
   // Manual toggle button
   toggleButton.addEventListener("click", () => {
-    // 1. Tell the app the user is now in control, stop the timer from changing it back
     manualOverride = true; 
 
-    // 2. Flip the state (If true, make false. If false, make true)
-    setBackground(!isLightMode);
+    // Calculate the next index. 
+    // The '%' (modulo) operator wraps the number back to 0 when it reaches 3.
+    let nextIndex = (currentIndex + 1) % bgOptions.length;
+    
+    setBackground(nextIndex);
   });
 </script>
 </body>
