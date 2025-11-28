@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Leeds Student Radio — Background Video</title>
+<style>
+   :root {
+    --top-pad: 90px;
+    --bottom-pad: 90px;
+    --overlay-bg: rgba(0,0,0,0.45);
+    --text-color: #fff;
+    --accent: #ffcc00;  
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box;  }
+
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    height:100vh;
+    background: url("https://github.com/stepzach/leedstestradio/blob/main/IMG_4173.gif?raw=true") center/cover no-repeat fixed;
+    color: var(--text-color);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+
+  /* Top bar */
+  .pad-top {
+    height: var(--top-pad);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 0 1.5rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  }
+
+  .brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* Play button */
+  .play-btn {
+    width: 44px;
+    height: 44px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background: rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,0.15);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .play-btn:hover { background: rgba(255,255,255,0.12); }
+  .play-btn svg { width:20px; height:20px; fill:white; }
+
+  /* Bottom bar */
+  .pad-bottom {
+    height: var(--bottom-pad);
+    display:flex; 
+    align-items:center;
+    padding: 0 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  }
+
+  .now-playing {
+    font-size: 0.95rem;
+    padding: .5rem .8rem;
+    background: rgba(0,0,0,0.35);
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Overlay content that respects top/bottom padding */
+  .site-overlay{
+    position:relative;
+    z-index:5;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+   
+  }
+
+  /* Top padded area */
+  .pad-top{
+    height:var(--top-pad);
+    display:flex;
+    align-items:start;
+    justify-content:space-between;
+    padding:1.25rem 1.25rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.45), transparent);
+    pointer-events:auto;
+    gap:1rem;
+  }
+  .brand{
+    font-weight:700;
+    letter-spacing:0.02em;
+    font-size:1.125rem;
+    color:var(--text-color);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+
+  /* Play / Pause button */
+  .controls{
+    display:flex;
+    align-items:center;
+    gap:0.75rem;
+  }
+
+  
+  .play-btn {
+    width: 48px;
+    height: 48px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background: rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,0.15);
+    cursor:pointer;
+    transition:.15s;
+  }
+  .play-btn:hover { background: rgba(255,255,255,0.12); }
+  .play-btn svg { width:22px; height:22px; fill:white; }
+
+  .play-btn svg{ width:20px; height:20px; display:block; fill:var(--text-color) }
+
+  /* Bottom padded area */
+  .pad-bottom{
+    height:var(--bottom-pad);
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    padding:0.5rem 1.25rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.45), transparent);
+    pointer-events:auto;
+  }
+
+  .now-playing{
+    font-size:0.95rem;
+    background: rgba(0,0,0,0.25);
+    padding:0.45rem 0.75rem;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.06);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  /* Example center content (optional) */
+  .center-content{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:1 1 auto;
+    pointer-events:none;
+  }
+  .center-card{
+    pointer-events:auto;
+    background:var(--overlay-bg);
+    padding:1rem 1.25rem;
+    border-radius:12px;
+    backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,0.05);
+    text-align:center;
+  }
+  .center-card h1{ font-size:2rem; margin-bottom:0.25rem }
+  .center-card p{ opacity:0.95; font-size:0.95rem }
+
+  /* Responsiveness */
+  @media (max-width:640px){
+    :root{ --top-pad:80px; --bottom-pad:80px }
+    .brand{ font-size:1rem }
+    .play-btn{ --size:40px }
+    .center-card h1{ font-size:1.25rem }
+  }
+  
+  /* Spinner */
+.spinner {
+ width:20px; height:20px; display:block;
+ margin-top:-28px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+</style>
+</head>
+<body>
+<audio id="radioStream" preload="none">
+    <source src="https://streamer.radio.co/s986435880/listen" type="audio/mpeg">
+  </audio>
+
+  <div id="app">
+
+  
+ 
+    <!-- Overlay content -->
+   <!-- Overlay content -->
+    <div class="site-overlay" role="region" aria-label="Leeds Student Radio interface">
+      <!-- Top padding area -->
+      <div class="pad-top">
+        <div class="brand" style="font-weight:400; text-align:center;"><p style="padding-bottom:10px !important">Now Playing:</p><div class="pill-banner" id="pillBanner" style="max-width:110px;" >
+           <div class="image">  
+                <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" class="thumbnail" style="width:100%;">
+            </div>
+            <div class="pill-content">
+                <div class="pill-top-row">
+                     <h4 style="color:white; line-height:1em; text-align:center; padding-top:10px; font-weight:400" class="pill-title">Loading...</h4>
+                </div>
+            </div>
+        </div>
+      </div>
+   
+        <div class="controls" aria-hidden="false">
+          <!-- Play / Pause button -->
+         <button id="playPause" class="play-btn" aria-label="Play" aria-pressed="false">
+      <!-- Play icon initially -->
+      <svg id="playIcon" viewBox="0 0 24 24">
+        <path d="M6 4.5v15l12-7.5L6 4.5z"/>
+      </svg>
+    </button>
+        </div> 
+      </div>  
+
+      <!-- optional center content you can remove -->
+        <style>
+     .chat-container {
+      display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align all content to the bottom */  align-items: auto;    
+             width: 25%; 
+          
+            
+           height:310px !important;
+           right:0;
+           bottom:0;
+           position: fixed;
+           margin-right:1.55rem;     
+           margin-bottom:1.55rem;   
+           z-index:1000000000;
+         }
+
+         /* --- Chat Header --- */
+         .chat-header {
+         
+             padding: 0.5rem; /* p-4 */
+               padding-top:0px;
+           
+         }
+         .chat-title {
+             font-size: 1.25rem; /* text-xl */
+             font-weight: 700; /* font-bold */
+             text-align: center;
+             color: whitesmoke; /* text-gray-800 */
+         } 
+ 
+         /* --- Chat Messages Area --- */
+         #chat-messages {
+             padding: 0.6rem; /* p-4 */ 
+            height:158px;
+             max-height:800px;
+           
+             overflow-y: auto;
+              
+         }
+         
+         
+         
+        
+           
+         /* Simulates space-y-3 */
+         #chat-messages > * + * {
+             margin-top: 0.6rem;
+         } 
+         
+         /* Custom scrollbar (from original) */
+         #chat-messages::-webkit-scrollbar {
+             width: 3px;
+         }
+         #chat-messages::-webkit-scrollbar-track {
+             background: rgba(0,0,0,0.35);
+             border-radius: 10px;
+             
+         }
+         #chat-messages::-webkit-scrollbar-thumb { 
+             background: rgba(255,255,255,0.2);
+             border-radius: 10px;
+         }
+         #chat-messages::-webkit-scrollbar-thumb:hover {
+             background: #a8a8a8;
+         }
+
+         /* --- Loading Spinner --- */
+         #loading-spinner {
+             display: flex; 
+             justify-content: center;
+             align-items: center;
+             height: 100%;
+         } 
+         .spinner-svg {
+             animation: spin 1s linear infinite;
+             height: 2rem; /* h-8 */
+             width: 2rem; /* w-8 */
+             color: #3b82f6; /* text-blue-500 */
+         }
+         .spinner-circle {
+             opacity: 0.25;
+         }
+         .spinner-path {
+             opacity: 0.75;
+         }
+
+         /* --- Input Area --- */
+         .chat-input-area {
+             padding: 0.5rem; /* p-4 */
+            
+              color:white;
+             
+         }  
+
+         #chat-form {
+             display: flex;
+             gap:5px;
+             flex-direction: column;
+             
+         }
+         /* Simulates space-x-2 */
+         #chat-form > * + * { 
+             
+         }
+
+         /* Common input styles */
+         .chat-input {
+             font-size: 0.775rem; /* text-sm */
+             padding: 0.4rem; /* p-2 */
+             border:1px solid rgba(255,255,255,0.1);
+             border-radius: 0.5rem; /* rounded-lg */
+             background: rgba(0,0,0,0.35);
+             color:white; 
+         }
+         .chat-input:focus { 
+             outline: none;
+             /* Replicates focus:ring-2 focus:ring-blue-500 */
+             box-shadow: 0 0 0 2px #3b82f6;
+         }
+         
+         #display-name {
+            width:100%;
+             
+              
+         }
+         #message-input {
+             flex-grow: 1; /* flex-grow */
+             height:50px;
+              
+         }
+
+         .send-button {
+             flex-shrink: 0;
+             font-size: 0.775rem; /* text-sm */
+             font-weight: 400; /* font-semibold */
+             color: white; /* text-blue-500 */
+             border-radius: 0.5rem; /* rounded-lg */
+             padding: 0.3rem; /* p-2 */
+             background: rgba(0,0,0,0.55);
+             border:2px solid rgba(255,255,255,0.25);
+             cursor: pointer;
+         }
+          .send-button:hover {
+            
+             background: rgba(255,255,255,0.12);
+             
+         }
+         
+
+         /* --- Dynamically Added Message Styles --- */
+         .message-entry {
+             display: flex;
+             align-items: flex-start;
+             animation: fade-in 0.3s ease-out;
+             
+         }
+         /* Simulates space-x-2 for message icon + text */
+         .message-entry > * + * {
+             margin-left: 0.5rem;
+         }
+
+         .message-icon {
+             display:none;
+             width: 0rem; /* w-8 */
+             height: 0rem; /* h-8 */
+            
+            
+             font-size: 0rem; /* text-sm */
+         }
+         .message-text-container {
+             flex-grow: 1;
+             
+         }
+         .message-text { 
+             font-size: 0.775rem; /* text-sm */
+             color: whitesmoke; /* text-gray-700 */
+             /* Added for better line-breaking */
+             word-break: break-word;
+         }
+         .message-author {
+           font-size: 0.775rem; 
+             font-weight: 700; /* font-semibold */
+            
+             color: white; /* text-gray-900 */
+         }
+
+        /* --- NEW: Timestamp Style --- */
+        .message-timestamp {
+            font-size: 0.8rem; /* Smaller */
+            color: #c7c7c7; /* Lighter/faded color */
+            margin-right: 0.35rem; /* space before name */
+        }
+
+         /* --- Status/Notice Text Styles --- */
+         .chat-notice {
+             text-align: center;
+             color: #6b7280; /* text-gray-500 */
+             font-size: 0.875rem; /* text-sm */
+         }
+         .chat-error {
+             text-align: center;
+             color: #ef4444; /* text-red-500 */
+             font-size: 0.875rem; /* text-sm */
+         }
+
+ 
+/* --- Standard (Modern Browsers) --- */ 
+.chat-input::placeholder {
+  color: white;
+  font-style: italic;
+  opacity: 1; /* Ensures full opacity */ 
+}
+
+/* --- WebKit (Safari, Chrome, iOS) --- */
+.chat-input::-webkit-input-placeholder {
+  color: white;
+  font-style: italic;
+}
+
+/* --- Mozilla Firefox --- */
+.chat-input::-moz-placeholder {
+  color: white;
+  font-style: italic;
+  opacity: 1; /* Firefox has a default opacity, so we reset it */
+} 
+
+/* --- Internet Explorer / Edge (Older) --- */
+.chat-input:-ms-input-placeholder {
+  color: white;
+  font-style: italic;
+} 
+
+
+
+.toggle-chat-btn {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    cursor: pointer; 
+    font-size: 0.775rem;
+    padding: 3px 6px;
+    border-radius: 7px;
+    width: 25px;
+    text-align: center;
+    position:relative;
+    align-self: end;
+    margin-right:8px;
+    margin-top:5px;
+     
+}
+
+ #chat-content,  
+.chat-input-area {
+    overflow: hidden;
+    max-height: 400px;
+    transition: max-height 0.4s ease-in-out;
+}
+
+#chat-content.hidden,
+.chat-input-area.hidden {
+    max-height: 0;
+    padding: 0;
+    display: none;
+}
+
+.toggle-chat-btn:hover {
+    background: rgba(255,255,255,0.12);
+}
+    </style>
+ <div class="chat-container"  id="chat-container" style="z-index:1000000000000000">
+     <div class="chat-header"> 
+      
+           
+     </div>  
+ <div id="chat-content">
+     <div id="chat-messages">
+         <div id="loading-spinner">
+             <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                 <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                 <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+             </svg>
+         </div>
+     </div> 
+       </div>
+
+     <div class="chat-input-area" id="chat-input-area">
+         <form id="chat-form">
+             <input type="text" id="display-name" placeholder="Name" class="chat-input">
+             <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
+             <button type="submit" class="send-button">
+                 Send 
+             </button>
+         </form>
+         
+     </div>
+       <button id="toggle-chat-btn" class="toggle-chat-btn">↓</button>
+ </div>
+ 
+<script>
+const toggleBtn = document.getElementById("toggle-chat-btn");
+const chatContent = document.getElementById("chat-content");
+const chatInput = document.getElementById("chat-input-area");
+
+toggleBtn.addEventListener("click", () => {
+    const isHidden = chatContent.classList.contains("hidden");
+
+    if (!isHidden) {
+        // Hide all chat UI
+        chatContent.style.maxHeight = chatContent.scrollHeight + "px";
+        chatInput.style.maxHeight = chatInput.scrollHeight + "px";
+
+        requestAnimationFrame(() => {
+            chatContent.style.maxHeight = "0px";
+            chatInput.style.maxHeight = "0px";
+        });
+
+        setTimeout(() => {
+            chatContent.classList.add("hidden");
+            chatInput.classList.add("hidden");
+            toggleBtn.textContent = "↑"
+        }, 400);
+    } else {
+        // Show all chat UI
+        chatContent.classList.remove("hidden");
+        chatInput.classList.remove("hidden");
+
+        chatContent.style.maxHeight = "0px";
+        chatInput.style.maxHeight = "0px";
+
+        requestAnimationFrame(() => {
+            chatContent.style.maxHeight = chatContent.scrollHeight + "px";
+            chatInput.style.maxHeight = chatInput.scrollHeight + "px"; 
+        });
+
+        toggleBtn.textContent = "↓";
+    }
+});
+
+ 
+</script>
+    <script type="module">
+         // Import Firebase modules
+         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+         import { 
+             getAuth, 
+             signInAnonymously, 
+             onAuthStateChanged 
+         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+         import { 
+             getFirestore, 
+             collection, 
+             addDoc, 
+             onSnapshot, 
+             query, 
+             orderBy, 
+             serverTimestamp
+         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+         // --- Firebase Configuration ---
+         const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
+         
+         // --- Global Variables ---
+         let db, auth, userId;
+         let messagesCollection; 
+
+         // --- UI Elements ---
+         const chatMessages = document.getElementById('chat-messages');
+         const chatForm = document.getElementById('chat-form');
+         const displayNameInput = document.getElementById('display-name');
+         const messageInput = document.getElementById('message-input');
+         const loadingSpinner = document.getElementById('loading-spinner');
+
+         // --- Functions ---
+
+         /**
+          * Renders a single message to the chat window.
+          */
+         function displayMessage(messageData) {
+             const name = messageData.name || 'Anonymous';
+             const text = messageData.text || '';
+             const createdAt = messageData.createdAt; // Get the Firebase Timestamp
+
+             // --- NEW: Format Timestamp ---
+             let timestampString = '';
+             if (createdAt && typeof createdAt.toDate === 'function') {
+                 const date = createdAt.toDate(); // Convert Firebase Timestamp to JS Date
+                 const hours = String(date.getHours()).padStart(2, '0');
+                 const minutes = String(date.getMinutes()).padStart(2, '0');
+                 timestampString = `[${hours}:${minutes}]`;
+             }
+             // --- END: New Code ---
+
+             const msgDiv = document.createElement('div');
+             msgDiv.className = 'message-entry';
+
+             const iconDiv = document.createElement('div');
+             iconDiv.className = 'message-icon';
+             iconDiv.textContent = name.charAt(0).toUpperCase() || 'A';
+             
+             const textDiv = document.createElement('div');
+             textDiv.className = 'message-text-container';
+             
+             const p = document.createElement('p');
+             p.className = 'message-text';
+             
+             const strong = document.createElement('strong');
+             strong.className = 'message-author';
+             strong.textContent = name;
+
+             // --- NEW: Create Timestamp Span ---
+             const timeSpan = document.createElement('span');
+             timeSpan.className = 'message-timestamp';
+             timeSpan.textContent = timestampString;
+             
+             // --- MODIFIED: Append nodes in new order ---
+             if (timestampString) {
+                p.appendChild(timeSpan); // Add [HH:MM]
+             }
+             p.appendChild(strong); // Add Name
+             p.appendChild(document.createTextNode(`: ${text}`)); // Add : Text
+
+             textDiv.appendChild(p);
+             msgDiv.appendChild(iconDiv);
+             msgDiv.appendChild(textDiv);
+
+             chatMessages.appendChild(msgDiv);
+         }
+
+         /**
+          * Scrolls the chat window to the bottom.
+          */
+         function scrollToBottom() {
+             chatMessages.scrollTop = chatMessages.scrollHeight;
+         }
+
+         /**
+          * Handles the chat form submission.
+          */
+         async function handleSendMessage(e) {
+             e.preventDefault();
+             const messageText = messageInput.value.trim();
+             const displayName = displayNameInput.value.trim() || 'Anonymous';
+
+             if (messageText === '' || !messagesCollection) {
+                 return;
+             }
+
+             try {
+                 await addDoc(messagesCollection, {
+                     name: displayName,
+                     text: messageText,
+                     createdAt: serverTimestamp()
+                 });
+                 messageInput.value = '';
+             } catch (error) {
+                 console.error("Error sending message: ", error);
+             }
+         }
+
+         /**
+          * Sets up the real-time listener for chat messages.
+          */
+         function setupMessageListener() {
+             if (!db) {
+                 return;
+             }
+
+             console.log("Setting up message listener...");
+             
+             messagesCollection = collection(db, "messages");
+             const q = query(messagesCollection, orderBy("createdAt", "asc"));
+
+             onSnapshot(q, (querySnapshot) => {
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                 }
+
+                 chatMessages.innerHTML = ''; // Clear existing messages
+
+                 if (querySnapshot.empty) {
+                     chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
+                     return;
+                 }
+
+                 querySnapshot.forEach((doc) => {
+                     displayMessage(doc.data());
+                 });
+
+                 scrollToBottom();
+
+             }, (error) => {
+                 console.error("Error getting messages: ", error);
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                 }
+                 chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
+             });
+         }
+         
+         /**
+          * Initializes the Firebase app and services.
+          */
+         async function initializeFirebase() {
+             try {
+                 const app = initializeApp(firebaseConfig);
+                 db = getFirestore(app);
+                 auth = getAuth(app);
+                 
+                 console.log("Firebase initialized. Waiting for auth...");
+
+                 onAuthStateChanged(auth, (user) => {
+                     if (user) {
+                         console.log("User is authenticated:", user.uid);
+                         userId = user.uid;
+                         setupMessageListener();
+                     } else {
+                         console.log("User is signed out.");
+                         userId = null;
+                     }
+                 });
+ 
+                 console.log("Signing in anonymously...");
+                 await signInAnonymously(auth);
+
+             } catch (error) {
+                 console.error("Firebase initialization failed:", error);
+                 if (loadingSpinner) {
+                     loadingSpinner.style.display = 'none';
+                  }
+                 chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
+             }
+         }
+
+         // --- Event Listeners ---
+         chatForm.addEventListener('submit', handleSendMessage);
+
+         // --- Start the App ---
+         initializeFirebase();
+
+    </script>
+
+      <!-- Bottom padding area -->
+      <div class="pad-bottom">
+        <div class="now-playing" id="nowPlaying"> <div class="up-next box" >
+                Up Next: <span class="pill-title" id="upNextTitle"
+>Loading...</span>
+            </div></div>
+         
+
+  </div>
+<script>
+(function(){
+  const audio = document.getElementById('radioStream');
+  const btn = document.getElementById('playPause');
+  const icon = document.querySelector('#playIcon path');
+
+  const PATHS = {
+    play: "M6 4.5v15l12-7.5L6 4.5z",
+    pause: "M6 19h4V5H6v14zm8-14v14h4V5h-4z"
+  };
+
+  let spinnerTimeout;
+
+  function showSpinner() {
+    icon.style.display = "none";
+    const spinner = document.createElement("div");
+    spinner.classList.add("spinner");
+    spinner.id = "loadingSpinner";
+    btn.appendChild(spinner);
+  }
+
+  function hideSpinner() {
+    const spinner = document.getElementById("loadingSpinner");
+    if (spinner) spinner.remove();
+    icon.style.display = "block";
+  }
+
+  function setPlayingState(isPlaying) {
+    btn.setAttribute("aria-pressed", isPlaying);
+    btn.setAttribute("aria-label", isPlaying ? "Pause" : "Play");
+    icon.setAttribute("d", isPlaying ? PATHS.pause : PATHS.play);
+  }
+
+  setPlayingState(false);
+
+  btn.addEventListener("click", async () => {
+    if (audio.paused) {
+      showSpinner();
+
+      try {
+        await audio.play();
+        // Delay showing pause icon for ~3 seconds max
+        spinnerTimeout = setTimeout(() => {
+          hideSpinner();
+          setPlayingState(true);
+        }, 3000);
+      } catch (err) {
+        console.warn("Playback failed:", err);
+        hideSpinner();
+      }
+    } else {
+      audio.pause();
+      clearTimeout(spinnerTimeout);
+      hideSpinner();
+      setPlayingState(false);
+    }
+  });
+
+  audio.addEventListener("playing", () => {
+    clearTimeout(spinnerTimeout);
+    hideSpinner();
+    setPlayingState(true);
+  });
+
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+/** ====== Config ====== **/
+// Replaced with your URL
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv"; 
+const A_IS_EVEN_ISO_WEEK = true;
+
+// Default values if no show is found
+const FALLBACK_SHOW = {
+  title: "Leeds Student Radio",
+  description: "Non-stop music",
+  cover_image_url: "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg"
+};
+
+const FALLBACK_NEXT = {
+  title: "Nothing Scheduled",
+  description: "",
+  cover_image_url: "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg"
+};
+
+/** ====== Date/Time Helpers ====== **/
+function isoWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() + 3 - dayNum);
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const diff = date - firstThursday;
+  return 1 + Math.round(diff / (7 * 24 * 3600 * 1000));
+}
+
+function getWeekTypeAB(date) {
+  const wk = isoWeekNumber(date);
+  const isEven = wk % 2 === 0;
+  return (A_IS_EVEN_ISO_WEEK ? (isEven ? "A" : "B") : (isEven ? "B" : "A"));
+}
+
+function timeToMinutes(t) {
+  if (!t) return NaN;
+  const [h, m] = t.trim().split(":").map(Number);
+  return h * 60 + (m || 0);
+}
+
+function currentDayTokens(date) {
+  const long = date.toLocaleString("en-GB", { weekday: "long" });
+  const short = long.slice(0, 3);
+  const dayIndex = (date.getDay() + 6) % 7;
+  const isWeekday = dayIndex <= 4;
+  return { long, short, isWeekday };
+}
+
+function matchesDay(showDayRaw, date) {
+  if (!showDayRaw) return false;
+  const val = String(showDayRaw).trim().toLowerCase();
+  const { long, short, isWeekday } = currentDayTokens(date);
+  
+  if (val === long.toLowerCase() || val === short.toLowerCase()) return true;
+  if (val === "daily" || val === "every day") return true;
+  if (["weekday", "weekdays", "every weekday", "mon-fri", "m-f"].includes(val)) return isWeekday;
+  if (["weekend", "weekends", "sat-sun"].includes(val)) return !isWeekday;
+  
+  return false;
+}
+
+function withinSlot(nowMin, startMin, endMin) {
+  if (isNaN(startMin) || isNaN(endMin)) return false;
+  if (startMin <= endMin) {
+    return nowMin >= startMin && nowMin < endMin;
+  } else {
+    return nowMin >= startMin || nowMin < endMin;
+  }
+}
+
+function nowInLondon() {
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+  const parts = formatter.formatToParts(new Date());
+  const get = t => parseInt(parts.find(p => p.type === t)?.value || 0, 10);
+  return new Date(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'));
+}
+
+function normalizeRows(rows) {
+  return rows.map(r => {
+    const o = {};
+    Object.keys(r).forEach(k => {
+      o[k.trim().toLowerCase().replace(/\s+/g, '_')] = (r[k] ?? "").toString().trim();
+    });
+    return o;
+  });
+}
+
+/** ====== Logic to find Shows ====== **/
+function findCurrentShow(rows) {
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+
+  return rows.find(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+    if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+    if (!weekOK) return false;
+    return withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
+  });
+}
+
+function findNextShow(rows) {
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+
+  const candidates = rows.filter(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+    if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+    if (!weekOK) return false;
+    // Only look for shows starting AFTER the current time
+    return timeToMinutes(show.start_time) > nowMinutes;
+  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
+
+  return candidates[0] || null;
+}
+
+/** ====== Main Update Function ====== **/
+function fetchAndUpdate() {
+  Papa.parse(SHEET_CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: "greedy",
+    complete: function(res) {
+      if (!res || !res.data || !res.data.length) return;
+      const rows = normalizeRows(res.data);
+
+      // 1. FIND AND UPDATE CURRENT SHOW
+      const current = findCurrentShow(rows) || FALLBACK_SHOW;
+      
+      // Update Image
+      const imgElem = document.querySelector("#pillBanner .thumbnail");
+      const showImg = current.cover_image_url || current.cover_image_url || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
+      if (imgElem) imgElem.src = showImg;
+
+      // Update Title
+      const titleElem = document.querySelector("#pillBanner .pill-title");
+      const showTitle = current.title || current.title || "LSR";
+      if (titleElem) titleElem.textContent = showTitle;
+
+      // 2. FIND AND UPDATE UP NEXT SHOW
+      const next = findNextShow(rows) || FALLBACK_NEXT;
+      
+      // Update Up Next Title (Using the class in the bottom box)
+      // We look for the .pill-title span inside the .up-next div
+      const nextTitleElem = document.querySelector(".up-next .pill-title");
+      const nextTitle = next.title || next.title || "Nothing Scheduled";
+      
+      if (nextTitleElem) nextTitleElem.textContent = nextTitle;
+    }
+  });
+}
+
+// Run immediately, then every 60 seconds
+fetchAndUpdate();
+
+// 2. Schedule the update logic every minute (60,000 milliseconds)
+// This ensures your content is up-to-date within the hour
+setInterval(fetchAndUpdate, 60000); 
+
+// 3. Schedule the FULL PAGE RELOAD every hour (3,600,000 milliseconds)
+// This is your safety net to prevent the display from freezing
+// 60 minutes * 60 seconds * 1000 milliseconds = 3,600,000 ms
+const ONE_HOUR_MS = 3600000;
+
+setInterval(() => {
+    // This command tells the browser to refresh the entire page
+    window.location.reload(true); 
+}, ONE_HOUR_MS);
+</script>
+
+</body>
+</html>
