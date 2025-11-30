@@ -3616,6 +3616,64 @@ const style = document.createElement('style');
     transform: translateX(100%);
   }
 }
+@media (min-width: 901px) {
+
+
+.week-grid {
+    display: grid
+;
+    grid-template-columns: repeat(7, minmax(150px, 1fr));
+    /* gap: 10px; */
+    overflow-x: auto;
+    border: solid 2px black;
+    gap: 1px !important;
+    background: #000000;
+    border-radius: 15px !important;
+}
+.day-column {
+    background: #cd3333 !important;
+   padding: 0px !important;
+    border-radius: 14px;
+    min-height: 120px;
+}
+
+.day-header {
+    font-weight: 700;
+    margin-bottom: 1px;
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: solid 2px black !important;
+    /* border-radius: 15px; */
+    background: #ac2e2e !important;
+    /* box-shadow: 5px 5px 5px #000000; */
+}
+
+.show-card {
+    display: flex;
+    gap: 1px;
+    align-items: center;
+    padding: 4px !important;
+    border-radius: 0px !important;
+    padding: 6px !important;
+     margin: 0px !important;
+    overflow: hidden;
+    cursor: pointer;
+    height: 70px;
+    transition: transform 0.3s ease;
+    border-bottom: solid 1px black;
+}
+.show-card-long {
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 0;
+    text-align: left;
+    height: 140px !important;
+}
+}
 
 
   `;
