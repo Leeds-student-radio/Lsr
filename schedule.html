@@ -32,6 +32,9 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </noscript>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 <!-- Preconnect -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2987,15 +2990,19 @@ display:none;
 
  
 
-  <div class="week-toggle" role="tablist" aria-label="Week type">
+ <div class="week-toggle" role="tablist" aria-label="Week type">
     <button id="weekA" class="btn" data-week="A">Week A</button>
     <button id="weekB" class="btn" data-week="B">Week B</button>
+    
+   
+    
     <button style="border:none"><p id="currentWeekDisplay" class="current-week">(Current: Week …)</p></button>
-
-  </div>
-
+     <button id="exportPdfBtn" class="btn" style="background-color: #333; color: white; position: absolute; right:0">
+        <i class="fa fa-download"></i> PDF 
+    </button>
+</div>
  
- <div id="scheduleRoot">
+ <div id="scheduleRoot"> 
     <div class="week-grid" id="weekGrid" aria-live="polite"></div>
     <div class="mobile-day" id="mobileDay">
      <div class="pager" id="mobilePager"></div>
@@ -3006,7 +3013,115 @@ display:none;
     </div>
   </div>
    </div>
-    
+    <script>
+  document.getElementById('exportPdfBtn').addEventListener('click', async function() {
+    const { jsPDF } = window.jspdf;
+    const element = document.getElementById('scheduleRoot');
+    const exportBtn = document.getElementById('exportPdfBtn');
+
+    // 1. User Feedback: Change button text
+    const originalText = exportBtn.innerHTML;
+    exportBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating...';
+    exportBtn.disabled = true;
+
+    try {
+        const weekName = (typeof activeWeek !== 'undefined' && activeWeek) ? activeWeek.toUpperCase() : 'A';
+        const fileName = `Week ${weekName} Schedule.pdf`;
+
+        // 2. Clone the element
+        const clone = element.cloneNode(true);
+        
+        // 3. Force Desktop Styling (1200px)
+        Object.assign(clone.style, {
+            position: 'fixed',
+            top: '0',
+            left: '-10000px', // Off-screen
+            width: '1500px',
+            height: 'auto',
+            zIndex: '-1000',
+            backgroundColor: '#0f1724', // Ensure background color matches
+            color: 'whitesmoke'
+        });
+        
+        document.body.appendChild(clone);
+        
+        const dots = clone.querySelectorAll('.live-dot'); dots.forEach(dot => dot.style.display = 'none');
+
+        // 4. THE MAGIC FIX: Route images through a CORS Proxy
+        const images = clone.querySelectorAll('img');
+        const imagePromises = Array.from(images).map(img => {
+            return new Promise((resolve) => {
+                const originalSrc = img.src;
+                
+                // Skip if no src or if it's a data URL already
+                if (!originalSrc || originalSrc.startsWith('data:')) {
+                    resolve();
+                    return;
+                }
+
+                // Strip the "https://" for weserv utility
+                const cleanUrl = originalSrc.replace(/^https?:\/\//, '');
+                
+                // Use images.weserv.nl to proxy the image with CORS headers enabled
+                // &output=png ensures we get a format html2canvas likes
+                img.src = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&output=png`;
+                
+                // Set crossOrigin to anonymous so html2canvas can read the pixels
+                img.crossOrigin = "anonymous";
+
+                img.onload = resolve;
+                img.onerror = () => {
+                    // If proxy fails, try reverting to original (fallback) and resolve anyway
+                    // so the PDF generation doesn't hang
+                    console.warn('Proxy failed for:', originalSrc);
+                    img.src = originalSrc; 
+                    resolve(); 
+                };
+            }); 
+        });
+ 
+        // 5. Wait for all proxy images to load
+        await Promise.all(imagePromises);
+
+        // 6. Generate Canvas
+        // We add a small delay to ensure rendering is settled
+        await new Promise(r => setTimeout(r, 500));
+
+        const canvas = await html2canvas(clone, {
+            scale: 2, // High resolution
+            width: 1500,
+            windowWidth: 1500,
+            useCORS: true, // This now works because the proxy sends the right headers
+            allowTaint: true,
+            scrollY: 0,
+            backgroundColor: '#0f1724',
+            logging: false
+        });
+
+        // 7. Create and Save PDF
+        const pdf = new jsPDF({
+            orientation: 'landscape',
+            unit: 'px',
+            format: [canvas.width, canvas.height]
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save(fileName);
+
+        // Cleanup
+        document.body.removeChild(clone);
+
+    } catch (err) {
+        console.error("PDF Export Error:", err);
+        alert("There was an issue generating the PDF.");
+    } finally {
+        // Reset button
+        exportBtn.innerHTML = originalText;
+        exportBtn.disabled = false;
+    }
+}); 
+</script>
 <script>
   const defaultCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv';
 
@@ -3844,7 +3959,7 @@ Discover, develop and decide your future with appointments, events and vacancies
     margin-top: 0;
 "><p>Leeds Student Radio is a student radio station broadcasting every day during term time, from the heart of Leeds University</p></li>
         <li id="disclaimer-trigger"><p style="cursor: pointer"><u>Disclaimer</u></p></li>
-
+ 
 <!-- Popup Modal -->
 <div id="disclaimer-modal" class="modala">
   <div class="modal-contenta">
@@ -3860,6 +3975,14 @@ Discover, develop and decide your future with appointments, events and vacancies
     </div>
     
      <style>
+     
+      @media (max-width: 900px) {
+     #exportPdfBtn  {
+  display: none; /* Hidden by default */
+  
+     }}
+     
+     
       .modala {
   display: none; /* Hidden by default */
   position: fixed;
