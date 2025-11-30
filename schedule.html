@@ -3013,13 +3013,13 @@ display:none;
     </div>
   </div>
    </div>
-    <script>
+ <script>
   document.getElementById('exportPdfBtn').addEventListener('click', async function() {
     const { jsPDF } = window.jspdf;
     const element = document.getElementById('scheduleRoot');
     const exportBtn = document.getElementById('exportPdfBtn');
 
-    // 1. User Feedback: Change button text
+    // 1. User Feedback
     const originalText = exportBtn.innerHTML;
     exportBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating...';
     exportBtn.disabled = true;
@@ -3031,11 +3031,11 @@ display:none;
         // 2. Clone the element
         const clone = element.cloneNode(true);
         
-        // 3. Force Desktop Styling (1200px)
+        // 3. Force Desktop Styling
         Object.assign(clone.style, {
             position: 'fixed',
             top: '0',
-            left: '-10000px', // Off-screen
+            left: '-10000px',
             width: '1500px',
             height: 'auto',
             zIndex: '-1000',
@@ -3047,30 +3047,31 @@ display:none;
         
         const dots = clone.querySelectorAll('.live-dot'); dots.forEach(dot => dot.style.display = 'none');
 
-        // 4. THE MAGIC FIX: Proxy + Resize + Compress
+        // 4. THE MAGIC FIX: Proxy + Resize (CORRECTED)
         const images = clone.querySelectorAll('img');
         const imagePromises = Array.from(images).map(img => {
             return new Promise((resolve) => {
                 const originalSrc = img.src;
                 
-                if (!originalSrc || originalSrc.startsWith('data:')) {
+                // Skip data: (base64) AND blob: (local blobs)
+                if (!originalSrc || originalSrc.startsWith('data:') || originalSrc.startsWith('blob:')) {
                     resolve();
                     return;
                 }
 
-                const cleanUrl = originalSrc.replace(/^https?:\/\//, '');
+                // --- CHANGED LOGIC START ---
+                // Do NOT strip "https://". Pass the full URL so signatures/tokens remain valid.
+                // We use encodeURIComponent to ensure special characters don't break the proxy string.
+                const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(originalSrc)}&output=png&w=200&q=75&we`;
                 
-                // --- UPDATED LINES BELOW ---
-                // Added &w=200 (resize to 200px width)
-                // Added &q=75 (set quality to 75%)
-                // Added &we (prevent upscaling if image is already small)
-                img.src = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&output=png&w=200&q=75&we`;
+                img.src = proxyUrl;
                 // ---------------------------
                 
                 img.crossOrigin = "anonymous";
 
                 img.onload = resolve;
                 img.onerror = () => {
+                    // If proxy fails (404/400), revert to original and hope html2canvas can handle it
                     console.warn('Proxy failed for:', originalSrc);
                     img.src = originalSrc; 
                     resolve(); 
@@ -3078,14 +3079,14 @@ display:none;
             }); 
         });
  
-        // 5. Wait for all proxy images to load
+        // 5. Wait for images
         await Promise.all(imagePromises);
 
         // 6. Generate Canvas
         await new Promise(r => setTimeout(r, 500));
 
         const canvas = await html2canvas(clone, {
-            scale: 1.8, 
+            scale: 2, 
             width: 1500,
             windowWidth: 1500,
             useCORS: true, 
@@ -3095,7 +3096,7 @@ display:none;
             logging: false
         });
 
-        // 7. Create and Save PDF
+        // 7. Save PDF
         const pdf = new jsPDF({
             orientation: 'landscape',
             unit: 'px',
@@ -3106,14 +3107,12 @@ display:none;
         pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
         pdf.save(fileName);
 
-        // Cleanup
         document.body.removeChild(clone);
 
     } catch (err) {
         console.error("PDF Export Error:", err);
         alert("There was an issue generating the PDF.");
     } finally {
-        // Reset button
         exportBtn.innerHTML = originalText;
         exportBtn.disabled = false;
     }
