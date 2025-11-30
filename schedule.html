@@ -1928,45 +1928,7 @@ position: absolute !important;
     </div>
   </div>
 </div>
- <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
-   
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
-    authDomain: "lsrlivecount.firebaseapp.com",
-    databaseURL: "https://lsrlivecount-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "lsrlivecount",
-     storageBucket: "lsrlivecount.firebasestorage.app",
-    messagingSenderId: "540310303767",
-    appId: "1:540310303767:web:82125bd428eaee173c1852"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // Persistent session ID across pages
-  const id = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
-  sessionStorage.setItem('liveId', id);
-
-  const userRef = ref(db, 'active/' + id);
-  set(userRef, Date.now());
-
-  // Optional: refresh timestamp every 30 seconds to show activity
-  setInterval(() => set(userRef, Date.now()), 30 * 1000);
-
-  window.addEventListener("beforeunload", () => remove(userRef));
-
-  const activeRef = ref(db, 'active');
-  onValue(activeRef, snap => {
-    const data = snap.val() || {};
-    const activeUsers = Object.values(data)
-      .filter(ts => Date.now() - ts < 5 * 60 * 1000).length;
-    document.getElementById("live-count").textContent = activeUsers;
-  });
-</script>
-
+ 
 <script>
 const menuBtn = document.getElementById("menuMOB");
   const fullscreenMenu = document.getElementById("fullscreenMenu");
