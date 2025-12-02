@@ -2959,9 +2959,7 @@ display:none;
    
     
     <button style="border:none"><p id="currentWeekDisplay" class="current-week">(Current: Week …)</p></button>
-     <button id="exportPdfBtn" class="btn" style="background-color: #333; color: white; position: absolute; right:0">
-        <i class="fa fa-download"></i> PDF 
-    </button>
+    
 </div>
  
  <div id="scheduleRoot"> 
@@ -2975,111 +2973,7 @@ display:none;
     </div>
   </div>
    </div>
- <script>
-  document.getElementById('exportPdfBtn').addEventListener('click', async function() {
-    const { jsPDF } = window.jspdf;
-    const element = document.getElementById('scheduleRoot');
-    const exportBtn = document.getElementById('exportPdfBtn');
-
-    // 1. User Feedback
-    const originalText = exportBtn.innerHTML;
-    exportBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating...';
-    exportBtn.disabled = true;
-
-    try {
-        const weekName = (typeof activeWeek !== 'undefined' && activeWeek) ? activeWeek.toUpperCase() : 'A';
-        const fileName = `Week ${weekName} Schedule.pdf`;
-
-        // 2. Clone the element
-        const clone = element.cloneNode(true);
-        
-        // 3. Force Desktop Styling
-        Object.assign(clone.style, {
-            position: 'fixed',
-            top: '0',
-            left: '-10000px',
-            width: '1500px',
-            height: 'auto',
-            zIndex: '-1000',
-            backgroundColor: '#0f1724', 
-            color: 'whitesmoke'
-        });
-        
-        document.body.appendChild(clone);
-        
-        const dots = clone.querySelectorAll('.live-dot'); dots.forEach(dot => dot.style.display = 'none');
-
-        // 4. THE MAGIC FIX: Proxy + Resize (CORRECTED)
-        const images = clone.querySelectorAll('img');
-        const imagePromises = Array.from(images).map(img => {
-            return new Promise((resolve) => {
-                const originalSrc = img.src;
-                
-                // Skip data: (base64) AND blob: (local blobs)
-                if (!originalSrc || originalSrc.startsWith('data:') || originalSrc.startsWith('blob:')) {
-                    resolve();
-                    return;
-                }
-
-                // --- CHANGED LOGIC START ---
-                // Do NOT strip "https://". Pass the full URL so signatures/tokens remain valid.
-                // We use encodeURIComponent to ensure special characters don't break the proxy string.
-                const proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(originalSrc)}&output=png&w=200&q=75&we`;
-                
-                img.src = proxyUrl;
-                // ---------------------------
-                
-                img.crossOrigin = "anonymous";
-
-                img.onload = resolve;
-                img.onerror = () => {
-                    // If proxy fails (404/400), revert to original and hope html2canvas can handle it
-                    console.warn('Proxy failed for:', originalSrc);
-                    img.src = originalSrc; 
-                    resolve(); 
-                };
-            }); 
-        });
  
-        // 5. Wait for images
-        await Promise.all(imagePromises);
-
-        // 6. Generate Canvas
-        await new Promise(r => setTimeout(r, 500));
-
-        const canvas = await html2canvas(clone, {
-            scale: 2, 
-            width: 1500,
-            windowWidth: 1500,
-            useCORS: true, 
-            allowTaint: true,
-            scrollY: 0,
-            backgroundColor: '#0f1724',
-            logging: false
-        });
-
-        // 7. Save PDF
-        const pdf = new jsPDF({
-            orientation: 'landscape',
-            unit: 'px',
-            format: [canvas.width, canvas.height]
-        });
-
-        const imgData = canvas.toDataURL('image/png');
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save(fileName);
-
-        document.body.removeChild(clone);
-
-    } catch (err) {
-        console.error("PDF Export Error:", err);
-        alert("There was an issue generating the PDF.");
-    } finally {
-        exportBtn.innerHTML = originalText;
-        exportBtn.disabled = false;
-    }
-}); 
-</script>
 <script>
   const defaultCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv';
 
