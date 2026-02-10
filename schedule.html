@@ -3437,19 +3437,30 @@ function highlightLiveShows(){
     renderMobile(filtered);
   } 
 
-  async function fetchCSV(url){
-    const res=await fetch(url); 
-    const txt=await res.text();
-    const rows=parseCSV(txt); 
-    const headers=rows[0].map(h=>h.trim());
-    schedule=rows.slice(1).map(r=>{
-      const obj={}; headers.forEach((h,i)=>obj[h]=r[i]||'');
+ async function fetchCSV(url) {
+  const res = await fetch(url);
+  const txt = await res.text();
+  const rows = parseCSV(txt);
+  const headers = rows[0].map(h => h.trim());
+
+  schedule = rows.slice(1)
+    .map(r => {
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = r[i] || '');
       return obj;
-    });
-    updateWeekButtons();
-    renderAll();
-   
-  }
+    })
+    // === MODIFIED FIX ===
+    // We filter out rows that have NO start time OR NO day.
+    // This keeps "Untitled" shows (valid gaps), but removes "Ghost" rows.
+    .filter(s => 
+      s.start_time && s.start_time.trim() !== '' && 
+      s.day_of_week && s.day_of_week.trim() !== ''
+    );
+    // ====================
+
+  updateWeekButtons();
+  renderAll();
+}
 function renderSkeletonUI() {
     // 1. Render Desktop Grid Skeleton
     const root = document.getElementById('weekGrid');
