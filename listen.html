@@ -3485,15 +3485,16 @@ margin-top: -16px;
              signInAnonymously, 
              onAuthStateChanged 
          } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-         import { 
-             getFirestore, 
-             collection, 
-             addDoc, 
-             onSnapshot, 
-             query, 
-             orderBy, 
-             serverTimestamp
-         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    onSnapshot, 
+    query, 
+    orderBy, 
+    serverTimestamp,
+    Timestamp // <--- ADD THIS
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
          // --- Firebase Configuration ---
          const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
@@ -3575,27 +3576,32 @@ margin-top: -16px;
          /**
           * Handles the chat form submission.
           */
-         async function handleSendMessage(e) {
-             e.preventDefault();
-             const messageText = messageInput.value.trim();
-             const displayName = displayNameInput.value.trim() || 'Anonymous';
+        async function handleSendMessage(e) {
+    e.preventDefault();
+    const messageText = messageInput.value.trim();
+    const displayName = displayNameInput.value.trim() || 'Anonymous';
 
-             if (messageText === '' || !messagesCollection) {
-                 return;
-             }
+    if (messageText === '' || !messagesCollection) {
+        return;
+    }
 
-             try {
-                 await addDoc(messagesCollection, {
-                     name: displayName,
-                     text: messageText,
-                     createdAt: serverTimestamp()
-                 });
-                 messageInput.value = '';
-             } catch (error) {
-                 console.error("Error sending message: ", error);
-             }
-         }
+    // --- NEW: Calculate 30 days from now ---
+    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+    const expirationDate = new Date(Date.now() + thirtyDaysInMs);
+    // ---------------------------------------
 
+    try {
+        await addDoc(messagesCollection, {
+            name: displayName,
+            text: messageText,
+            createdAt: serverTimestamp(),
+            expiresAt: Timestamp.fromDate(expirationDate) // <--- THIS TELLS FIREBASE WHEN TO DELETE
+        });
+        messageInput.value = '';
+    } catch (error) {
+        console.error("Error sending message: ", error);
+    }
+}
          /**
           * Sets up the real-time listener for chat messages.
           */
