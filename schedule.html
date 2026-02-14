@@ -2817,11 +2817,11 @@ margin-top: -16px;
 
     .show-card{display:flex;gap:1px;align-items:center;padding:4px;border-radius:10px;margin-bottom:6px;overflow:hidden; cursor:pointer; height:70px; transition: transform 0.3s ease; }
      @media (min-width:901px){
-    .show-card:hover{transform: translateY(-6px) scale(1.01);}
+    .show-card:hover{filter: brightness(1.1);}
     }
     .show-thumb{width:56px;height:56px;border-radius:8px;flex:0 0 56px;background:#0a1220;object-fit:cover}
     .show-body{flex:1}
-    .show-title{font-weight:500;font-size:14px;margin:0; margin-left:4px;}
+    .show-title{font-weight:400;font-size:13px;margin:0; margin-left:3px;}
     .show-meta{font-size:13px;color:#c1c6cf;margin-top:4px}
     .show-desc{font-size:13px;color:var(--muted);margin-top:6px}
 
@@ -3132,9 +3132,9 @@ function createPopup(){
 
 
   <button id="closePopup" style="
-    position: absolute !important; top: 12px !important; padding-bottom: 2px; right: 16px!important; 
-    border: solid 2px black !important; border-radius: 50% !important; font-size: 34px; font-weight: bold; 
-    color: whitesmoke; cursor: pointer; background: rgb(149 13 13 / 64%);
+    position: absolute !important; top: 2px !important; padding-bottom: 2px; right: 2px!important; 
+    border-radius: 50% !important; font-size: 34px; font-weight: bold; 
+    color: whitesmoke; cursor: pointer; 
   width:45px !important; height:45px !important; line-height: 0;" aria-label="Close popup">&times;</button>
 
   <img id="popupImage" src="" alt="" style="
@@ -3192,24 +3192,72 @@ function createPopup(){
    }
 }
 
+// === UPDATED HELPER FUNCTION ===
+function getShowFrequencyText(show) {
+  const title = show.title?.trim();
+  const day = normalizeDay(show.day_of_week);
+  const startTime = show.start_time;
+  const endTime = show.end_time;
+
+  // Find all occurrences of this show across the whole schedule
+  const occurrences = schedule.filter(s => 
+    s.title?.trim() === title && 
+    normalizeDay(s.day_of_week) === day &&
+    s.start_time === startTime
+  );
+
+  const hasA = occurrences.some(s => s.week_type?.toUpperCase() === 'A');
+  const hasB = occurrences.some(s => s.week_type?.toUpperCase() === 'B');
+  const hasNone = occurrences.some(s => !s.week_type || s.week_type.trim() === '');
+
+  // Logic: If it's in both A & B, or has no week type, it's every [Day]
+  let frequencyPrefix = `Every ${day}`; 
+  if ((hasA && !hasB) || (!hasA && hasB)) {
+    frequencyPrefix = `Every other ${day}`;
+  }
+
+  // Format the time (e.g., 2-3pm or 10:30-11:30am)
+  const formatTime = (t) => {
+    if(!t) return '';
+    let [h, m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    // Only show minutes if they aren't :00
+    return m === 0 ? `${h}${ampm}` : `${h}:${m.toString().padStart(2, '0')}${ampm}`;
+  };
+
+  return `${frequencyPrefix} at ${formatTime(startTime)}-${formatTime(endTime)}`;
+}
+
+// === UPDATED showPopup FUNCTION ===
 function showPopup(show) {
   const popup = createPopup();
 
-  // Inject content dynamically
+  // Inject standard content
   popup.querySelector('#popupImage').src = show.cover_image_url || '';
   popup.querySelector('#popupImage').alt = show.title || '';
   popup.querySelector('#popupTitle').textContent = show.title || '';
   popup.querySelector('#popupHosts').textContent = `Host(s): ${show.hosts || 'Unknown'}`;
+  
+  // Create or update the frequency line
+  let freqEl = popup.querySelector('#popupFrequency');
+  if (!freqEl) {
+    freqEl = document.createElement('p');
+    freqEl.id = 'popupFrequency';
+    // Styling it slightly differently to stand out
+freqEl.style.cssText = 'font-weight: bold; margin-bottom: 10px; color: rgb(117 0 0); background:whitesmoke; padding: 4px 8px; border-radius:5px;';
+    const hostEl = popup.querySelector('#popupHosts');
+    hostEl.parentNode.insertBefore(freqEl, hostEl.nextSibling);
+  }
+  
+  freqEl.textContent = getShowFrequencyText(show);
   popup.querySelector('#popupDescription').textContent = show.description || 'No description available.';
 
-  // Adjust layout *after* content is in place
   adjustPopupLayout();
 
-  // Show popup
   popup.style.visibility = 'visible';
   popup.style.opacity = 1;
 }
-
  // === MODIFIED FUNCTION ===
 function makeShowElement(show) {
   const el = document.createElement('div');
@@ -3291,7 +3339,7 @@ thumb.src = show.cover_image_url;
       <div class='show-meta'>
         ${hasTitle ? 
           `<span class='time-pill' style='background:${show.colour || '#b33'}'>
-            ${show.start_time}—${show.end_time}
+            ${show.start_time}
           </span>` : 
           '' // Otherwise, show nothing
         }
