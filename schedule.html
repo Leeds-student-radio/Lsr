@@ -3163,7 +3163,7 @@ style.textContent = `
   }
   @media (max-width: 550px) {
     #popupDescription {
-      line-height: 1 !important; 
+      line-height: 1.2 !important; 
     }
      #popupTitle {
       font-size: 1.2em !important; 
@@ -3182,13 +3182,41 @@ style.textContent = `
     font-weight: bold;
     color: #bd2f2f !important;
     cursor: pointer;
-    width: 30px !important;
-    height: 30px !important;
+    width: 32px !important;
+    height: 32px !important;
     line-height: 0;
     background: #f5f5f5db;
    
-    padding: 2px !important;
+    padding: 0px !important;
     }
+ #showPopup {
+  
+    width: 100vw !important;
+    height: 100vh;
+    background: rgb(205, 50, 50) !important;
+    display: flex;
+    justify-content: center;
+    align-items: start !important;
+    margin-top: 108px !important;
+    box-sizing: border-box;
+    overflow-y: auto;
+    z-index: 1147 !important;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+   #popupContent { 
+  
+   position: relative;
+    width: 100% !important
+   
+  
+    background: rgb(205, 50, 50);
+    color: whitesmoke;
+    text-align: center;
+    border: none !important
+   
+  }
   }
 `;
 document.head.appendChild(style);
