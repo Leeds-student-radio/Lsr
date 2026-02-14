@@ -1552,7 +1552,8 @@ pill-link {
     gap: 0.3rem;
     font-size: 0.9rem;
     font-weight: bold;
-    color: orange;
+    color: #ffb130;
+    white-space: nowrap;
   }
 }
 @media (max-width: 1099px) {
@@ -2270,7 +2271,7 @@ const menuBtn = document.getElementById("menuMOB");
       <!-- TOP ROW -->
       <div class="pill-top-row">
         <span class="pill-title">...Loading</span>
-        <span class="up-next-label">⏳ Up Next</span>
+        <span class="up-next-label"><i class="fa-solid fa-hourglass"></i> Up Next</span>
       </div>
 
       <!-- BOTTOM ROW -->
@@ -2794,11 +2795,20 @@ function applyShowToSection(sectionSelector, show, labelText, isLive, labelSelec
 
   const labelElem = section.querySelector(labelSelector);
   if (labelElem) {
-    if (isLive) {
-      labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+   if (labelElem) {
+  if (isLive) {
+    // Live = pulsing dot
+    labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+  } else {
+    // Not live
+    if (labelText === "Up Next") {
+      labelElem.innerHTML = `<i class="fa-solid fa-hourglass"></i> ${labelText}`;
     } else {
       labelElem.textContent = labelText;
     }
+  }
+}
+
   }
 
   // Special: Update description toggle fullText for first banner
@@ -2986,13 +2996,60 @@ function fetchAndUpdate() {
         applyShowToSection("#pillBanner1 .current-show", FALLBACK_SHOW, "Off Air", false, ".on-air");
       }
 
-      const next = findNextShow(rows);
-      if (next) {
-        applyShowToSection("#pillBanner1 .up-next", next, "⏳ Up Next", false, ".up-next-label");
-      } else {
-        applyShowToSection("#pillBanner1 .up-next", FALLBACK_NEXT, "⏳ Up Next", false, ".up-next-label");
-      }
+     const next = findNextShow(rows);
+
+if (next) {
+
+  const formatHour = (t) => {
+    if (!t) return "";
+    let [h] = t.split(":").map(Number);
+
+    const ampm = h >= 12 ? "pm" : "am";
+    h = h % 12;
+    if (h === 0) h = 12;
+
+    return { hour: h, ampm };
+  };
+
+  const start = formatHour(next.start_time);
+  const end = formatHour(next.end_time);
+
+  // If both times share same am/pm → only show once at the end
+  let timeText;
+  if (start.ampm === end.ampm) {
+    timeText = `Tune in from ${start.hour} to ${end.hour} ${end.ampm}`;
+  } else {
+    timeText = `Tune in from ${start.hour}${start.ampm} to ${end.hour}${end.ampm}`;
+  }
+
+  const nextWithTime = {
+    ...next,
+    description: `${next.description || ""}  ${timeText}`
+  };
+
+  applyShowToSection(
+    "#pillBanner1 .up-next",
+    nextWithTime,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
+
+} else {
+  applyShowToSection(
+    "#pillBanner1 .up-next",
+    FALLBACK_NEXT,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
+}
+
     },
+
+
+
+  
     error: function(err) {
       console.error("Papa.parse error:", err);
     }
