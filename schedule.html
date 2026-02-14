@@ -1567,7 +1567,8 @@ pill-link {
     gap: 0.3rem;
     font-size: 0.9rem;
     font-weight: bold;
-    color: orange;
+           color: #ffb130;
+        white-space: nowrap;
   }
 }
 @media (max-width: 1099px) {
@@ -1949,7 +1950,8 @@ const menuBtn = document.getElementById("menuMOB");
 
 <div class="pill-banner" id="pillBanner1">
   <!-- CURRENT SHOW -->
-  <div class="pill-section current-show">
+  <div class="pill-section current-show" style="    border-right: solid 1px #940000;">
+       <button class="play-btn" id="playBtn">▶</button>
     <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" alt="Thumbnail" class="thumbnail">
 
     <div class="pill-content">
@@ -1967,7 +1969,7 @@ const menuBtn = document.getElementById("menuMOB");
     </div>
 
     <!-- Play Button (moved out for alignment control) -->
-    <button class="play-btn" id="playBtn">▶</button>
+ 
   </div>
 
   <!-- UP NEXT SHOW -->
@@ -1977,7 +1979,7 @@ const menuBtn = document.getElementById("menuMOB");
       <!-- TOP ROW -->
       <div class="pill-top-row">
         <span class="pill-title">...Loading</span>
-        <span class="up-next-label">⏳ Up Next</span>
+        <span class="up-next-label"><i class="fa-solid fa-hourglass"></i> Up Next</span>
       </div>
 
       <!-- BOTTOM ROW -->
@@ -3770,7 +3772,7 @@ Discover, develop and decide your future with appointments, events and vacancies
       <div style="height:1px; width: 1px;" ><img class="footimg" src="https://stepzach.github.io/leedstestradio/316c00_e85e432bbd2e4e15a926db384684cf02~mv2.png.avif">
     </div>  </div>
      <div class="footer-section"  id="footerlline" style="
-    border-left: 1px solid #ccc;">
+    border-left: 1px solid #940000;">
       
       <ul>
         <li style="margin-top: 0;"></li>
@@ -3808,7 +3810,7 @@ Discover, develop and decide your future with appointments, events and vacancies
  
     </div>
     <div class="footer-section"  id="footerline" style="
-    border-left: 1px solid #ccc;">
+    border-left: 1px solid #940000;">
       
       <ul>
         <li style="margin-top: 0;"></li>
@@ -3912,8 +3914,13 @@ window.addEventListener('click', (e) => {
   </script>
   </div>
   <div class="footer-bottom">
-    <p>© Leeds Student Radio 2025</p>
-  </div>
+  <p>© Leeds Student Radio <span id="current-year"></span></p>
+</div>
+
+<script>
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+
 </footer>
 
 
@@ -4014,13 +4021,27 @@ function applyShowToSection(sectionSelector, show, labelText, isLive, labelSelec
   if (imgElem) imgElem.src = img;
 
   const labelElem = section.querySelector(labelSelector);
-  if (labelElem) {
-    if (isLive) {
-      labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+if (labelElem) {
+  if (isLive) {
+    // Live = pulsing dot
+    labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+    labelElem.style.color = ""; // reset any forced color
+  } else {
+    if (labelText === "Up Next") {
+      labelElem.innerHTML = `<i class="fa-solid fa-hourglass"></i> ${labelText}`;
+      labelElem.style.color = ""; // reset
     } else {
       labelElem.textContent = labelText;
+
+      // ✅ FORCE GREY when Off Air
+      if (labelText.toLowerCase() === "off air") {
+        labelElem.style.setProperty("color", "#ff9991", "important");
+      } else {
+        labelElem.style.color = ""; // reset if not Off Air
+      }
     }
   }
+}
 
   // Special: Update description toggle fullText for first banner
   if (sectionSelector === "#pillBanner") {
@@ -4213,11 +4234,53 @@ if (current2) {
   applyShowToSection("#pillBanner1 .current-show", FALLBACK_SHOW, "Off Air", false, ".on-air");
 }
 
-const next = findNextShow(rows);
+ const next = findNextShow(rows);
+
 if (next) {
-  applyShowToSection("#pillBanner1 .up-next", next, "⏳ Up Next", false, ".up-next-label");
+
+  const formatHour = (t) => {
+    if (!t) return "";
+    let [h] = t.split(":").map(Number);
+
+    const ampm = h >= 12 ? "pm" : "am";
+    h = h % 12;
+    if (h === 0) h = 12;
+
+    return { hour: h, ampm };
+  };
+
+  const start = formatHour(next.start_time);
+  const end = formatHour(next.end_time);
+
+  // If both times share same am/pm → only show once at the end
+  let timeText;
+  if (start.ampm === end.ampm) {
+    timeText = `Tune in from ${start.hour} to ${end.hour} ${end.ampm}`;
+  } else {
+    timeText = `Tune in from ${start.hour}${start.ampm} to ${end.hour}${end.ampm}`;
+  }
+
+  const nextWithTime = {
+    ...next,
+    description: `${next.description || ""}  ${timeText}`
+  };
+
+
+ applyShowToSection(
+    "#pillBanner1 .up-next",
+    nextWithTime,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
 } else {
-  applyShowToSection("#pillBanner1 .up-next", FALLBACK_NEXT, "⏳ Up Next", false, ".up-next-label");
+   applyShowToSection(
+    "#pillBanner1 .up-next",
+    FALLBACK_NEXT,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
 }
 }
   });
@@ -5327,7 +5390,7 @@ text-decoration: underline;
 }
 
 .footer-bottom {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #5b0000;
   margin-top: 24px;
   padding-top: 12px;
   text-align: center;
@@ -6399,6 +6462,7 @@ pill-link {
     align-items: center;
     gap: 1rem;
     padding: 0 1rem;
+    z-index:1000;
   }
 
   /* Play button aligned with thumbnail */
