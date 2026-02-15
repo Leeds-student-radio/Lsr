@@ -3189,11 +3189,11 @@ margin-top: -16px;
      </div>
     <div class="player-content">
         <div class="player-title">...Loading</div>
+     <div class="player-hosts" style="color: #ffb130; font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; font-family: 'Noto Sans', sans-serif;"></div>
         <div class="player-description">...Loading</div>
       
     </div>
-  <div class="fullscreenmode" onclick="window.open('https://www.thisislsr.com/fullscreen', '_blank');" style="padding: 0.2rem; border-radius:9px; border:solid 1px black; text-align: center; background: rgb(255 255 255 / 9%); color: White; font-weight:300; align-self:end; justify-self:end;">Vinyl Player</div>
-     
+   
 </div>
 
 
@@ -4404,40 +4404,44 @@ function applyShowToPlayer(sectionSelector, show, isLive) {
   const titleElem = section.querySelector(".player-title");
   const descElem = section.querySelector(".player-description");
   const imgElem = section.querySelector(".album-cover img");
+  // NEW: Select the host element
+  const hostElem = section.querySelector(".player-hosts");
 
   const title = show.title || show["Title"];
   const desc = show.description || show["Description"];
   const img = show.cover_image_url || show["cover image url"] || show["Cover Image Url"] || show["Cover Image URL"];
+  // NEW: Get host data (assuming column header is 'Host' or 'Hosts')
+  const host = show.host || show.hosts || "";
 
   if (titleElem) titleElem.textContent = title;
+  
+  // NEW: Apply host text if it exists
+  if (hostElem) {
+    hostElem.textContent = host ? `with ${host}` : "";
+  }
+
   if (descElem) descElem.textContent = desc;
   if (imgElem) imgElem.src = img;
 
-  // Optional: Add "On Air" indicator somewhere in the player if needed
   if (isLive) {
     section.classList.add("on-air");
   } else {
     section.classList.remove("on-air");
+    // Optional: Clear host name if off-air
+    if (hostElem) hostElem.textContent = ""; 
   }
 
-   // Media Session API (lock-screen title + artwork)
+  // Media Session API
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title,
-      artist: 'Leeds Student Radio',
-      album: '',
+      artist: host ? `LSR: ${host}` : 'Leeds Student Radio', // Shows host on lock screen
+      album: 'Live Stream',
       artwork: [
-        { src: img, sizes: '96x96',   type: 'image/jpeg' },
-        { src: img, sizes: '128x128', type: 'image/jpeg' },
-        { src: img, sizes: '256x256', type: 'image/jpeg' },
         { src: img, sizes: '512x512', type: 'image/jpeg' }
       ]
     });
-
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
   }
-
 }
 
 /** ====== Fetch + Update ====== **/
