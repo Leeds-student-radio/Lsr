@@ -4453,7 +4453,15 @@ function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
   } else {
     section.classList.remove("on-air");
   }
+ if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: title,
+      artist: host ? `LSR: ${host}` : 'Leeds Student Radio',
+      artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
+    });
+  }
 }
+
 
 // Keep your formatTo12Hr function as you had it
 function formatTo12Hr(t) {
