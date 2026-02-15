@@ -2969,8 +2969,10 @@ margin-top: -16px;
   padding: 6px 2px;
   gap: 4px;
   position: sticky;
-  top: 108px;
+  top: 146px;
   z-index: 10;
+     
+    border-bottom: solid 1px black;
  
   scrollbar-width: none; /* Hide scrollbar for clean look */
 }
@@ -3016,8 +3018,8 @@ margin-top: -16px;
   
  
   .mobile-scroller {
-   gap: 0px !important
-    padding: 0px !important
+   gap: 0px !important;
+    padding: 0px !important;
   }
       .day-column {
    border: none !important;
@@ -3033,20 +3035,37 @@ margin-top: -16px;
       .show-card {
    
     margin-bottom: 0px !important;
-   height: 60px !important;
+   height: 65px !important;
         border-radius: 0px !important;
     border-bottom: solid black 1px;
+        padding: 6px 12px !important;
     
         }  
          .show-card-long {
    
    
-   height: 120px !important;
+   height: 130px !important;
      
     
         }  
+.show-card-long .show-thumb {
+      width: 56px !important;
+    height: 56px !important;
+    border-radius: 8px !important;
+    flex: 0 0 56px !important;
+    background: #0a1220 !important;
+    object-fit: cover !important;
 
-     
+       } 
+      .week-toggle {
+    padding-top: 5px;
+    background: rgb(205, 50, 50);
+    position: sticky;
+    top: 108px;
+    height: 38px;
+        margin-bottom:0px !important;
+       } 
+        } 
   </style>
  
 </div>
@@ -3074,8 +3093,10 @@ margin-top: -16px;
    </div>
  
 <script>
+  
   const defaultCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv';
-
+let isInitialLoad = true;
+let currentMobileDayIndex = null; // This will track which day the user is viewing
   const DAY_ORDER = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   function normalizeDay(name){
     if(!name) return '';
@@ -3610,52 +3631,48 @@ function renderMobile(shows) {
   
   if (!scroller || !pager) return;
 
-  // 1. Force visibility before calculating offsets
-  pager.style.display = 'flex'; 
-
   scroller.innerHTML = '';
   pager.innerHTML = '';
 
   const byDay = groupByDay(shows);
   const today = getTodayName();
+  const todayIndex = DAY_ORDER.indexOf(today);
 
-  
+  // If this is the first time the site loads, default to today's index
+  if (currentMobileDayIndex === null) {
+    currentMobileDayIndex = todayIndex;
+  }
 
- DAY_ORDER.forEach((day, i) => {
+  DAY_ORDER.forEach((day, i) => {
+    // 1. Create Pager Button
     const btn = document.createElement('button');
     btn.className = 'pager-btn';
+    btn.dataset.index = i;
+    btn.textContent = day.slice(0, 3);
     
-    // ABBREVIATION LOGIC:
-    // This takes 'Monday' and turns it into 'Mon'
-    const shortDay = day.slice(0, 3); 
-    btn.textContent = shortDay; 
-    
-    if (day === today) btn.classList.add('active');
+    // Highlight the button based on our saved index, NOT necessarily "today"
+    if (i === currentMobileDayIndex) {
+      btn.classList.add('active');
+    }
 
     btn.onclick = () => {
-        const targetCol = scroller.children[i];
-        if (targetCol) {
-            scroller.scrollTo({
-                left: targetCol.offsetLeft,
-                behavior: 'smooth'
-            });
-        }
-
-        document.querySelectorAll('.pager-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Scroll the pager bar horizontally without moving the whole page
-        pager.scrollTo({
-            left: btn.offsetLeft - (pager.offsetWidth / 2) + (btn.offsetWidth / 2),
-            behavior: 'smooth'
+      currentMobileDayIndex = i; // Update tracker on click
+      const targetCol = scroller.children[i];
+      if (targetCol) {
+        scroller.scrollTo({
+          left: targetCol.offsetLeft,
+          behavior: 'smooth'
         });
+      }
+      // Update active class immediately for better UI feel
+      document.querySelectorAll('.pager-btn').forEach((b, idx) => {
+        b.classList.toggle('active', idx === i);
+      });
     };
 
     pager.appendChild(btn);
-    // ... rest of your column building code ...
 
-
-    // Build the day column content
+    // 2. Create Day Column
     const col = document.createElement('div');
     col.className = 'day-column';
     if (byDay[day] && byDay[day].length > 0) {
@@ -3666,28 +3683,51 @@ function renderMobile(shows) {
     scroller.appendChild(col);
   });
 
-  // Initial scroll logic
- // Initial scroll logic
-setTimeout(() => {
-  const todayIndex = DAY_ORDER.indexOf(today);
-  if (todayIndex !== -1 && scroller.children[todayIndex]) {
-    // Scroll the horizontal container ONLY
-    scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
+  // --- Scroll Detection (Update Tracker while swiping) ---
+  scroller.onscroll = () => {
+    const scrollLeft = scroller.scrollLeft;
+    const width = scroller.offsetWidth;
+    const activeIndex = Math.round(scrollLeft / width);
 
-    // CHANGE THIS: 
-    // Instead of scrollIntoView (which moves the whole page), 
-    // just scroll the pager container horizontally.
-    const activeBtn = pager.children[todayIndex];
-    if (activeBtn) {
-      pager.scrollTo({
-        left: activeBtn.offsetLeft - (pager.offsetWidth / 2),
-        behavior: 'auto' // 'auto' prevents the "sliding" look on first load
-      });
-    }
+    // Update the saved index so week-switches remember this position
+    currentMobileDayIndex = activeIndex;
+
+    const allBtns = pager.querySelectorAll('.pager-btn');
+    allBtns.forEach((btn, i) => {
+      if (i === activeIndex) {
+        btn.classList.add('active');
+        // Auto-scroll the pager bar to keep the active day visible
+        pager.scrollTo({
+          left: btn.offsetLeft - (pager.offsetWidth / 2) + (btn.offsetWidth / 2),
+          behavior: 'smooth'
+        });
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  };
+
+  // --- Initial Load Only: Jump to Today ---
+  if (isInitialLoad) {
+    setTimeout(() => {
+      if (todayIndex !== -1 && scroller.children[todayIndex]) {
+        scroller.scrollTo({
+          left: scroller.children[todayIndex].offsetLeft,
+          behavior: 'auto'
+        });
+
+        const activeBtn = pager.children[todayIndex];
+        if (activeBtn) {
+          pager.scrollTo({
+            left: activeBtn.offsetLeft - (pager.offsetWidth / 2) + (activeBtn.offsetWidth / 2),
+            behavior: 'auto'
+          });
+        }
+      }
+      isInitialLoad = false; // Disable for the rest of the session
+    }, 150);
   }
-}, 100);
 }
-
   function renderAll(){
     const filtered=schedule.filter(s=>!s.week_type || s.week_type===activeWeek);
     renderWeekGrid(filtered); 
@@ -3790,8 +3830,8 @@ function applyWeekStyles(viewing) {
     if (!btnA || !btnB) return;
 
     // 1. Set the "Current" labels (Permanent)
-    btnA.textContent = (REAL_CURRENT_WEEK === 'A') ? "This Week: A" : "(Next) Week: A";
-    btnB.textContent = (REAL_CURRENT_WEEK === 'B') ? "This Week: B" : "(Next) Week: B";
+    btnA.textContent = (REAL_CURRENT_WEEK === 'A') ? "This Week (A)" : "Next Week (A)";
+    btnB.textContent = (REAL_CURRENT_WEEK === 'B') ? "This Week (B)" : "Next Week (B)";
 
     // 2. Set the "Active" styles (Based on what is being viewed)
     btnA.classList.toggle('active', viewing === 'A');
