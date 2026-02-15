@@ -3194,6 +3194,7 @@ margin-top: -16px;
         <div class="player-title">...Loading</div>
      <div class="player-hosts" style="    color: #fff6e7e3;
     font-weight: 400; font-size: 0.9rem; margin-bottom: 4px; font-family: 'Noto Sans', sans-serif;"></div>
+     <p id="popupFrequency" style="font-weight: bold; margin-bottom: 10px; color: rgb(117, 0, 0); background: whitesmoke; padding: 4px 8px; border-radius: 5px; display: none; width: fit-content; font-size: 0.85rem;"></p>
         <div class="player-description">...Loading</div>
       
     </div>
@@ -4400,54 +4401,80 @@ function setBannerDescription(newText) {
 
 // Initial render
 updateDescription();
-
 function applyShowToPlayer(sectionSelector, show, isLive) {
   const section = document.querySelector(sectionSelector);
   if (!section) return;
 
+  // 1. SELECT THE ELEMENTS
   const titleElem = section.querySelector(".player-title");
+  const hostElem = section.querySelector(".player-hosts");
   const descElem = section.querySelector(".player-description");
   const imgElem = section.querySelector(".album-cover img");
-  // NEW: Select the host element
-  const hostElem = section.querySelector(".player-hosts");
+  const freqElem = document.getElementById("popupFrequency");
 
-  const title = show.title || show["Title"];
-  const desc = show.description || show["Description"];
-  const img = show.cover_image_url || show["cover image url"] || show["Cover Image Url"] || show["Cover Image URL"];
-  // NEW: Get host data (assuming column header is 'Host' or 'Hosts')
+  // 2. GET THE DATA FROM THE SHEET
+  const title = show.title || show["Title"] || "No Show Live";
   const host = show.host || show.hosts || "";
+  const desc = show.description || show["Description"] || "";
+  const img = show.cover_image_url || show["cover image url"] || show["Cover Image URL"] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
 
-  if (titleElem) titleElem.textContent = title;
-  
-  // NEW: Apply host text if it exists
-  if (hostElem) {
-    hostElem.textContent = host ? `with ${host}` : "";
+  // 3. APPLY FREQUENCY (AM/PM)
+  if (freqElem && show.day_of_week) {
+    const wt = (show.week_type || "").toUpperCase();
+    const isEveryOther = (wt === "A" || wt === "B");
+    const freqPrefix = isEveryOther ? "Every other" : "Every";
+    
+    // Capitalize day
+    const day = show.day_of_week.charAt(0).toUpperCase() + show.day_of_week.slice(1).toLowerCase();
+    
+    // Format times
+    const startTime = formatTo12Hr(show.start_time);
+    const endTime = formatTo12Hr(show.end_time);
+    const timeRange = `${startTime}-${endTime}`;
+    
+    freqElem.textContent = `${freqPrefix} ${day} at ${timeRange}`;
+    freqElem.style.display = "block";
+  } else if (freqElem) {
+    freqElem.style.display = "none";
   }
 
+  // 4. APPLY TITLE, HOST, DESC, IMG
+  if (titleElem) titleElem.textContent = title;
+  if (hostElem) hostElem.textContent = host ? `with ${host}` : "";
   if (descElem) descElem.textContent = desc;
   if (imgElem) imgElem.src = img;
 
+  // 5. ON AIR STATUS
   if (isLive) {
     section.classList.add("on-air");
   } else {
     section.classList.remove("on-air");
-    // Optional: Clear host name if off-air
-    if (hostElem) hostElem.textContent = ""; 
   }
 
-  // Media Session API
+  // 6. MEDIA SESSION (Lock screen)
   if ('mediaSession' in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: title,
-      artist: host ? `LSR: ${host}` : 'Leeds Student Radio', // Shows host on lock screen
-      album: 'Live Stream',
-      artwork: [
-        { src: img, sizes: '512x512', type: 'image/jpeg' }
-      ]
+      artist: host ? `LSR: ${host}` : 'Leeds Student Radio',
+      artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
     });
   }
 }
 
+// Keep your formatTo12Hr function as you had it
+function formatTo12Hr(t) {
+  if (!t) return "";
+  let parts = t.split(":");
+  let h = parseInt(parts[0], 10);
+  let m = parts[1] ? parseInt(parts[1], 10) : 0;
+  
+  const ampm = h >= 12 ? "pm" : "am";
+  h = h % 12;
+  if (h === 0) h = 12;
+  
+  const mins = (m > 0) ? ":" + m.toString().padStart(2, '0') : "";
+  return h + mins + ampm;
+}
 /** ====== Fetch + Update ====== **/
 function fetchAndUpdate() {
   Papa.parse(SHEET_CSV_URL, {
