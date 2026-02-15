@@ -4453,13 +4453,16 @@ function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
   } else {
     section.classList.remove("on-air");
   }
- if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: title,
-      artist: host ? `LSR: ${host}` : 'Leeds Student Radio',
-      artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
-    });
-  }
+if ('mediaSession' in navigator) {
+  // Check if host exists and contains a comma
+  const displayArtist = (host && host.includes(',')) ? 'Leeds Student Radio' : (host ? `LSR: ${host}` : 'Leeds Student Radio');
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: title,
+    artist: displayArtist,
+    artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
+  });
+}
 }
 
 
