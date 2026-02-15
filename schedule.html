@@ -2957,13 +2957,9 @@ display:none;
  <div class="week-toggle" role="tablist" aria-label="Week type">
     <button id="weekA" class="btn" data-week="A">Week A</button>
     <button id="weekB" class="btn" data-week="B">Week B</button>
-    
-   
-    
-    <button style="border:none"><p id="currentWeekDisplay" class="current-week">(Current: Week …)</p></button>
-    
 </div>
- 
+
+     
  <div id="scheduleRoot"> 
     <div class="week-grid" id="weekGrid" aria-live="polite"></div>
     <div class="mobile-day" id="mobileDay">
@@ -3644,22 +3640,67 @@ function renderSkeletonUI() {
         }
     }
 }
- // ... existing code ...
+ // Replace your existing click listeners and add this logic
+// Change this to 'B' manually or via logic if needed
+const REAL_CURRENT_WEEK = 'A'; 
 
-document.getElementById('weekA').onclick = () => setActiveWeek('A');
-document.getElementById('weekB').onclick = () => setActiveWeek('B');
+function applyWeekStyles(viewing) {
+    const btnA = document.getElementById('weekA');
+    const btnB = document.getElementById('weekB');
+    if (!btnA || !btnB) return;
 
-// 1. Load the fake structure IMMEDIATELY
+    // 1. Set the "Current" labels (Permanent)
+    btnA.textContent = (REAL_CURRENT_WEEK === 'A') ? "This Week: A" : "(Next) Week A";
+    btnB.textContent = (REAL_CURRENT_WEEK === 'B') ? "This Week: B" : "(Next) Week B";
+
+    // 2. Set the "Active" styles (Based on what is being viewed)
+    btnA.classList.toggle('active', viewing === 'A');
+    btnB.classList.toggle('active', viewing === 'B');
+}
+  
+// Update your listeners to use this function
+document.getElementById('weekA').onclick = () => {
+    setActiveWeek('A'); // Your function to change the schedule data
+    updateWeekButtons('A'); // Updates the button styles
+};
+
+document.getElementById('weekB').onclick = () => {
+    setActiveWeek('B');
+    updateWeekButtons('B');
+};
+
+
+
+document.getElementById('weekA').onclick = () => {
+    setActiveWeek('A'); // Your data switch logic
+    applyWeekStyles('A'); // Update the buttons
+};
+
+document.getElementById('weekB').onclick = () => {
+    setActiveWeek('B'); // Your data switch logic
+    applyWeekStyles('B'); // Update the buttons
+};
+
+// 1. Load skeleton and set default button style immediately
 renderSkeletonUI();
+applyWeekStyles(REAL_CURRENT_WEEK); 
 
-// 2. Then start fetching data (this will replace the skeleton when done)
-fetchCSV(defaultCsvUrl);
+// 2. Fetch Data
+fetchCSV(defaultCsvUrl).then(() => {
+    /* Inside your .then() or at the end of your fetchCSV function, 
+       make sure you call it again to ensure the styles 
+       persist after the DOM might have refreshed.
+    */
+    applyWeekStyles(REAL_CURRENT_WEEK); 
+});
 
-// ... style block ...
-
+ 
 
 const style = document.createElement('style');
   style.textContent = `
+
+  
+
     @keyframes pulse {
       0% { transform: scale(0.9); opacity: 0.7; }
       50% { transform: scale(1.3); opacity: 1; }
@@ -3680,7 +3721,7 @@ const style = document.createElement('style');
         display: none;
       }
     }
-    
+
     
     /* ... existing styles ... */
 
@@ -3740,7 +3781,7 @@ const style = document.createElement('style');
 }
 
 .day-header {
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 1px;
     display: flex;
     justify-content: center !important;
@@ -3776,7 +3817,47 @@ const style = document.createElement('style');
     height: 140px !important;
 }
 }
+  .btn {
+    position: relative !important;
+    padding: 10px 25px;
+   
+  
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.btn.is-current::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%); /* Centers dot vertically */
+    width: 10px;
+    height: 10px;
+    background-color: #28a745; /* Nice forest green */
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(40, 167, 69, 0.4);
+    animation: pulse-green 2s infinite;
+}
+.btn.is-current {
+    display: inline-flex;
+    align-items: center;
+}
+/* 3. The Pulsing Keyframes */
+@keyframes pulse-green {
+    0% {
+        transform: translateY(-50%) scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+    70% {
+        transform: translateY(-50%) scale(1);
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+    100% {
+        transform: translateY(-50%) scale(0.95);
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
 
   `;
   document.head.appendChild(style);
