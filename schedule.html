@@ -2880,9 +2880,7 @@ margin-top: -16px;
     #mobilePager button {
  padding:8px 12px;border-radius:8px;border: solid 1px black;cursor:pointer
 }
-#mobilePager  {
-display:none;
-}
+
 
   @media (max-width: 900px) {
     .hero-img-wrapper {
@@ -3559,6 +3557,12 @@ function highlightLiveShows(){
 function renderMobile(shows) {
   const scroller = document.getElementById('mobileScroller');
   const pager = document.getElementById('mobilePager');
+  
+  if (!scroller || !pager) return;
+
+  // 1. Force visibility before calculating offsets
+  pager.style.display = 'flex'; 
+
   scroller.innerHTML = '';
   pager.innerHTML = '';
 
@@ -3566,57 +3570,49 @@ function renderMobile(shows) {
   const today = getTodayName();
 
   DAY_ORDER.forEach((day, i) => {
-    // 1. Create the Column (WITHOUT the internal header)
-    const col = document.createElement('div');
-    col.className = 'day-column';
-    
-    // Add shows to the column
-    if (byDay[day] && byDay[day].length > 0) {
-      byDay[day].forEach(s => col.appendChild(makeShowElement(s)));
-    } else {
-      col.innerHTML = '<div class="no-shows">No shows scheduled</div>';
-    }
-    scroller.appendChild(col);
-
-    // 2. Create the Pager Button
     const btn = document.createElement('button');
-    btn.className = 'pager-btn';
+    btn.className = 'pager-btn'; // Matches the CSS fix above
     btn.textContent = day; 
     
     if (day === today) btn.classList.add('active');
 
     btn.onclick = () => {
-      // Scroll the schedule
-      scroller.scrollTo({
-        left: scroller.children[i].offsetLeft,
-        behavior: 'smooth'
-      });
+      // Use the actual column element for offset
+      const targetCol = scroller.children[i];
+      if (targetCol) {
+        scroller.scrollTo({
+          left: targetCol.offsetLeft,
+          behavior: 'smooth'
+        });
+      }
 
-      // Update active button styling
       document.querySelectorAll('.pager-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      // Optional: Scroll the pager itself so the selected day is visible
       btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     };
 
     pager.appendChild(btn);
+
+    // Build the day column content
+    const col = document.createElement('div');
+    col.className = 'day-column';
+    if (byDay[day] && byDay[day].length > 0) {
+      byDay[day].forEach(s => col.appendChild(makeShowElement(s)));
+    } else {
+      col.innerHTML = '<div class="muted" style="padding:20px;">No shows scheduled</div>';
+    }
+    scroller.appendChild(col);
   });
 
-  // Initial Scroll to today
-  const todayIndex = DAY_ORDER.indexOf(today);
-  if (todayIndex !== -1 && scroller.children[todayIndex]) {
-    // Use requestAnimationFrame to ensure layout is rendered before scrolling
-    requestAnimationFrame(() => {
-      scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
-      pager.children[todayIndex].scrollIntoView({ inline: 'center' });
-    });
-  }
-
-  highlightLiveShows();
-  scroller.addEventListener('scroll', highlightLiveShows);
+  // Initial scroll logic
+  setTimeout(() => {
+    const todayIndex = DAY_ORDER.indexOf(today);
+    if (todayIndex !== -1 && scroller.children[todayIndex]) {
+       scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
+       pager.children[todayIndex].scrollIntoView({ inline: 'center' });
+    }
+  }, 100);
 }
-
 
   function renderAll(){
     const filtered=schedule.filter(s=>!s.week_type || s.week_type===activeWeek);
