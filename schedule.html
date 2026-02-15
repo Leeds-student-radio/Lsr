@@ -2891,7 +2891,7 @@ margin-top: -16px;
     font-size: 1em;
 }
 
-    .pager-btn active {
+    .pager-btn.active {
    background: whitesmoke !important;
       color: black  !important;
 }
@@ -3584,29 +3584,41 @@ function renderMobile(shows) {
   const byDay = groupByDay(shows);
   const today = getTodayName();
 
-  DAY_ORDER.forEach((day, i) => {
+  
+
+ DAY_ORDER.forEach((day, i) => {
     const btn = document.createElement('button');
-    btn.className = 'pager-btn'; // Matches the CSS fix above
-    btn.textContent = day; 
+    btn.className = 'pager-btn';
+    
+    // ABBREVIATION LOGIC:
+    // This takes 'Monday' and turns it into 'Mon'
+    const shortDay = day.slice(0, 3); 
+    btn.textContent = shortDay; 
     
     if (day === today) btn.classList.add('active');
 
     btn.onclick = () => {
-      // Use the actual column element for offset
-      const targetCol = scroller.children[i];
-      if (targetCol) {
-        scroller.scrollTo({
-          left: targetCol.offsetLeft,
-          behavior: 'smooth'
-        });
-      }
+        const targetCol = scroller.children[i];
+        if (targetCol) {
+            scroller.scrollTo({
+                left: targetCol.offsetLeft,
+                behavior: 'smooth'
+            });
+        }
 
-      document.querySelectorAll('.pager-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        document.querySelectorAll('.pager-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Scroll the pager bar horizontally without moving the whole page
+        pager.scrollTo({
+            left: btn.offsetLeft - (pager.offsetWidth / 2) + (btn.offsetWidth / 2),
+            behavior: 'smooth'
+        });
     };
 
     pager.appendChild(btn);
+    // ... rest of your column building code ...
+
 
     // Build the day column content
     const col = document.createElement('div');
@@ -3620,13 +3632,25 @@ function renderMobile(shows) {
   });
 
   // Initial scroll logic
-  setTimeout(() => {
-    const todayIndex = DAY_ORDER.indexOf(today);
-    if (todayIndex !== -1 && scroller.children[todayIndex]) {
-       scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
-       pager.children[todayIndex].scrollIntoView({ inline: 'center' });
+ // Initial scroll logic
+setTimeout(() => {
+  const todayIndex = DAY_ORDER.indexOf(today);
+  if (todayIndex !== -1 && scroller.children[todayIndex]) {
+    // Scroll the horizontal container ONLY
+    scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
+
+    // CHANGE THIS: 
+    // Instead of scrollIntoView (which moves the whole page), 
+    // just scroll the pager container horizontally.
+    const activeBtn = pager.children[todayIndex];
+    if (activeBtn) {
+      pager.scrollTo({
+        left: activeBtn.offsetLeft - (pager.offsetWidth / 2),
+        behavior: 'auto' // 'auto' prevents the "sliding" look on first load
+      });
     }
-  }, 100);
+  }
+}, 100);
 }
 
   function renderAll(){
