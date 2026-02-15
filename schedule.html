@@ -2883,7 +2883,7 @@ margin-top: -16px;
 }
  
     #mobilePager button {
-     padding: 4px 6px;
+     padding: 6px 8px;
     border-radius: 8px;
     border: solid 1px black;
     cursor: pointer;
@@ -2966,10 +2966,10 @@ margin-top: -16px;
   display: flex;
   overflow-x: auto;
   background: rgb(205, 50, 50);
-  padding: 3px 2px;
-  gap: 2px;
+  padding: 6px 2px;
+  gap: 4px;
   position: sticky;
-  top: 0;
+  top: 108px;
   z-index: 10;
  
   scrollbar-width: none; /* Hide scrollbar for clean look */
@@ -3684,23 +3684,19 @@ setTimeout(() => {
   renderAll();
 }
 function renderSkeletonUI() {
-    // 1. Render Desktop Grid Skeleton
+    // --- 1. Desktop Grid Skeleton ---
     const root = document.getElementById('weekGrid');
     if (root) {
         root.innerHTML = '';
         const today = getTodayName();
-        
         DAY_ORDER.forEach(day => {
             const col = document.createElement('div');
             col.className = 'day-column';
-            
             const header = document.createElement('div');
             header.className = 'day-header';
             if(day === today) header.classList.add('today');
             header.innerHTML = `<div>${day}</div>`;
             col.appendChild(header);
- 
-            // Add 10 dummy cards per day to fill space
             for(let i=0; i<13; i++) {
                 const s = document.createElement('div');
                 s.className = 'show-card skeleton-card';
@@ -3710,22 +3706,29 @@ function renderSkeletonUI() {
         });
     }
 
-    // 2. Render Mobile Skeleton
+    // --- 2. Mobile Skeleton (With Pager) ---
     const scroller = document.getElementById('mobileScroller');
-    if(scroller) {
+    const pager = document.getElementById('mobilePager');
+    if(scroller && pager) {
         scroller.innerHTML = '';
+        pager.innerHTML = ''; // Clear pager
         const today = getTodayName();
         let todayIndex = 0;
 
         DAY_ORDER.forEach((day, i) => {
+            // Create Skeleton Buttons (Abbreviated)
+            const btn = document.createElement('button');
+            btn.className = 'pager-btn skeleton-btn';
+            btn.textContent = day.slice(0, 3); // Abbreviated
+            if(day === today) {
+                btn.classList.add('active');
+                todayIndex = i;
+            }
+            pager.appendChild(btn);
+
+            // Create Skeleton Columns
             const col = document.createElement('div');
             col.className = 'day-column';
-            const header = document.createElement('div');
-            header.className = 'day-header';
-            if(day === today) todayIndex = i;
-            header.innerHTML = `<div>${day}</div>`;
-            col.appendChild(header);
-
             for(let k=0; k<13; k++) {
                 const s = document.createElement('div');
                 s.className = 'show-card skeleton-card';
@@ -3734,12 +3737,12 @@ function renderSkeletonUI() {
             scroller.appendChild(col);
         });
         
-        // Scroll to generic position
-        if(scroller.children[todayIndex]) {
-             setTimeout(() => {
+        // Initial internal scroll (No page jump)
+        setTimeout(() => {
+            if(scroller.children[todayIndex]) {
                 scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
-             }, 0);
-        }
+            }
+        }, 0);
     }
 }
  // Replace your existing click listeners and add this logic
