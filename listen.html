@@ -4401,63 +4401,57 @@ function setBannerDescription(newText) {
 
 // Initial render
 updateDescription();
-function applyShowToPlayer(sectionSelector, show, isLive) {
+function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
   const section = document.querySelector(sectionSelector);
   if (!section) return;
 
-  // 1. SELECT THE ELEMENTS
   const titleElem = section.querySelector(".player-title");
   const hostElem = section.querySelector(".player-hosts");
   const descElem = section.querySelector(".player-description");
   const imgElem = section.querySelector(".album-cover img");
   const freqElem = document.getElementById("popupFrequency");
 
-  // 2. GET THE DATA FROM THE SHEET
   const title = show.title || show["Title"] || "No Show Live";
   const host = show.host || show.hosts || "";
   const desc = show.description || show["Description"] || "";
-  const img = show.cover_image_url || show["cover image url"] || show["Cover Image URL"] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
+  const img = show.cover_image_url || show["cover image url"] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
 
-  // 3. APPLY FREQUENCY (AM/PM)
+  // --- LOGIC TO FIND IF IT'S EVERY WEEK ---
   if (freqElem && show.day_of_week) {
-    const wt = (show.week_type || "").toUpperCase();
-    const isEveryOther = (wt === "A" || wt === "B");
-    const freqPrefix = isEveryOther ? "Every other" : "Every";
+    const currentWeekType = (show.week_type || "").toUpperCase();
+    const startTime = show.start_time;
     
-    // Capitalize day
+    // Look for a "matching" show in the other week
+    const hasOtherWeek = allRows.some(r => 
+      r.title === show.title && 
+      r.day_of_week === show.day_of_week && 
+      r.start_time === show.start_time &&
+      (r.week_type || "").toUpperCase() !== currentWeekType &&
+      (r.week_type || "").toUpperCase() !== "" // Ensure the other week isn't just a blank/global row
+    );
+
+    // If it's explicitly A or B, AND we didn't find the other week, it's "Every other"
+    // If we found both weeks, OR if week_type is blank/*, it's "Every"
+    const isStrictlyEveryOther = (currentWeekType === "A" || currentWeekType === "B") && !hasOtherWeek;
+    const freqPrefix = isStrictlyEveryOther ? "Every other" : "Every";
+    
     const day = show.day_of_week.charAt(0).toUpperCase() + show.day_of_week.slice(1).toLowerCase();
-    
-    // Format times
-    const startTime = formatTo12Hr(show.start_time);
-    const endTime = formatTo12Hr(show.end_time);
-    const timeRange = `${startTime}-${endTime}`;
+    const timeRange = `${formatTo12Hr(show.start_time)}-${formatTo12Hr(show.end_time)}`;
     
     freqElem.textContent = `${freqPrefix} ${day} at ${timeRange}`;
     freqElem.style.display = "block";
-  } else if (freqElem) {
-    freqElem.style.display = "none";
   }
 
-  // 4. APPLY TITLE, HOST, DESC, IMG
+  // --- APPLY TEXT ---
   if (titleElem) titleElem.textContent = title;
   if (hostElem) hostElem.textContent = host ? `with ${host}` : "";
   if (descElem) descElem.textContent = desc;
   if (imgElem) imgElem.src = img;
 
-  // 5. ON AIR STATUS
   if (isLive) {
     section.classList.add("on-air");
   } else {
     section.classList.remove("on-air");
-  }
-
-  // 6. MEDIA SESSION (Lock screen)
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: title,
-      artist: host ? `LSR: ${host}` : 'Leeds Student Radio',
-      artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
-    });
   }
 }
 
@@ -4548,7 +4542,7 @@ function fetchAndUpdate() {
   );
       }
       if (current1) {
-        applyShowToPlayer(".playerzz .main-player", current1, true);
+       applyShowToPlayer(".playerzz .main-player", current1, true, rows);
       } else {
         applyShowToPlayer(".playerzz .main-player", FALLBACK_SHOW, false);
       }
