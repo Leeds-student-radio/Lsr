@@ -2946,6 +2946,59 @@ display:none;
    margin-top: -1315px !important;
      }
       }
+
+
+    /* Mobile Pager Styling */
+#mobilePager {
+  display: flex;
+  overflow-x: auto;
+  background: rgb(205, 50, 50);
+  padding: 3px 2px;
+  gap: 2px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid #444;
+  scrollbar-width: none; /* Hide scrollbar for clean look */
+}
+
+#mobilePager::-webkit-scrollbar { display: none; }
+
+.pager-day {
+  padding: 3px 8px;
+  border-radius: 10px;
+  color: black;
+  white-space: nowrap;
+  cursor: pointer;
+ 
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+/* The style for the current/selected day */
+.pager-day.active {
+  background-color: white !important;
+  color: black !important;
+  border-color: white;
+}
+
+/* Hide table headers only on mobile */
+@media (max-width: 768px) {
+  .day-column h2 { 
+    display: none; 
+  }
+  .mobile-scroller {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+  .day-column {
+    min-width: 100%;
+    scroll-snap-align: start;
+  }
+}
   </style>
  
 </div>
@@ -3503,47 +3556,61 @@ function highlightLiveShows(){
     highlightLiveShows();
   } 
 
- function renderMobile(shows){
-  const scroller = document.getElementById('mobileScroller'); 
+function renderMobile(shows) {
+  const scroller = document.getElementById('mobileScroller');
+  const pager = document.getElementById('mobilePager');
   scroller.innerHTML = '';
-  const pager = document.getElementById('mobilePager'); 
   pager.innerHTML = '';
+
   const byDay = groupByDay(shows);
   const today = getTodayName();
-  let activeDay = today; // Track which day is active
-  let todayIndex = 0;
 
   DAY_ORDER.forEach((day, i) => {
-    const col = document.createElement('div'); 
+    // 1. Create the Column (WITHOUT the internal header)
+    const col = document.createElement('div');
     col.className = 'day-column';
-    const header = document.createElement('div');
-    header.className = 'day-header';
-    if(day === today) todayIndex = i;
-    header.innerHTML = `<div>${day}</div>`;
-    col.appendChild(header);
-    byDay[day].forEach(s => col.appendChild(makeShowElement(s)));
+    
+    // Add shows to the column
+    if (byDay[day] && byDay[day].length > 0) {
+      byDay[day].forEach(s => col.appendChild(makeShowElement(s)));
+    } else {
+      col.innerHTML = '<div class="no-shows">No shows scheduled</div>';
+    }
     scroller.appendChild(col);
 
-    const dot = document.createElement('button'); 
-    dot.textContent = day.slice(0,3);
-    if(day === today) dot.classList.add('today'); // highlight current day on load
-    dot.onclick = () => {
-      activeDay = day;
-      // Scroll to the day
+    // 2. Create the Pager Button
+    const btn = document.createElement('button');
+    btn.className = 'pager-btn';
+    btn.textContent = day; 
+    
+    if (day === today) btn.classList.add('active');
+
+    btn.onclick = () => {
+      // Scroll the schedule
       scroller.scrollTo({
         left: scroller.children[i].offsetLeft,
         behavior: 'smooth'
       });
-      // Update button highlights
-      pager.querySelectorAll('button').forEach(b => b.classList.remove('today'));
-      dot.classList.add('today');
+
+      // Update active button styling
+      document.querySelectorAll('.pager-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Optional: Scroll the pager itself so the selected day is visible
+      btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     };
-    pager.appendChild(dot);
+
+    pager.appendChild(btn);
   });
 
-  // Scroll to today's column on load
-  if(scroller.children[todayIndex]) {
-    scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
+  // Initial Scroll to today
+  const todayIndex = DAY_ORDER.indexOf(today);
+  if (todayIndex !== -1 && scroller.children[todayIndex]) {
+    // Use requestAnimationFrame to ensure layout is rendered before scrolling
+    requestAnimationFrame(() => {
+      scroller.scrollLeft = scroller.children[todayIndex].offsetLeft;
+      pager.children[todayIndex].scrollIntoView({ inline: 'center' });
+    });
   }
 
   highlightLiveShows();
@@ -3650,8 +3717,8 @@ function applyWeekStyles(viewing) {
     if (!btnA || !btnB) return;
 
     // 1. Set the "Current" labels (Permanent)
-    btnA.textContent = (REAL_CURRENT_WEEK === 'A') ? "This Week: A" : "(Next) Week A";
-    btnB.textContent = (REAL_CURRENT_WEEK === 'B') ? "This Week: B" : "(Next) Week B";
+    btnA.textContent = (REAL_CURRENT_WEEK === 'A') ? "This Week: A" : "(Next) Week: A";
+    btnB.textContent = (REAL_CURRENT_WEEK === 'B') ? "This Week: B" : "(Next) Week: B";
 
     // 2. Set the "Active" styles (Based on what is being viewed)
     btnA.classList.toggle('active', viewing === 'A');
@@ -3842,6 +3909,7 @@ const style = document.createElement('style');
 .btn.is-current {
     display: inline-flex;
     align-items: center;
+   
 }
 /* 3. The Pulsing Keyframes */
 @keyframes pulse-green {
