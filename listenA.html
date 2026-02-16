@@ -5,7 +5,6 @@
  <title>Leeds Student Radio</title>
     <meta content="Officially the UK's Best Student Station 2024" name="description">
    
-    <meta content="Leeds Student Radio" property="twitter:title">
     <meta content="Student Radio" property="twitter:description">
     <meta property="og:type" content="website">
     <meta content="summary_large_image" name="twitter:card">
@@ -3474,6 +3473,7 @@ margin-top: -16px;
             <h1 class="chat-title">Live Chat</h1>
             <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
                 Active: <span id="live-count"> </span>
+               <button id="close-chat-mobile-btn">Close chat</button>
             </div>
         </div> 
 
@@ -3491,7 +3491,7 @@ margin-top: -16px;
                 <input type="text" id="display-name" placeholder="Name" class="chat-input">
                 <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
                <div style="display: flex; flex-direction: row; justify-content: space-between; width:100%;">
-               <button id="close-chat-mobile-btn">Close chat</button> <button type="submit" class="send-button">Send</button>
+               <button id="close-chat-mobile-btn1">Close chat</button> <button type="submit" class="send-button">Send</button>
                                                                       </div>
             </form>
         </div>
@@ -5874,7 +5874,11 @@ body, html {
     }
 
     /* Style and show the Close button */
-    .fullscreen-chat #close-chat-mobile-btn {
+    
+    .fullscreen-chat #close-chat-mobile-btn { display: inline-block; position: absolute; top: -6px; right: 0px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; cursor: pointer; z-index: 10000; }
+    
+    
+    .fullscreen-chat #close-chat-mobile-btn1 {
         display: inline-block;
         position: relative;
        
@@ -5882,10 +5886,12 @@ body, html {
         color: white;
         border: 1px solid rgba(255,255,255,0.2);
         border-radius: 8px;
-        padding: 7px 10px;
-        font-size: 0.95rem;
-        cursor: pointer;
-        z-index: 10000;
+        padding: 0px 0px;
+        font-size: 0.00001rem;
+        cursor: none;
+        pointer-events:none; 
+        opacity:0;
+        
     }
  #muds {
   border: none !important;
@@ -5992,5 +5998,11 @@ border: none !important;
 }
  }
  
+ @media (min-width: 439px) {
+#close-chat-mobile-btn1 {
+        display: none;
+      
+        
+    }
 </style>
 <!-- ✅ END LSR Awards Popup Embed -->
