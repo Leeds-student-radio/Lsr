@@ -38,6 +38,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
+ 
+<link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=BBH+Sans+Bogle&family=Bitcount+Single+Ink:wght@100..900&family=Caveat:wght@400..700&family=Indie+Flower&family=Noto+Sans:wdth,wght@62.5..100,100..900&family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+ 
 <!-- Fallback for older browsers -->
 <noscript>
   <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
@@ -384,7 +388,7 @@
     }
    .footer {
   
-  background-color: rgb(149, 13, 13);
+  background-color: rgb(205, 50, 50);
   border: solid 2px black;
   max-width:100% !important;
   padding: 32px 24px 16px;
@@ -479,6 +483,7 @@ text-decoration: underline;
   text-align: center;
   font-size: 0.9rem;
   color: whitesmoke;
+     border-top: solid 1px #5b0000;
 }
  
  @media (max-width: 768px) {
@@ -1565,7 +1570,8 @@ pill-link {
     gap: 0.3rem;
     font-size: 0.9rem;
     font-weight: bold;
-    color: orange;
+    color: #ffb130;
+           white-space: nowrap;
   }
 }
 @media (max-width: 1099px) {
@@ -2272,14 +2278,15 @@ const menuBtn = document.getElementById("menuMOB");
 
 <div class="pill-banner" id="pillBanner1">
   <!-- CURRENT SHOW -->
-  <div class="pill-section current-show">
+  <div class="pill-section current-show"   style="          z-index: 1000;">
+     <button class="play-btn" id="playBtn">▶</button>
     <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" alt="Thumbnail" class="thumbnail">
 
     <div class="pill-content">
       <!-- TOP ROW -->
       <div class="pill-top-row">
         <span class="pill-title">...Loading</span>
-        <span class="on-air"><span class="pulse-dot"></span>On Air</span>
+       <span class="on-air" style=" font-family: 'Roboto Mono', sans-serif; white-space: nowrap;" ></span>
       </div>
 
       <!-- BOTTOM ROW -->
@@ -2290,7 +2297,7 @@ const menuBtn = document.getElementById("menuMOB");
     </div>
 
     <!-- Play Button (moved out for alignment control) -->
-    <button class="play-btn" id="playBtn">▶</button>
+  
   </div>
 
   <!-- UP NEXT SHOW -->
@@ -2300,7 +2307,7 @@ const menuBtn = document.getElementById("menuMOB");
       <!-- TOP ROW -->
       <div class="pill-top-row">
         <span class="pill-title">...Loading</span>
-        <span class="up-next-label">⏳ Up Next</span>
+         <span class="up-next-label"><i class="fa-solid fa-hourglass"></i> Up Next</span>
       </div>
 
       <!-- BOTTOM ROW -->
@@ -2983,19 +2990,24 @@ margin-top: -16px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+     height: 100%;
+    justify-content: center !important;
         flex: 1;
     }
 
     .player-title {
         font-size: 1.2rem;
         font-weight: bold;
-        color: whitesmoke
+        color: whitesmoke !important;
+         margin-bottom: 3px;
     }
 
     .player-description {
         font-size: 1rem;
          color: whitesmoke;
-     font-weight: 300;
+        font-weight: 300;
+    margin-top: 10px;
+     
     }
 
    
@@ -3060,10 +3072,7 @@ margin-top: -16px;
         width: 220px;
         height: 220px;
     }
-        .alt-player img {
-        width: 220px;
-        height: 220px;
-    }
+       
     
     .playerzz {
     width:100%;
@@ -3123,7 +3132,10 @@ margin-top: -16px;
        display: none !important;
     }
      }
-    
+#popupFrequency {
+ width: fit-content; 
+ }
+ 
       @media (max-width: 438px) {
          .playerzz {
     width:100%;
@@ -3183,16 +3195,28 @@ margin-top: -16px;
      </div>
     <div class="player-content">
         <div class="player-title">...Loading</div>
+     <div class="player-hosts" style="    color: #fff6e7e3;
+    font-weight: 400; font-size: 0.9rem; margin-bottom: 4px; font-family: 'Noto Sans', sans-serif;">...Loading</div>
+     <p id="popupFrequency" style="font-weight: bold; margin-bottom: 10px; color: rgb(117, 0, 0); background: whitesmoke; padding: 4px 8px; border-radius: 5px; font-size: 0.85rem;">...Loading</p>
         <div class="player-description">...Loading</div>
       
-      
     </div>
+   
 </div>
 
+
 <!-- Alternate Player -->
-<div class="player alt-player"  >
+
   <head>
     <style>
+    
+    .fullscreenmode:hover {
+             background: rgb(255 255 255 / 39%) !important; 
+             cursor:pointer;
+         }
+         
+         
+    
      .chat-container {
              width: 100%;
             
@@ -3232,6 +3256,11 @@ margin-top: -16px;
              
          }
            }
+             @media (max-width:799px)  {
+            .fullscreenmode {
+            display:none !important;
+         }
+          }
          
            @media (min-width:768px)  {
            #chat-messages {
@@ -3435,33 +3464,38 @@ margin-top: -16px;
 }
     </style>
 </head>
-<body class=""> <div class="chat-container">
-     <div class="chat-header">
-         <h1 class="chat-title">Live Chat</h1>
-          <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
-  Active: <span id="live-count"> </span>
-</div>
-     </div> 
+<div class="player alt-player" id="muds">
+  
+    <button id="open-chat-mobile-btn">Open Live Chat</button>
 
-     <div id="chat-messages">
-         <div id="loading-spinner">
-             <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                 <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                 <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-             </svg>
-         </div>
-     </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            <button id="close-chat-mobile-btn">✕ Close</button>
+            <h1 class="chat-title">Live Chat</h1>
+            <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
+                Active: <span id="live-count"> </span>
+            </div>
+        </div> 
 
-     <div class="chat-input-area">
-         <form id="chat-form">
-             <input type="text" id="display-name" placeholder="Name" class="chat-input">
-             <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
-             <button type="submit" class="send-button">
-                 Send
-             </button>
-         </form>
-     </div>
- </div>
+        <div id="chat-messages">
+            <div id="loading-spinner">
+                <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <form id="chat-form">
+                <input type="text" id="display-name" placeholder="Name" class="chat-input">
+                <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
+                <button type="submit" class="send-button">Send</button>
+            </form>
+        </div>
+    </div>
+
+   
 
     <script type="module">
          // Import Firebase modules
@@ -3471,15 +3505,16 @@ margin-top: -16px;
              signInAnonymously, 
              onAuthStateChanged 
          } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-         import { 
-             getFirestore, 
-             collection, 
-             addDoc, 
-             onSnapshot, 
-             query, 
-             orderBy, 
-             serverTimestamp
-         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    onSnapshot, 
+    query, 
+    orderBy, 
+    serverTimestamp,
+    Timestamp // <--- ADD THIS
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
          // --- Firebase Configuration ---
          const firebaseConfig = { apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", authDomain: "lsrchat-6ffb1.firebaseapp.com", projectId: "lsrchat-6ffb1", storageBucket: "lsrchat-6ffb1.firebasestorage.app", messagingSenderId: "333921149565", appId: "1:333921149565:web:c5dcced8299b1527994714" }; 
@@ -3561,27 +3596,32 @@ margin-top: -16px;
          /**
           * Handles the chat form submission.
           */
-         async function handleSendMessage(e) {
-             e.preventDefault();
-             const messageText = messageInput.value.trim();
-             const displayName = displayNameInput.value.trim() || 'Anonymous';
+        async function handleSendMessage(e) {
+    e.preventDefault();
+    const messageText = messageInput.value.trim();
+    const displayName = displayNameInput.value.trim() || 'Anonymous';
 
-             if (messageText === '' || !messagesCollection) {
-                 return;
-             }
+    if (messageText === '' || !messagesCollection) {
+        return;
+    }
 
-             try {
-                 await addDoc(messagesCollection, {
-                     name: displayName,
-                     text: messageText,
-                     createdAt: serverTimestamp()
-                 });
-                 messageInput.value = '';
-             } catch (error) {
-                 console.error("Error sending message: ", error);
-             }
-         }
+    // --- NEW: Calculate 30 days from now ---
+    const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+    const expirationDate = new Date(Date.now() + thirtyDaysInMs);
+    // ---------------------------------------
 
+    try {
+        await addDoc(messagesCollection, {
+            name: displayName,
+            text: messageText,
+            createdAt: serverTimestamp(),
+            expiresAt: Timestamp.fromDate(expirationDate) // <--- THIS TELLS FIREBASE WHEN TO DELETE
+        });
+        messageInput.value = '';
+    } catch (error) {
+        console.error("Error sending message: ", error);
+    }
+}
          /**
           * Sets up the real-time listener for chat messages.
           */
@@ -3651,7 +3691,7 @@ margin-top: -16px;
                  console.error("Firebase initialization failed:", error);
                  if (loadingSpinner) {
                      loadingSpinner.style.display = 'none';
-                 }
+                  }
                  chatMessages.innerHTML = '<p class="chat-error">Could not connect to chat. Please refresh.</p>';
              }
          }
@@ -3663,6 +3703,25 @@ margin-top: -16px;
          initializeFirebase();
 
     </script>
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const openChatBtn = document.getElementById('open-chat-mobile-btn');
+    const closeChatBtn = document.getElementById('close-chat-mobile-btn');
+    const chatContainer = document.querySelector('#muds .chat-container');
+
+    if (openChatBtn && closeChatBtn && chatContainer) {
+        openChatBtn.addEventListener('click', () => {
+            chatContainer.classList.add('fullscreen-chat');
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatContainer.classList.remove('fullscreen-chat');
+            document.body.style.overflow = ''; // Restore background scrolling
+        });
+    }
+  });
+</script>
 </body>
     
 
@@ -3672,8 +3731,38 @@ margin-top: -16px;
       
 
     </div>
-    
+     <div class="player alt-player" id="num">
+  <div class="album-cover">
+    <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" 
+         alt="Alternate Stream Cover Art" 
+         style="aspect-ratio: 1 / 1; object-fit: cover;">
+    <button class="play-btn1">▶</button>
   </div>
+  <div class="player-content">
+    <div class="player-title">Alternate Stream</div>
+    <div class="player-description">LSR alternate live stream runs 24/7 with a chilled mix of hand-picked tracks. Expect smooth, relaxing tunes all day.
+</div>
+  </div>
+</div>
+
+<audio id="alt-audio" src="https://s2.radio.co/seb5cdba5b/listen"></audio>
+
+<script>
+  const audioPPP = document.getElementById('alt-audio');
+  const btnPPP = document.querySelector('.play-btn1');
+
+  btnPPP.addEventListener('click', () => {
+    if (audioPPP.paused) {
+      audioPPP.play();
+      btnPPP.textContent = '⏸';
+    } else {
+      audioPPP.pause();
+      btnPPP.textContent = '▶';
+    }
+  });
+</script>
+  </div>
+  
   </div>
 
 
@@ -3770,23 +3859,27 @@ margin-top: -16px;
  <div class="footer-wrapper">
  
  
- <div class="footer1" id="book21" style="height:400px">
-    <div class="footer-section1" style="height:400px">
+ <div class="footer1" id="book21" style="height:400px; cursor: pointer; "  onclick="window.open('https://calendly.com/leedsstudentradio/bookstudio2', '_blank')">
+    <div class="footer-section1" style="height:400px;" >
       <h4>BOOK STUDIO 2</h4>
       <div class="image-container2" style="height:400px">
         <img src="https://github.com/Leeds-student-radio/Lsr/blob/main/IMG_8848%20(1).webp?raw=true" alt="Podcast" style="height:400px">
       </div>
 
       <div class="podcast-links" style="margin-top: 10px; width:90%;">
-        <a href="https://calendly.com/leedsstudentradio/bookstudio2" target="_blank" rel="noopener" 
-           style=" align-items: center; text-decoration: none; color: inherit;">
+        <a class="bduiezbvueiv" rel="noopener" 
+           style=" align-items: center; text-decoration: none; color: inherit; font-family: Indie Flower; 
+   
+    font-weight:200;">
          
           <span><b>If you'd like to record your podcast or make use of our CDJs/Turntable, LSR's Studio 2 is available for our members to book out.</b></span>
         </a> <br>
-       <button class="bottom-rightb" onclick="window.open('https://calendly.com/leedsstudentradio/bookstudio2', '_blank')">
-  Make a booking
-</button>
-        <p style="font-size:0.85em; line-height:1.1em !important; opacity:0.8; padding-top:1px;"><br>PLEASE NOTE: You must have received training and be an LSR member to use our booking system.</p>
+       
+ <p class="hezuefiefzu" style="   
+    line-height: 1.1em !important;
+    opacity: 0.8;
+    padding-top: 1px;
+    font-weight: 100;"><br>PLEASE NOTE: You must have received training and be an LSR member to use our booking system.</p>
       </div>
       
     </div>
@@ -3822,9 +3915,51 @@ margin-top: -16px;
 
 
 <style>
+ .footer1:hover {
+  filter: brightness(1.1);
+}
+.footer10:hover {
+  filter: brightness(1.1);
+}
+
+
+  
+.bduiezbvueiv  {
+  font-size: 1.2em;
+   line-height: 0.2;
+}
+
+  
+  .hezuefiefzu  {
+  font-size:0.8em;
+}
+  
+  @media (max-width: 854px) {
+  .hezuefiefzu  {
+  font-size:0.89em !important;
+   
+}
+    .bduiezbvueiv  {
+  font-size: 1.3em;
+       line-height:0.1;
+}
+
+    }
+  @media (min-width: 700px) {
+  .bottom-rightb:hover {
+   
+  background-color: black;
+    color: white;
+    
+    transition: all 0.3s ease;
+   
+}
+   }
+
+ 
 .footer {
   position: relative; /* needed for ::before to be positioned correctly */
-  background: transparent;
+  background: rgb(205, 50, 50);
   border-radius: 14px; /* match pseudo element radius */
   overflow: hidden;    /* keeps gradient inside rounded corners */
 }
@@ -3857,7 +3992,7 @@ Discover, develop and decide your future with appointments, events and vacancies
       <div style="height:1px; width: 1px;" ><img class="footimg" src="https://stepzach.github.io/leedstestradio/316c00_e85e432bbd2e4e15a926db384684cf02~mv2.png.avif">
     </div>  </div>
      <div class="footer-section"  id="footerlline" style="
-    border-left: 1px solid #ccc;">
+        border-left: 1px solid #940000;">
       
       <ul>
         <li style="margin-top: 0;"></li>
@@ -3895,7 +4030,7 @@ Discover, develop and decide your future with appointments, events and vacancies
  
     </div>
     <div class="footer-section"  id="footerline" style="
-    border-left: 1px solid #ccc;">
+        border-left: 1px solid #940000; ">
       
       <ul>
         <li style="margin-top: 0;"></li>
@@ -3989,20 +4124,71 @@ window.addEventListener('click', (e) => {
 
   </script>
   </div>
-  <div class="footer-bottom">
-    <p>© Leeds Student Radio 2025</p>
-  </div>
+ <div class="footer-bottom">
+  <p>© Leeds Student Radio <span id="current-year"></span></p>
+</div>
+
+<script>
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
 </footer>
 
 </body>
 </html>
+<style>
+    /* Mobile styles for the player and info pills */
+    @media (max-width: 438px) {
+        .album-cover {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
 
+        .player.main-player {
+            border: none !important;
+            padding-top: 0 !important;
+        }
+
+        .album-cover .play-btn {
+            top: calc(100% + 40px) !important;
+            left: 30px !important;
+            transform: translate(-50%, -50%) !important;
+            background-color: whitesmoke !important;
+            color: #8a2020 !important;
+        }
+
+        .player-content {
+            padding-left: 0.5rem !important;
+        }
+
+        .player-title {
+            margin-left: 60px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .player-hosts {
+            color: #fff6e7e3;
+            font-weight: 400;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            font-family: 'Noto Sans', sans-serif;
+            margin-left: 60px !important;
+        }
+
+        #popupFrequency {
+            margin-bottom: 10px !important;
+            width: auto !important;
+            text-align: center !important;
+            font-size: 0.85rem;
+            margin-top: 20px !important;
+        }
+    }
+</style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
 /** ====== Config ====== **/
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv"; // change to your published CSV link
-const A_IS_EVEN_ISO_WEEK = true;
+const A_IS_EVEN_ISO_WEEK = false;
 
 const FALLBACK_SHOW = {
   title: "No Show Live",
@@ -4088,13 +4274,27 @@ function applyShowToSection(sectionSelector, show, labelText, isLive, labelSelec
   if (imgElem) imgElem.src = img;
 
   const labelElem = section.querySelector(labelSelector);
-  if (labelElem) {
-    if (isLive) {
-      labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+if (labelElem) {
+  if (isLive) {
+    // Live = pulsing dot
+    labelElem.innerHTML = `<span class="pulse-dot"></span>${labelText}`;
+    labelElem.style.color = ""; // reset any forced color
+  } else {
+    if (labelText === "Up Next") {
+      labelElem.innerHTML = `<i class="fa-solid fa-hourglass"></i> ${labelText}`;
+      labelElem.style.color = ""; // reset
     } else {
       labelElem.textContent = labelText;
+
+      // ✅ FORCE GREY when Off Air
+      if (labelText.toLowerCase() === "off air") {
+        labelElem.style.setProperty("color", "#ff9991", "important");
+      } else {
+        labelElem.style.color = ""; // reset if not Off Air
+      }
     }
   }
+}
 
   // Special: Update description toggle fullText for first banner
   if (sectionSelector === "#pillBanner") {
@@ -4139,34 +4339,46 @@ function normalizeRows(rows) {
 }
 
 function findCurrentShow(rows) {
-const now = nowInLondon();
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const weekType = getWeekTypeAB(now);
-  return rows.find(show => {
-    const dayOK = matchesDay(show.day_of_week, now);
-    if (!dayOK) return false;
-    const wt = (show.week_type || "").toUpperCase();
-    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
-    if (!weekOK) return false;
-    return withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
-  });
+  return rows.find(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+  	if (!dayOK) return false;
+
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+  	if (!weekOK) return false;
+
+    const inSlot = withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
+  	if (!inSlot) return false;
+
+    // **MODIFIED:** Only return true if all checks pass AND the title is not empty.
+  	// normalizeRows() ensures show.title is a trimmed string, so !!show.title
+  	// correctly checks for an empty string ("").
+  	return !!show.title;
+  });
 }
 
 function findNextShow(rows) {
 const now = nowInLondon();
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const weekType = getWeekTypeAB(now);
-  const candidates = rows.filter(show => {
-    const dayOK = matchesDay(show.day_of_week, now);
-    if (!dayOK) return false;
-    const wt = (show.week_type || "").toUpperCase();
-    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
-    if (!weekOK) return false;
-    return timeToMinutes(show.start_time) > nowMinutes;
-  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
-  return candidates[0] || null;
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+  const candidates = rows.filter(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+  	if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+  	if (!weekOK) return false;
+
+    // **MODIFIED:** Also ensure next shows have a title
+    if (!show.title) return false; 
+    
+    return timeToMinutes(show.start_time) > nowMinutes;
+  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
+  return candidates[0] || null;
 }
   
 /** ====== Description Toggle for Banner 1 ====== **/
@@ -4263,50 +4475,85 @@ function setBannerDescription(newText) {
 
 // Initial render
 updateDescription();
-
-function applyShowToPlayer(sectionSelector, show, isLive) {
+function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
   const section = document.querySelector(sectionSelector);
   if (!section) return;
 
   const titleElem = section.querySelector(".player-title");
+  const hostElem = section.querySelector(".player-hosts");
   const descElem = section.querySelector(".player-description");
   const imgElem = section.querySelector(".album-cover img");
+  const freqElem = document.getElementById("popupFrequency");
 
-  const title = show.title || show["Title"];
-  const desc = show.description || show["Description"];
-  const img = show.cover_image_url || show["cover image url"] || show["Cover Image Url"] || show["Cover Image URL"];
+  const title = show.title || show["Title"] || "No Show Live";
+  const host = show.host || show.hosts || "";
+  const desc = show.description || show["Description"] || "";
+  const img = show.cover_image_url || show["cover image url"] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
 
+  // --- LOGIC TO FIND IF IT'S EVERY WEEK ---
+  if (freqElem && show.day_of_week) {
+    const currentWeekType = (show.week_type || "").toUpperCase();
+    const startTime = show.start_time;
+    
+    // Look for a "matching" show in the other week
+    const hasOtherWeek = allRows.some(r => 
+      r.title === show.title && 
+      r.day_of_week === show.day_of_week && 
+      r.start_time === show.start_time &&
+      (r.week_type || "").toUpperCase() !== currentWeekType &&
+      (r.week_type || "").toUpperCase() !== "" // Ensure the other week isn't just a blank/global row
+    );
+
+    // If it's explicitly A or B, AND we didn't find the other week, it's "Every other"
+    // If we found both weeks, OR if week_type is blank/*, it's "Every"
+    const isStrictlyEveryOther = (currentWeekType === "A" || currentWeekType === "B") && !hasOtherWeek;
+    const freqPrefix = isStrictlyEveryOther ? "Every other" : "Every";
+    
+    const day = show.day_of_week.charAt(0).toUpperCase() + show.day_of_week.slice(1).toLowerCase();
+    const timeRange = `${formatTo12Hr(show.start_time)}-${formatTo12Hr(show.end_time)}`;
+    
+    freqElem.textContent = `${freqPrefix} ${day} at ${timeRange}`;
+    freqElem.style.display = "block";
+  }
+
+  // --- APPLY TEXT ---
   if (titleElem) titleElem.textContent = title;
+  if (hostElem) hostElem.textContent = host ? `with ${host}` : "";
   if (descElem) descElem.textContent = desc;
   if (imgElem) imgElem.src = img;
 
-  // Optional: Add "On Air" indicator somewhere in the player if needed
   if (isLive) {
     section.classList.add("on-air");
   } else {
     section.classList.remove("on-air");
   }
+if ('mediaSession' in navigator) {
+  // Check if host exists and contains a comma
+  const displayArtist = (host && host.includes(',')) ? 'Leeds Student Radio' : (host ? `LSR: ${host}` : 'Leeds Student Radio');
 
-   // Media Session API (lock-screen title + artwork)
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: title,
-      artist: 'Leeds Student Radio',
-      album: '',
-      artwork: [
-        { src: img, sizes: '96x96',   type: 'image/jpeg' },
-        { src: img, sizes: '128x128', type: 'image/jpeg' },
-        { src: img, sizes: '256x256', type: 'image/jpeg' },
-        { src: img, sizes: '512x512', type: 'image/jpeg' }
-      ]
-    });
-
-    navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
-  }
-
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: title,
+    artist: displayArtist,
+    artwork: [{ src: img, sizes: '512x512', type: 'image/jpeg' }]
+  });
+}
 }
 
+
+// Keep your formatTo12Hr function as you had it
+function formatTo12Hr(t) {
+  if (!t) return "";
+  let parts = t.split(":");
+  let h = parseInt(parts[0], 10);
+  let m = parts[1] ? parseInt(parts[1], 10) : 0;
+  
+  const ampm = h >= 12 ? "pm" : "am";
+  h = h % 12;
+  if (h === 0) h = 12;
+  
+  const mins = (m > 0) ? ":" + m.toString().padStart(2, '0') : "";
+  return h + mins + ampm;
+}
 /** ====== Fetch + Update ====== **/
 function fetchAndUpdate() {
   Papa.parse(SHEET_CSV_URL, {
@@ -4335,12 +4582,52 @@ function fetchAndUpdate() {
 
       const next = findNextShow(rows);
       if (next) {
-        applyShowToSection("#pillBanner1 .up-next", next, "⏳ Up Next", false, ".up-next-label");
+
+        const formatHour = (t) => {
+    if (!t) return "";
+    let [h] = t.split(":").map(Number);
+
+    const ampm = h >= 12 ? "pm" : "am";
+    h = h % 12;
+    if (h === 0) h = 12;
+
+    return { hour: h, ampm };
+  };
+
+  const start = formatHour(next.start_time);
+  const end = formatHour(next.end_time);
+
+  // If both times share same am/pm → only show once at the end
+  let timeText;
+  if (start.ampm === end.ampm) {
+    timeText = `Tune in from ${start.hour} to ${end.hour} ${end.ampm}`;
+  } else {
+    timeText = `Tune in from ${start.hour}${start.ampm} to ${end.hour}${end.ampm}`;
+  }
+
+  const nextWithTime = {
+    ...next,
+    description: `${next.description || ""}  ${timeText}`
+  };
+
+        applyShowToSection(
+    "#pillBanner1 .up-next",
+    nextWithTime,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
       } else {
-        applyShowToSection("#pillBanner1 .up-next", FALLBACK_NEXT, "⏳ Up Next", false, ".up-next-label");
+        applyShowToSection(
+    "#pillBanner1 .up-next",
+    FALLBACK_NEXT,
+    "Up Next",
+    false,
+    ".up-next-label"
+  );
       }
       if (current1) {
-        applyShowToPlayer(".playerzz .main-player", current1, true);
+       applyShowToPlayer(".playerzz .main-player", current1, true, rows);
       } else {
         applyShowToPlayer(".playerzz .main-player", FALLBACK_SHOW, false);
       }
@@ -5318,15 +5605,15 @@ line-height:1.1rem;
 
           @media (min-width:1200px)  {
            .album-cover {
-             height: 300px !important;
-             width:300px !important;
+             height: 300px ;
+             width:300px ;
             
              
          }
            .album-cover img {
             
              height: 300px !important;
-             width:300px !important;
+             width:300px ;
             
              
          }
@@ -5357,4 +5644,214 @@ line-height:1.1rem;
     document.body.style.overflow = '';
   };
 </script>
+
+
+<style>
+
+ .player.alt-player .player-content {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: column !important;
+        justify-content: center !important;
+        flex: 1 !important;
+    }
+
+     .player.alt-player .player-title {
+        font-size: 1.2rem !important;
+        font-weight: bold;
+        color: whitesmoke
+    }
+
+     .player.alt-player .player-description {
+        font-size: 1rem !important;
+         color: whitesmoke;
+     font-weight: 300;
+    }
+
+   
+    /* Play button styling */ 
+   
+     .player.alt-player .play-btn:hover {
+        background-color: #ff9800;
+    }
+
+    /* Different image sizes for main/alt */
+    
+     .player.alt-player .alt-player img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+  .player.alt-player .album-cover {
+    position: relative;
+    display: inline-block;
+     width: 150px !important;
+    height: 150px !important;
+}
+
+ .player.alt-player .album-cover img {
+    display: block !important;
+    width: 150px !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-radius: 14px;
+}
+
+@media (max-width: 438px) {
+    #num {
+        width: calc(100% - 0.5rem);
+        flex-direction: row !important;
+    }
+}
+ @media (min-width: 769px) {
+ 
+ #num {
+       margin-top:16px;
+    }
+    }
+    
+    @media (max-width: 438px) {
+    .album-cover {
+    /* width: 90%; */
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.player.main-player {
+   border: none !important;
+   padding-top: 0 !important;
+}
+   
+  .album-cover .play-btn {
+       top: calc(100% + 40px) !important;
+    left: 30px !important;
+    transform: translate(-50%, -50%) !important;
+    background-color: whitesmoke !important;
+    color: #8a2020 !important;
+   
+}
+.player-content {
+    padding-left: 0.5rem !important;
+  
+}
+.player-title {
+    margin-left: 60px !important;
+    /* border-right: solid 1px whitesmoke; */
+    margin-bottom: 0 !important;
+}
+.player-hosts {
+    color: #fff6e7e3;
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    font-family: 'Noto Sans', sans-serif;
+    margin-left: 60px !important;
+    /* border-right: solid 1px whitesmoke; */
+}
+#popupFrequency {
+   
+    margin-bottom: 10px !important;
+   
+    width: auto !important;
+    text-align: center !important;
+    font-size: 0.85rem;
+    margin-top: 20px !important;
+    /* border-top: solid 1px whitesmoke; */
+}
+    }
+ /* --- Mobile Chat Toggle Styles --- */
+#open-chat-mobile-btn {
+    display: none;
+}
+#close-chat-mobile-btn {
+    display: none;
+}
+
+@media (max-width: 438px) {
+    /* Hide the normal chat container by default */
+    #muds .chat-container:not(.fullscreen-chat) {
+        display: none !important;
+    }
+
+    /* Style and show the "Open Live Chat" button */
+    #open-chat-mobile-btn {
+        display: block;
+        width: 100%;
+        padding: 10px 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: rgb(105 14 14) !important;
+        border: 2px solid whitesmoke;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: -10px;
+        border:solid 1px black;
+    }
+    
+   
+
+    /* The Fullscreen Mode Overlay */
+   /* The Fullscreen Mode Overlay */
+    .fullscreen-chat {
+        position: fixed !important;
+        top: 109px !important; /* Start exactly 109px from the top */
+        left: 0 !important;
+        width: 100vw !important;
+        
+        /* Subtract the 109px top offset from the total dynamic height */
+        height: calc(100dvh - 109px) !important; 
+        
+        z-index: 99999999 !important;
+        background-color: rgb(205, 50, 50) !important;
+        padding: 20px !important;
+        
+        /* Flexbox ensures the input stays at the bottom */
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box;
+    }
+
+    /* Prevent the header and input area from squishing */
+    .fullscreen-chat .chat-header,
+    .fullscreen-chat .chat-input-area {
+        flex-shrink: 0 !important;
+    }
+
+    /* Let the messages area take up exactly the remaining space */
+    .fullscreen-chat #chat-messages {
+        flex-grow: 1 !important; 
+        height: auto !important; 
+        max-height: none !important;
+        overflow-y: auto !important;
+        margin-bottom: 10px; 
+    }
+    /* Make the messages area fill the screen height */
+    .fullscreen-chat #chat-messages {
+        height: calc(100vh - 160px) !important; 
+        max-height: none !important;
+    }
+
+    /* Style and show the Close button */
+    .fullscreen-chat #close-chat-mobile-btn {
+        display: inline-block;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        z-index: 10000;
+    }
+ #muds {
+  border: none !important;
+}
+ }
+ 
+</style>
 <!-- ✅ END LSR Awards Popup Embed -->
