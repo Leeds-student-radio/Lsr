@@ -3470,7 +3470,7 @@ margin-top: -16px;
 
     <div class="chat-container">
         <div class="chat-header">
-            <button id="close-chat-mobile-btn">✕ Close</button>
+          
             <h1 class="chat-title">Live Chat</h1>
             <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
                 Active: <span id="live-count"> </span>
@@ -3490,7 +3490,9 @@ margin-top: -16px;
             <form id="chat-form">
                 <input type="text" id="display-name" placeholder="Name" class="chat-input">
                 <input type="text" id="message-input" placeholder="Add a message..." class="chat-input" required>
-                <button type="submit" class="send-button">Send</button>
+               <div style="display: flex; flex-direction: row; justify-content: space-between; width:100%;">
+               <button id="close-chat-mobile-btn">Close chat</button> <button type="submit" class="send-button">Send</button>
+                                                                      </div>
             </form>
         </div>
     </div>
@@ -5874,15 +5876,14 @@ body, html {
     /* Style and show the Close button */
     .fullscreen-chat #close-chat-mobile-btn {
         display: inline-block;
-        position: absolute;
-        top: 15px;
-        right: 15px;
+        position: relative;
+       
         background: rgba(0,0,0,0.5);
         color: white;
         border: 1px solid rgba(255,255,255,0.2);
         border-radius: 8px;
-        padding: 6px 10px;
-        font-size: 0.85rem;
+        padding: 7px 10px;
+        font-size: 0.95rem;
         cursor: pointer;
         z-index: 10000;
     }
@@ -5922,7 +5923,7 @@ border: none !important;
     background: #f5f5f5f7 !important;
         color: #610808 !important;
         border: 1px solid rgb(0 0 0) !important; 
-                top: 9px   !important;
+               
 }
 .chat-header {
     
@@ -5970,6 +5971,18 @@ border: none !important;
     border: solid #000000 1px;
     cursor: pointer;
     width:35%;
+     display: inline-block;
+        position: relative;
+       
+        background: rgba(0,0,0,0.5);
+               background: #f5f5f5f7 !important;
+        color: #610808 !important;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 7px 10px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        z-index: 10000;
 }
 .chat-title {
     font-size: 1.35rem;
