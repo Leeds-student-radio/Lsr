@@ -3635,31 +3635,37 @@ margin-top: -16px;
              messagesCollection = collection(db, "messages");
              const q = query(messagesCollection, orderBy("createdAt", "asc"));
 
-             onSnapshot(q, (querySnapshot) => {
-                 if (loadingSpinner) {
-                     loadingSpinner.style.display = 'none';
-                 }
+            onSnapshot(q, (querySnapshot) => {
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'none';
+    }
 
-                 chatMessages.innerHTML = ''; // Clear existing messages
+    chatMessages.innerHTML = ''; // Clear existing messages
 
-                 if (querySnapshot.empty) {
-                     chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
-                     return;
-                 }
+    if (querySnapshot.empty) {
+        chatMessages.innerHTML = '<p class="chat-notice">No messages yet. Be the first!</p>';
+        return;
+    }
 
-                 querySnapshot.forEach((doc) => {
-                     displayMessage(doc.data());
-                 });
+    querySnapshot.forEach((doc) => {
+        displayMessage(doc.data());
+    });
 
-                 scrollToBottom();
+    // --- FIX IS HERE ---
+    // Use requestAnimationFrame or a 0ms setTimeout to ensure 
+    // the browser has finished rendering the new HTML nodes 
+    // before calculating the scroll height.
+    window.requestAnimationFrame(() => {
+        scrollToBottom();
+    });
 
-             }, (error) => {
-                 console.error("Error getting messages: ", error);
-                 if (loadingSpinner) {
-                     loadingSpinner.style.display = 'none';
-                 }
-                 chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
-             });
+}, (error) => {
+    console.error("Error getting messages: ", error);
+    if (loadingSpinner) {
+        loadingSpinner.style.display = 'none';
+    }
+    chatMessages.innerHTML = '<p class="chat-error">Error loading messages. Please refresh.</p>';
+});
          }
          
          /**
@@ -3721,6 +3727,30 @@ margin-top: -16px;
         });
     }
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const openChatBtn = document.getElementById('open-chat-mobile-btn');
+    const closeChatBtn = document.getElementById('close-chat-mobile-btn');
+    const chatContainer = document.querySelector('#muds .chat-container');
+    const chatMessages = document.getElementById('chat-messages'); // Add this
+
+    if (openChatBtn && closeChatBtn && chatContainer) {
+        openChatBtn.addEventListener('click', () => {
+            chatContainer.classList.add('fullscreen-chat');
+            document.body.style.overflow = 'hidden'; 
+            
+            // Force scroll to bottom once it becomes visible
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 50); 
+        });
+
+        closeChatBtn.addEventListener('click', () => {
+            chatContainer.classList.remove('fullscreen-chat');
+            document.body.style.overflow = ''; 
+        });
+    }
+});
 </script>
 </body>
     
@@ -5711,7 +5741,7 @@ line-height:1.1rem;
     }
     
     @media (max-width: 438px) {
-    .album-cover {
+    .player.main-player .album-cover {
     /* width: 90%; */
     padding-left: 20px !important;
     padding-right: 20px !important;
@@ -5719,7 +5749,7 @@ line-height:1.1rem;
 
 .player.main-player {
    border: none !important;
-   padding-top: 0 !important;
+          padding-top: 15px !important;
 }
    
   .album-cover .play-btn {
@@ -5758,6 +5788,14 @@ line-height:1.1rem;
     margin-top: 20px !important;
     /* border-top: solid 1px whitesmoke; */
 }
+
+body, html {
+   
+    background-color: rgb(181 39 39) !important;
+}
+
+
+
     }
  /* --- Mobile Chat Toggle Styles --- */
 #open-chat-mobile-btn {
@@ -5786,7 +5824,7 @@ line-height:1.1rem;
         font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-top: -10px;
+        margin-top: 0px;
         border:solid 1px black;
     }
     
@@ -5850,6 +5888,25 @@ line-height:1.1rem;
     }
  #muds {
   border: none !important;
+}
+.player.alt-player {
+     
+border: none !important;
+    
+}
+
+.player.alt-player .album-cover {
+     
+
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    
+}
+.player.alt-player .player-title {
+            margin-left: 3px !important;
+}
+.player.alt-player .player-description {
+ margin-left: 3px !important;
 }
  }
  
