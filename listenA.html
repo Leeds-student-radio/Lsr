@@ -2233,7 +2233,7 @@ import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/
     appId: "1:540310303767:web:82125bd428eaee173c1852"
   };
 
-  const app = initializeApp(firebaseConfig);
+ const app = initializeApp(firebaseConfig, "liveCountApp"); // Added a name here!
   const db = getDatabase(app);
 
   // Persistent session ID across pages
@@ -3470,10 +3470,10 @@ margin-top: -16px;
     <div class="chat-container">
         <div class="chat-header">
           
-            <h1 class="chat-title">Live Chat</h1>
+            <h1 class="chat-title" style="opacity:0;">Live</h1>
             <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
                 Active: <span id="live-count"> </span>
-               <button id="close-chat-mobile-btn">Close chat</button>
+               <button id="close-chat-mobile-btn">✕</button>
             </div>
         </div> 
 
@@ -3673,11 +3673,12 @@ margin-top: -16px;
          /**
           * Initializes the Firebase app and services.
           */
-         async function initializeFirebase() {
-             try {
-                 const app = initializeApp(firebaseConfig);
-                 db = getFirestore(app);
-                 auth = getAuth(app);
+       async function initializeFirebase() {
+      try {
+          const app = initializeApp(firebaseConfig, "chatApp"); // Added a name here!
+          db = getFirestore(app);
+          auth = getAuth(app);
+          // ... rest of the code
                  
                  console.log("Firebase initialized. Waiting for auth...");
 
