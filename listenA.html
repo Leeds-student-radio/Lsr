@@ -3420,7 +3420,7 @@ margin-top: -16px;
         /* --- NEW: Timestamp Style --- */
         .message-timestamp {
             font-size: 0.8rem; /* Smaller */
-            color: #c7c7c7; /* Lighter/faded color */
+            color: #ff9090; /* Lighter/faded color */
             margin-right: 0.35rem; /* space before name */
         }
 
@@ -3546,7 +3546,7 @@ margin-top: -16px;
                  const date = createdAt.toDate(); // Convert Firebase Timestamp to JS Date
                  const hours = String(date.getHours()).padStart(2, '0');
                  const minutes = String(date.getMinutes()).padStart(2, '0');
-                 timestampString = `[${hours}:${minutes}]`;
+                 timestampString = `${hours}:${minutes}`;
              }
              // --- END: New Code ---
 
@@ -5907,6 +5907,75 @@ border: none !important;
 }
 .player.alt-player .player-description {
  margin-left: 3px !important;
+}
+
+.chat-container.fullscreen-chat {
+        background-color: rgb(181 39 39) !important;
+                padding: 10px !important;
+}
+#chat-messages {
+    background: #cb3333;
+    border-radius: 15px;
+}
+
+#close-chat-mobile-btn {
+    background: #f5f5f5f7 !important;
+        color: #610808 !important;
+        border: 1px solid rgb(0 0 0) !important; 
+                top: 9px   !important;
+}
+.chat-header {
+    
+    border-bottom: none;
+}
+.chat-input-area {
+    padding: 0.5rem;
+    border-top: none;
+    color: black;
+}
+#chat-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 7px;
+}
+#display-name {
+    flex-shrink: 1;
+    max-width: none;
+    min-width: 50px;
+    width:100%;
+     padding: 0.7rem;
+         background: rgb(255 245 245 / 83%);
+    color: #500707;
+}
+#message-input {
+    flex-grow: 1;
+    min-width: 180px;
+     max-width: none;
+    width:100%;
+    padding: 0.7rem;
+        background: rgb(255 245 245 / 83%);
+    color: #500707;
+    
+}
+.send-button {
+    flex-shrink: 0;
+    background: #f5f5f5e0 !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #590c0c;
+    border-radius: 0.5rem;
+    padding: 0.6rem;
+    background: none;
+    border: solid #000000 1px;
+    cursor: pointer;
+    width:35%;
+}
+.chat-title {
+    font-size: 1.35rem;
+    font-weight: 400;
+    text-align: center;
+    color: whitesmoke;
 }
  }
  
