@@ -2194,7 +2194,7 @@ z-index: 1000;
   <ul>
     <li><a onclick="window.location.href='https://thisislsr.com'">Home</a></li>
     <li><a onclick="window.location.href='https://thisislsr.com/schedule'">Schedule</a></li>
-    <li><a onclick="window.location.href='https://thisislsr.com/listen'"><u>Listen</u></a></li>
+    <li style="border:solid 1px white !important;"><a onclick="window.location.href='https://thisislsr.com/listen'">Listen</a></li>
       <li><a onclick="window.location.href='https://thisislsr.com/apply'">Get Involved</a></li>
     <li><a onclick="window.location.href='https://thisislsr.com/about'">About</a></li>
     <li style="border:none; margin-top:26px; width:100%;     display: flex
@@ -2342,7 +2342,7 @@ const menuBtn = document.getElementById("menuMOB");
   <nav class="unique-nav-card" aria-label="Main actions">
     <ul class="unique-nav-list">
       <li><a class="unique-nav-link unique-schedule-link" href="https://thisislsr.com/schedule"><span class="unique-nav-icon" aria-hidden="true"></span>Schedule</a></li>
-      <li style="border:solid 1px white !important;"><a class="unique-nav-link unique-listen-link" href="https://thisislsr.com/listen"><span class="unique-nav-icon" aria-hidden="true"></span>Listen</a></li>
+      <li><a class="unique-nav-link unique-listen-link" href="https://thisislsr.com/listen"><span class="unique-nav-icon" aria-hidden="true"></span>Listen</a></li>
       <li><a class="unique-nav-link unique-apply-link" href="https://thisislsr.com/apply"><span class="unique-nav-icon" aria-hidden="true"></span>GET INVOLVED</a></li>
        <li><a class="unique-nav-link unique-apply-link" href="https://thisislsr.com/about"><span class="unique-nav-icon" aria-hidden="true"></span>About</a></li>
     </ul>
@@ -3143,7 +3143,9 @@ margin-top: -16px;
  
       @media (max-width: 438px) {
 
-       
+       .fullscreen-menu {
+        border-top: solid 2px white;
+         }
     .footer {
         margin: 0px 0px;
         border-top: solid 1px white !important;
@@ -4336,6 +4338,7 @@ function applyShowToSection(sectionSelector, show, labelText, isLive, labelSelec
   const imgElem = section.querySelector(".thumbnail");
 
   const title = show.title || show["Title"];
+ 
   const desc = show.description || show["Description"];
   const img = show.cover_image_url || show["cover image url"] || show["Cover Image Url"] || show["Cover Image URL"];
 
@@ -4556,7 +4559,7 @@ function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
   const freqElem = document.getElementById("popupFrequency");
 
   const title = show.title || show["Title"] || "No Show Live";
-  const host = show.host || show.hosts || "";
+  const host = show.host || show.hosts || "Leeds Student Radio";
   const desc = show.description || show["Description"] || "";
   const img = show.cover_image_url || show["cover image url"] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
 
@@ -4588,7 +4591,7 @@ function applyShowToPlayer(sectionSelector, show, isLive, allRows = []) {
 
   // --- APPLY TEXT ---
   if (titleElem) titleElem.textContent = title;
-  if (hostElem) hostElem.textContent = host ? `with ${host}` : "";
+ if (hostElem) hostElem.textContent = `with ${host}`;
   if (descElem) descElem.textContent = desc;
   if (imgElem) imgElem.src = img;
 
