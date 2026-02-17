@@ -1927,7 +1927,7 @@ border-radius: 0px !important;
 margin: 0px 0px !important;
 width: 100% !important;
 border: none !important;
-border-bottom: solid 2px black !important;
+            border-bottom: solid 2px rgba(0, 0, 0, 0.4) !important;
       
        }  
        
@@ -1955,7 +1955,7 @@ height: 40px;
     z-index: 9999;
     transition: all 0.3s ease;
     width:100%;
-    border-bottom: solid 2px black;
+    border-bottom: solid 2px whitesmoke;
      z-index: 20000000;
      height:45px;
       
@@ -3044,7 +3044,7 @@ margin-top: -16px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0,0,0,0.6);
+        background-color: rgba(0, 0, 0, 0.6);
     color: white;
     border: none;
     border-radius: 50%;
@@ -3056,7 +3056,13 @@ margin-top: -16px;
     align-items: center;
     justify-content: center;
 }
-
+ @media (max-width: 768px) {
+  .play-btn1 {
+ background-color: whitesmoke;
+        color: #861616;
+}
+ }
+ 
 .play-btn:hover {
     background-color: #ff9800;
 }
@@ -3473,7 +3479,7 @@ margin-top: -16px;
             <h1 class="chat-title" style="opacity:0;">Live</h1>
             <div style="height:0px; position:relative; top:-25px;font-family:sans-serif;font-size:16px; color:lightgreen; margin-top:6px;">
                 Active: <span id="live-count"> </span>
-               <button id="close-chat-mobile-btn">✕</button>
+               <button id="close-chat-mobile-btn">×</button>
             </div>
         </div> 
 
@@ -3769,7 +3775,7 @@ margin-top: -16px;
     <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" 
          alt="Alternate Stream Cover Art" 
          style="aspect-ratio: 1 / 1; object-fit: cover;">
-    <button class="play-btn1">▶</button>
+    <button class="play-btn1"><i class="fa-solid fa-play"></i></button>
   </div>
   <div class="player-content">
     <div class="player-title">Alternate Stream</div>
@@ -5885,7 +5891,7 @@ body, html {
        
         background: rgba(0,0,0,0.5);
         color: white;
-        border: 1px solid rgba(255,255,255,0.2);
+     
         border-radius: 8px;
         padding: 0px 0px;
         font-size: 0.00001rem;
@@ -5893,7 +5899,15 @@ body, html {
         pointer-events:none; 
         opacity:0;
         
+       
     }
+
+
+ 
+
+
+
+ 
  #muds {
   border: none !important;
 }
@@ -5927,10 +5941,23 @@ border: none !important;
 }
 
 #close-chat-mobile-btn {
-    background: #f5f5f5f7 !important;
-        color: #610808 !important;
-        border: 1px solid rgb(0 0 0) !important; 
+   
+       
                
+        width: 33px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 33px !important;
+        font-weight: 410 !important;
+        color: rgb(149, 13, 13) !important;
+        background: whitesmoke !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        padding-bottom: 5px !important;
+        
 }
 .chat-header {
     
