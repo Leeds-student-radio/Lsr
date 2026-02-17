@@ -3142,6 +3142,14 @@ margin-top: -16px;
  }
  
       @media (max-width: 438px) {
+
+     .player.alt-player .album-cover img  {
+   
+    width: 130px; /* adjust as needed */
+    height: 130px; /* adjust as needed */
+   
+}
+       
          .playerzz {
     width:100%;
     
@@ -3154,8 +3162,8 @@ margin-top: -16px;
             flex-direction: column;
         }
           .album-cover img {
-        width: 130px !important;
-        height: 130px  !important;
+        width: 100%;
+        height: auto;
     }
        
     .player-title {
@@ -5724,14 +5732,14 @@ line-height:1.1rem;
   .player.alt-player .album-cover {
     position: relative;
     display: inline-block;
-     width: 150px ;
-    height: 150px;
+     width: 150px !important;
+    height: 150px !important;
 }
 
  .player.alt-player .album-cover img {
     display: block !important;
-    width: 150px;
-    height: 150px;
+    width: 150px !important;
+    height: 150px !important;
     object-fit: cover !important;
     border-radius: 14px;
 }
@@ -5754,8 +5762,7 @@ line-height:1.1rem;
     /* width: 90%; */
     padding-left: 20px !important;
     padding-right: 20px !important;
-     width: 130px !important;
-     height: 130px !important;
+   
 }
 
 .player.main-player {
@@ -5921,7 +5928,8 @@ border: none !important;
 
 .player.alt-player .album-cover {
      
-
+  width:130px !important;
+     height: 130px !important;
         padding-left: 0px !important;
         padding-right: 0px !important;
     
