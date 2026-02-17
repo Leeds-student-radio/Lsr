@@ -3822,7 +3822,7 @@ function renderSkeletonUI() {
 }
  // Replace your existing click listeners and add this logic
 // Change this to 'B' manually or via logic if needed
-const REAL_CURRENT_WEEK = 'A'; 
+const REAL_CURRENT_WEEK = getCurrentWeekType(); 
 
 function applyWeekStyles(viewing) {
     const btnA = document.getElementById('weekA');
