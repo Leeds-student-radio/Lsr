@@ -5989,7 +5989,13 @@ body, html {
 
      .fullscreen-menu {
         border-top: none;
+          background: rgb(181 39 39) !important;
     }
+  .fullscreen-menu:before {
+       display: none;
+        
+    }
+
 
 .fullscreen-menu.active li:nth-child(1) {
     transition-delay: 0.1s;
@@ -6125,11 +6131,11 @@ border: none !important;
     text-align: center;
     color: whitesmoke;
 }
- }
+ } }
  
  @media (min-width: 439px) {
 #close-chat-mobile-btn1 {
-        display: none;
+        display: none !important;
       
         
     }
