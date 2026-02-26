@@ -2163,7 +2163,9 @@ z-index: 1000;
     <div class="pill-top-row">
       <span class="pill-title">...Loading</span>
       <span class="on-air" style="margin-right:5px;"><span class="pulse-dot"></span>On Air</span>
-     
+      <div class="menu" id="menuMOB" aria-haspopup="true" aria-expanded="false">
+  <span></span>
+</div>
     </div>
 
     <!-- BOTTOM ROW -->
@@ -5863,8 +5865,30 @@ body, html {
     display: none;
 }
 
+@media (min-width: 439px) {
+
+.pill-banner .pill-top-row .menu {
+        display: none;
+           }
+           
+           }
+
 @media (max-width: 438px) {
 
+.pill-banne .pill-top-row {
+          display: none;
+           }
+
+    .carousel-container {
+        margin-top: 80px !important;
+    }
+    
+
+.pill-banne {
+           height: 0px;
+    margin: 0;
+    padding: 0;
+           }
 
  .pill-banner {
     border: none !important;
@@ -5922,6 +5946,7 @@ body, html {
     
    
 
+        
     /* The Fullscreen Mode Overlay */
    /* The Fullscreen Mode Overlay */
     .fullscreen-chat {
