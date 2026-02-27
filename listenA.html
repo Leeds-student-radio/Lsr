@@ -2155,7 +2155,8 @@ z-index: 1000;
     margin-left: auto;
     margin-right: auto;">
     
-    <div class="pill-banner" id="pillBanner">
+    <div class="pill-banner" id="pillBanner" style="justify-content:space-between;">
+    <div class="guecgueuzdbuzuzu" >
        <button class="play-btn" id="playBtn"><i class="fa-solid fa-play"></i></button>
   <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" alt="Thumbnail" class="thumbnail">
   <div class="pill-content">
@@ -2163,9 +2164,9 @@ z-index: 1000;
     <div class="pill-top-row">
       <span class="pill-title">...Loading</span>
       <span class="on-air" style="margin-right:5px;"><span class="pulse-dot"></span>On Air</span>
-      <div class="menu" id="menuMOB" aria-haspopup="true" aria-expanded="false">
-  <span></span>
-</div>
+    
+
+ </div>
     </div>
 
     <!-- BOTTOM ROW -->
@@ -2173,7 +2174,12 @@ z-index: 1000;
       ...Loading
       <span class="show-more" id="toggleDescription"></span>
     </div>
+    
   </div>
+    <div class="menu" id="menuMOB" aria-haspopup="true" aria-expanded="false">
+  <span></span>
+
+</div>
 </div>
 
 
@@ -6244,6 +6250,8 @@ border: none !important;
     
 }
 
+
+
 .player.main-player .album-cover {
      
   
@@ -6389,7 +6397,39 @@ display: none !important;
 
   display: none !important;
 }
+}
+.guecgueuzdbuzuzu  {
 
+background:#b22020; 
+width:100%; 
+display: flex; 
+border-radius:14px; 
+padding: 5px 10px; 
+gap:8px; 
+align-items:center;
 
+}
 </style>
+
+<script>
+function handleWrapper() {
+  const wrapper = document.querySelector('.guecgueuzdbuzuzu');
+
+  if (window.innerWidth >= 483) {
+    // If wrapper exists, unwrap it
+    if (wrapper) {
+      while (wrapper.firstChild) {
+        wrapper.parentNode.insertBefore(wrapper.firstChild, wrapper);
+      }
+      wrapper.remove();
+    }
+  }
+}
+
+// Run on load
+handleWrapper();
+
+// Run on resize
+window.addEventListener('resize', handleWrapper);
+</script>
 <!-- ✅ END LSR Awards Popup Embed -->
