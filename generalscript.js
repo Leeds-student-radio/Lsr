@@ -253,7 +253,7 @@ box.appendChild(showsContainer);
         if ('mediaSession' in navigator) {
             const title = show?.title || "LSR Non-Stop";
             const artist = show?.host || "Leeds Student Radio";
-            const artworkUrl = show?.image || show?.img || "https://github.com/Leeds-student-radio/Lsr/blob/main/316c00_e270ed388b21449d9bdd56622dbeb4ec~mv2.jpg.webp?raw=true";
+            const artworkUrl = show?.image || show?.img || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: title, artist: artist,
                 artwork: [{ src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }]
@@ -300,7 +300,7 @@ box.appendChild(showsContainer);
         const parsedShows = todayShows.map(row => ({
             title: row[1] || "LSR Show",
             description: row[2] || "Non-stop student radio.",
-            image: row[3] || "https://github.com/Leeds-student-radio/Lsr/blob/main/316c00_e270ed388b21449d9bdd56622dbeb4ec~mv2.jpg.webp?raw=true",
+            image: row[3] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg",
             start: timeToMinutes(row[6]),
             end: timeToMinutes(row[7]),
             rawStart: row[6],
