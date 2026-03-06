@@ -504,7 +504,7 @@ updateNavLinks();
 
                 updatePlayButtons(!radioPlayer.paused);
 
-                if (url.includes('involved')) fetchApplyData();
+                if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
                 if (url.includes('listen') || url.includes('schedule')) fetchScheduleData();
              if (url.includes('listen')) {
