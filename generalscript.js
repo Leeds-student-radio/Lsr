@@ -332,7 +332,7 @@ box.appendChild(showsContainer);
         const lnImg = document.getElementById('live-now-img');
         const lnDesc = document.getElementById('live-now-desc');
         const mainTitle = document.getElementById('main-player-title');
-        const defaultImg = "https://github.com/Leeds-student-radio/Lsr/blob/main/316c00_e270ed388b21449d9bdd56622dbeb4ec~mv2.jpg.webp?raw=true";
+        const defaultImg = "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
 
         if (liveShow) {
             if(lnTitle) lnTitle.innerText = liveShow.title;
