@@ -503,7 +503,7 @@ updateNavLinks();
                 if (navMenu && navMenu.classList.contains('active')) toggleMenu();
 
                 updatePlayButtons(!radioPlayer.paused);
-
+ 
                 if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
                 if (url.includes('listen') || url.includes('schedule')) fetchScheduleData();
