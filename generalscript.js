@@ -285,7 +285,7 @@ box.appendChild(showsContainer);
         }
     }
 
-    function updateLiveNowUI(realWeek) {
+  function updateLiveNowUI(realWeek) {
         const now = new Date();
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDay = days[now.getDay()];
@@ -327,17 +327,20 @@ box.appendChild(showsContainer);
             }
         }
 
+        // --- 1. LIVE SHOW FALLBACK LOGIC ---
+        const lnTitle = document.getElementById('live-now-title');
+        const lnImg = document.getElementById('live-now-img');
+        const lnDesc = document.getElementById('live-now-desc');
+        const mainTitle = document.getElementById('main-player-title');
+        const defaultImg = "https://github.com/Leeds-student-radio/Lsr/blob/main/316c00_e270ed388b21449d9bdd56622dbeb4ec~mv2.jpg.webp?raw=true";
+
         if (liveShow) {
-            const lnTitle = document.getElementById('live-now-title');
-            const lnImg = document.getElementById('live-now-img');
-            const lnDesc = document.getElementById('live-now-desc');
             if(lnTitle) lnTitle.innerText = liveShow.title;
             if(lnImg) lnImg.src = liveShow.image;
             if(lnDesc) lnDesc.innerText = liveShow.description;
             
             updateMediaSession(liveShow);
 
-            const mainTitle = document.getElementById('main-player-title');
             if (mainTitle) {
                 mainTitle.innerText = liveShow.title;
                 document.getElementById('main-player-host').innerText = "with " + liveShow.host;
@@ -345,15 +348,41 @@ box.appendChild(showsContainer);
                 document.getElementById('main-player-img').src = liveShow.image;
                 document.getElementById('main-player-time').innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             }
+        } else {
+            // NO LIVE SHOW: Load default non-stop data
+            if(lnTitle) lnTitle.innerText = "LSR Non-Stop";
+            if(lnImg) lnImg.src = defaultImg;
+            if(lnDesc) lnDesc.innerText = "No show is live right now, enjoy our non-stop student radio mix.";
+
+            updateMediaSession({
+                title: "LSR Non-Stop", 
+                host: "Leeds Student Radio", 
+                image: defaultImg
+            });
+
+            if (mainTitle) {
+                mainTitle.innerText = "LSR Non-Stop";
+                document.getElementById('main-player-host').innerText = "with Leeds Student Radio";
+                document.getElementById('main-player-desc').innerText = "No show is live right now, enjoy our non-stop student radio mix.";
+                document.getElementById('main-player-img').src = defaultImg;
+                document.getElementById('main-player-time').innerText = `LIVE NOW (24/7)`;
+            }
         }
 
+        // --- 2. NEXT SHOW FALLBACK LOGIC ---
+        const nextT = document.getElementById('up-next-title');
+        const nextI = document.getElementById('up-next-img');
+        const nextD = document.getElementById('up-next-desc'); 
+
         if (nextShow) {
-            const nextT = document.getElementById('up-next-title');
-            const nextI = document.getElementById('up-next-img');
-            const nextD = document.getElementById('up-next-desc'); 
             if(nextT) nextT.innerText = nextShow.title;
             if(nextI) nextI.src = nextShow.image;
-         if(nextD) nextD.innerText = nextShow.description;
+            if(nextD) nextD.innerText = nextShow.description;
+        } else {
+            // NO NEXT SHOW: Load default upcoming data
+            if(nextT) nextT.innerText = "No show next";
+            if(nextI) nextI.src = defaultImg;
+            if(nextD) nextD.innerText = "Check the schedule for our next show!";
         }
     }
 
