@@ -19,7 +19,28 @@
             bar.style.animationPlayState = isPlaying ? 'running' : 'paused';
         });
     }
+function toggleAltStream(button) {
+    // 1. Get the audio element and the icon inside the clicked button
+    const audio = document.getElementById('alt-audio');
+    const icon = button.querySelector('i');
 
+    // 2. Check if the audio is currently paused
+    if (audio.paused) {
+        // Play the stream
+        audio.play();
+        
+        // Swap the FontAwesome icon from 'play' to 'pause'
+        icon.classList.remove('fa-play');
+        icon.classList.add('fa-pause');
+    } else {
+        // Pause the stream
+        audio.pause();
+        
+        // Swap the icon back from 'pause' to 'play'
+        icon.classList.remove('fa-pause');
+        icon.classList.add('fa-play');
+    }
+}
     // Initialize state
     bars.forEach(bar => bar.style.animationPlayState = 'paused');
 
