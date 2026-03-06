@@ -1230,11 +1230,11 @@ hr {
         .play-toggle .fa-pause { margin-left: 0; }
         .play-toggle:hover { transform: scale(1.07); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-        .show-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; width: 100%;}
-        .info-header { display: flex; align-items: center; gap: px; flex-wrap: wrap; }
-        .info-header h4 { font-size: 1rem; color: #ffffff; text-transform: uppercase; margin: 0; flex-wrap: wrap;
-    width: 100%;
+        .show-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; width: 100%; }
+        .info-header { display: flex; align-items: center; gap: px; flex-wrap: wrap;  width: 100%;
     justify-content: space-between; }
+        .info-header h4 { font-size: 1rem; color: #ffffff; text-transform: uppercase; margin: 0; 
+    }
 
         .track-desc {
             font-size: 0.91rem;
