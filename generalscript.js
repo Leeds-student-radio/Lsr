@@ -531,6 +531,7 @@ updateNavLinks();
     window.addEventListener('popstate', () => loadPage(window.location.href));
 
     // Start everything
+    
     updateNavLinks();
     fetchScheduleData();
     fetchCommitteeData();
@@ -542,10 +543,6 @@ updateNavLinks();
 });
 
 // --- FIREBASE IMPORTS ---
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
-import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 // --- CONFIGS ---
 const chatConfig = { 
