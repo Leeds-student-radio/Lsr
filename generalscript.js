@@ -1,4 +1,10 @@
- document.addEventListener('DOMContentLoaded', () => {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+
+
+document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
     const radioPlayer = document.getElementById('radio-player');
@@ -20,27 +26,22 @@
         });
     }
 function toggleAltStream(button) {
-    // 1. Get the audio element and the icon inside the clicked button
     const audio = document.getElementById('alt-audio');
     const icon = button.querySelector('i');
 
-    // 2. Check if the audio is currently paused
     if (audio.paused) {
-        // Play the stream
         audio.play();
-        
-        // Swap the FontAwesome icon from 'play' to 'pause'
         icon.classList.remove('fa-play');
         icon.classList.add('fa-pause');
     } else {
-        // Pause the stream
         audio.pause();
-        
-        // Swap the icon back from 'pause' to 'play'
         icon.classList.remove('fa-pause');
         icon.classList.add('fa-play');
     }
 }
+
+// ADD THIS LINE RIGHT HERE:
+window.toggleAltStream = toggleAltStream;
     // Initialize state
     bars.forEach(bar => bar.style.animationPlayState = 'paused');
 
