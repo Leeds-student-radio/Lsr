@@ -1788,3 +1788,110 @@ hr {
 
     /* ... rest of your code ... */
 }
+.award-box {
+    background-color: #c92a2a;
+    border: 2px solid #8f1818;
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.award-grid {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+    gap: 20px;
+}
+
+.award-section {
+    padding: 20px 20px 60px 20px;
+}
+
+.award-box h3 {
+    font-family: 'Asap Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+/* Grouped Icon Styles */
+.award-box i {
+    aspect-ratio: 1;
+    background: rgb(160, 43, 43);
+    border: solid 1px #8f1818;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px; /* Ensures consistent circular sizing */
+    height: 35px;
+}
+
+.award-box .fa-star {
+    color: gold;
+}
+
+.award-box .fa-2 {
+    color: #d6d6d6;
+}
+
+.award-box .fa-3 {
+    color: #e4872c;
+}
+
+/* Flexbox Layout for the Award Link */
+.award {
+    width: 100%;
+    display: flex;
+    align-items: flex-start; /* Aligns the icon to the top of the text */
+    gap: 12px; /* Adds space between the icon and the text block */
+    text-decoration: none; /* Removes any default link underlining */
+    margin-bottom: 15px; /* Replaces the margin-bottom previously on the anchor */
+}
+
+.award-box a {
+    font-family: 'Asap Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    color: white;
+    letter-spacing: 0.2px;
+}
+
+/* New Wrapper for Text */
+.award-details {
+    display: flex;
+    flex-direction: column; /* Stacks the title and subtitle vertically */
+    justify-content: center;
+}
+
+.award-subtitle {
+    color: lightgrey;
+    font-family: 'Open Sans';
+    font-style: normal;
+    text-transform: none;
+    font-weight: 200;
+    font-size: 1.1rem;
+    letter-spacing: 0px;
+    margin-top: 2px; /* Slight spacing between title and subtitle */
+}
+
+.award-container {
+    display: flex;
+    flex-direction: column; /* Better to stack these vertically instead of wrap */
+}
+
+@media (max-width: 600px) {
+    .award-grid {
+      
+        grid-template-columns: none !important; 
+    }
+}
