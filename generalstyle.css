@@ -1859,11 +1859,11 @@ hr {
 
 .award-box a {
     font-family: 'Asap Condensed', sans-serif;
-    font-weight: 500;
-    font-size: 1.25rem;
+       font-weight: 550;
+    font-size: 1.27rem;
     text-transform: uppercase;
     color: white;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.1px;
 }
 
 /* New Wrapper for Text */
@@ -1874,12 +1874,12 @@ hr {
 }
 
 .award-subtitle {
-    color: lightgrey;
+    color: #b4b4b4d9;
     font-family: 'Open Sans';
     font-style: normal;
     text-transform: none;
     font-weight: 200;
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 0px;
     margin-top: 2px; /* Slight spacing between title and subtitle */
 }
