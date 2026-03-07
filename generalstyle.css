@@ -1,7 +1,10 @@
 .skeleton-col {
     pointer-events: none;
 }
-
+.play-toggle .fa-solid {
+    font-size: 1.3rem !important;
+}
+    
 /* Skeleton Card: Matches .show-card exactly */
 .skeleton-show {
     height: 70px; /* Matches your .show-card height */
