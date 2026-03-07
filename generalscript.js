@@ -298,8 +298,8 @@ box.appendChild(showsContainer);
         });
 
         const parsedShows = todayShows.map(row => ({
-            title: row[1] || "LSR Show",
-            description: row[2] || "Non-stop student radio.",
+            title: row[1] || "No show live",
+            description: row[2] || "Check our schedule for the next show!",
             image: row[3] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg",
             start: timeToMinutes(row[6]),
             end: timeToMinutes(row[7]),
