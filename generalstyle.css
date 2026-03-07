@@ -826,12 +826,12 @@ hr {
 
         @media (max-width: 768px) {
 .visualizer  {
-            display: none;
+            display: none !important;
           
         }
 .live-badge, .next-badge {
    
-    padding: 3px 4px;
+    padding: 3px 4px !important;
     margin-right:2px;
  }
             .player-section {
