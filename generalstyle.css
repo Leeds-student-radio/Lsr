@@ -1,3 +1,22 @@
+     
+       .legalsection { padding:40px; max-width:1500px;}
+         .legalsection h2 { margin: 15px 0px;}
+           .legalsection h3 { margin: 15px 5px;}
+             .legalsection p { margin: 5px 10px;}
+            .legalsection ul { margin: 5px 10px;}
+              .legalsection li { margin: 5px 30px;   list-style-type: disc;}
+              .legalsection a { text-decoration: underline;}
+            
+        .legalsection hr { margin: 30px 20px; border: 0; border-top: 1px solid #eee; }
+        
+      @media screen and (max-width: 687px) { 
+  .legalsection { 
+    padding: 10px 20px; 
+  }
+}
+
+
+
 .skeleton-col {
     pointer-events: none;
 }
