@@ -7,48 +7,71 @@ import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
-    const radioPlayer = document.getElementById('radio-player');
+     const radioPlayer = document.getElementById('radio-player');
     const bars = document.querySelectorAll('.bar');
 
     function updatePlayButtons(isPlaying) {
         const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
 
         allPlayIcons.forEach(icon => {
-            if (isPlaying) {
-                icon.classList.replace('fa-play', 'fa-pause');
-            } else {
-                icon.classList.replace('fa-pause', 'fa-play');
-            }
+            // Replaced .replace() with .className so it cleanly overwrites the spinner classes
+            icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
         });
 
         bars.forEach(bar => {
             bar.style.animationPlayState = isPlaying ? 'running' : 'paused';
         });
     }
-function toggleAltStream(button) {
-    const audio = document.getElementById('alt-audio');
-    const icon = button.querySelector('i');
 
-    if (audio.paused) {
-        audio.play();
-        icon.classList.remove('fa-play');
-        icon.classList.add('fa-pause');
-    } else {
-        audio.pause();
-        icon.classList.remove('fa-pause');
-        icon.classList.add('fa-play');
+    function toggleAltStream(button) {
+        const audio = document.getElementById('alt-audio');
+        const icon = button.querySelector('i');
+
+        if (audio.paused) {
+            // Apply spinner immediately on click
+            icon.className = 'fa-solid fa-circle-notch fa-spin'; 
+            
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    icon.className = 'fas fa-pause';
+                }).catch(() => {
+                    icon.className = 'fas fa-play';
+                });
+            } else {
+                icon.className = 'fas fa-pause';
+            }
+        } else {
+            audio.pause();
+            icon.className = 'fas fa-play';
+        }
     }
-}
 
-// ADD THIS LINE RIGHT HERE:
-window.toggleAltStream = toggleAltStream;
+    // ADD THIS LINE RIGHT HERE:
+    window.toggleAltStream = toggleAltStream;
+    
     // Initialize state
     bars.forEach(bar => bar.style.animationPlayState = 'paused');
 
     function togglePlay() {
         if (radioPlayer.paused) {
-            radioPlayer.play();
-            updatePlayButtons(true);
+            // Apply spinner immediately on click
+            const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
+            allPlayIcons.forEach(icon => {
+                icon.className = 'fa-solid fa-circle-notch fa-spin';
+            });
+
+            const playPromise = radioPlayer.play();
+            if (playPromise !== undefined) {
+                // Wait for audio to actually load and start playing
+                playPromise.then(() => {
+                    updatePlayButtons(true);
+                }).catch(() => {
+                    updatePlayButtons(false);
+                });
+            } else {
+                updatePlayButtons(true); // Fallback for very old browsers
+            }
         } else {
             radioPlayer.pause();
             updatePlayButtons(false);
@@ -61,7 +84,6 @@ window.toggleAltStream = toggleAltStream;
             togglePlay();
         }
     });
-
     // --- 2. MOBILE MENU LOGIC ---
     const mobileBtn = document.querySelector('.mobile-toggle');
     const navMenu = document.querySelector('.nav-menu');
