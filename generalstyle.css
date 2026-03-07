@@ -1859,11 +1859,11 @@ hr {
 
 .award-box a {
     font-family: 'Asap Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 1.3rem;
+    font-weight: 500;
+    font-size: 1.25rem;
     text-transform: uppercase;
     color: white;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.4px;
 }
 
 /* New Wrapper for Text */
