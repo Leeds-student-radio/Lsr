@@ -825,8 +825,20 @@ hr {
         }
 
         @media (max-width: 768px) {
-
-
+.visualizer  {
+            display: none;
+          
+        }
+.live-badge, .next-badge {
+   
+    padding: 3px 4px;
+    margin-right:2px;
+ }
+            .player-section {
+   
+    gap: 10px;
+                }
+    
             .player-bar {
             background-color: rgb(160, 43, 43);
         }
@@ -1346,7 +1358,7 @@ hr {
         .nav-link:hover::after,
 .nav-link.active::after { width: 100%; }
 
-        .mobile-toggle { display: none; font-size: 1.5rem; color: #ffffff; cursor: pointer; }
+        .mobile-toggle { display: none; font-size: 1.8rem; color: #ffffff; cursor: pointer; }
 
         .mobile-overlay {
             position: fixed;
