@@ -826,6 +826,15 @@ hr {
 
         @media (max-width: 768px) {
 
+
+            .player-bar {
+            background-color: rgb(160, 43, 43);
+        }
+              .player-bar::before {
+            content: none;
+          
+        }
+
             .card-content.alt-card {
     margin-left: auto;
     margin-right: auto;
