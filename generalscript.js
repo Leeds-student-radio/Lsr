@@ -408,7 +408,7 @@ box.appendChild(showsContainer);
         }
     }
 
-   function renderSchedule(weekLetter) {
+  function renderSchedule(weekLetter) {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const grid = document.getElementById('schedule-grid');
     if (!grid) return; 
@@ -438,13 +438,24 @@ box.appendChild(showsContainer);
         filteredShows.forEach(row => {
             const show = {
                 title: row[1], desc: row[2], img: row[3] || "https://via.placeholder.com/300",
-                day: row[4], week: row[5], start: row[6], end: row[7], host: row[8]
+                day: row[4], week: row[5], start: row[6], end: row[7], host: row[8],
+                // ADDED: Assuming 'colour' is the 10th column in your sheet (index 9)
+                color: row[9] 
             };
             const showEl = document.createElement('div');
             showEl.className = 'show-card';
+            
             if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
                 showEl.classList.add('is-live');
             }
+
+            // ADDED: Apply the custom background color if it exists in the sheet
+            if (show.color && show.color.trim() !== "") {
+                showEl.style.backgroundColor = show.color.trim();
+                // Optional: You might also want to override the border color to match
+                // showEl.style.borderColor = show.color.trim(); 
+            }
+
             showEl.innerHTML = `
                 <img src="${show.img}" alt="${show.title}">
                 <div class="show-card-meta">
@@ -455,6 +466,7 @@ box.appendChild(showsContainer);
             showEl.onclick = () => openShowModal(show);
             dayCol.appendChild(showEl);
         });
+        
         grid.appendChild(dayCol);
     });
 
@@ -478,19 +490,37 @@ box.appendChild(showsContainer);
         }
     });
 
-    function openShowModal(show) {
-        const modal = document.getElementById('schedule-modal');
-        if(!modal) return;
-        document.getElementById('modal-show-img').src = show.img;
-        document.getElementById('modal-show-title').innerText = show.title;
-        document.getElementById('modal-show-time').innerText = `${show.start} - ${show.end}`;
-        document.getElementById('modal-show-host').innerText = `With ${show.host}`;
-        document.getElementById('modal-show-desc').innerText = show.desc;
-        modal.style.display = 'block';
-        const closeBtn = modal.querySelector('.close-modal');
-        if(closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-        window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; };
+   function openShowModal(show) {
+    const modal = document.getElementById('schedule-modal');
+    if(!modal) return;
+
+    document.getElementById('modal-show-img').src = show.img;
+    document.getElementById('modal-show-title').innerText = show.title;
+    document.getElementById('modal-show-time').innerText = `${show.start} - ${show.end}`;
+    document.getElementById('modal-show-host').innerText = `With ${show.host}`;
+    document.getElementById('modal-show-desc').innerText = show.desc;
+
+    // --- NEW MODAL COLOR LOGIC ---
+    // Targets the inner modal box. If your inner box uses a different class/ID, update '.modal-content' below:
+    const modalInner = modal.querySelector('.modal-content') || modal; 
+
+    if (show.color && show.color.trim() !== "") {
+        modalInner.style.backgroundColor = show.color.trim();
+    } else {
+        // Clears the inline style so it falls back to your original CSS
+        modalInner.style.backgroundColor = ''; 
     }
+    // -----------------------------
+
+    modal.style.display = 'block';
+    
+    const closeBtn = modal.querySelector('.close-modal');
+    if(closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+    
+    window.onclick = (e) => { 
+        if(e.target == modal) modal.style.display = 'none'; 
+    };
+}
 
     function initMobileSchedule() {
         const buttons = document.querySelectorAll('.day-btn');
