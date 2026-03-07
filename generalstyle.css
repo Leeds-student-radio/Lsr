@@ -831,7 +831,7 @@ hr {
             background-color: rgb(160, 43, 43);
         }
               .player-bar::before {
-            content: none;
+            display: none;
           
         }
 
@@ -1569,8 +1569,15 @@ hr {
               .player-bar {
   
   
-    padding: 8px 25px !important;
+    padding: 8px 12px !important;
   }
+
+            .brand-logo.nav-link  {
+  
+  
+    padding-left: 2px !important;
+  }
+            
       
             .main-nav { margin: 0; border: none; border-radius: 0; border-bottom: solid 2px #8f1818; background: var(--bg-body); }
             .nav-container { padding-top: 0; }
