@@ -1,4 +1,63 @@
-     
+
+@keyframes award-shimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+/* Base class for the pulsing boxes */
+.award-skeleton-box {
+  background: #f6f7f8;
+  background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 800px 100%;
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: award-shimmer;
+  animation-timing-function: linear;
+  border-radius: 4px; 
+}
+
+/* Specific layout elements */
+.award-skeleton-year {
+  width: 60px;
+  height: 24px;
+  margin-bottom: 15px;
+}
+
+.award-skeleton-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 0; 
+}
+
+.award-skeleton-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; 
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.award-skeleton-text-container {
+  flex: 1;
+}
+
+.award-skeleton-title {
+  width: 85%;
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.award-skeleton-subtitle {
+  width: 55%;
+  height: 12px;
+}
+
+
+
+
        .legalsection { padding:40px; max-width:1500px;}
          .legalsection h2 { margin: 15px 0px;}
            .legalsection h3 { margin: 15px 5px;}
