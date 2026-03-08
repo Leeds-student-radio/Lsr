@@ -1695,7 +1695,7 @@ hr {
             .card-badge { top: 15px; right: 15px; font-size: 0.67rem; }
             .main-footer { margin: 0; padding: 0; border: none; box-shadow: none; }
             .main-footer:before { display: none; }
-            .footer-grid { grid-template-columns: 1fr; gap: 10px; padding-bottom: 0; }
+            .footer-grid { grid-template-columns: 1fr; gap: 10px; padding-bottom: 0; margin-bottom: 5px !important}
             .footer-links-group { flex-direction: row; padding: 20px; border-top: solid 2px #8f1818; justify-content: center; margin: auto -15px;
         overflow-x: hidden;}
             
@@ -1704,7 +1704,11 @@ hr {
             .col-banner { border: solid 2px #8f1818; padding: 20px; border-radius: var(--radius-md); margin:0px; margin-bottom: 15px; }
             .copyright { padding: 20px; }
         }
-        
+        @media screen and (min-width: 769px) { 
+.legalsmall  { display:none;
+ }
+}
+
        
    /* Base Styles (Desktop/Default) */
 .chat-input-area {
