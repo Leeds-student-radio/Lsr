@@ -2108,3 +2108,18 @@ hr {
     font-size: 0.75rem;
   }
 }
+.empty-show-slot {
+    pointer-events: none; /* Ensures it can't be clicked */
+    background-color: rgba(0, 0, 0, 0.05); /* Optional: Gives it a faint empty box look */
+    border: 1px dashed #8f1818; /* Optional: Styling for the empty box */
+   
+    box-shadow: none;
+}
+
+/* --- Mobile: Hide completely --- */
+/* Adjust the 768px breakpoint to whatever you are currently using for mobile */
+@media (max-width: 768px) {
+    .empty-show-slot {
+        display: none !important;
+    }
+}
