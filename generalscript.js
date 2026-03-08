@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if ('mediaSession' in navigator) {
             const title = show?.title || "LSR Non-Stop";
             const artist = show?.host || "Leeds Student Radio";
-            const artworkUrl = show?.image || show?.img || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
+            const artworkUrl = show?.image || show?.img || "/ourlogo.jpeg";
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: title, artist: artist,
                 artwork: [{ src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }]
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const parsedShows = todayShows.map(row => ({
             title: row[1] || "No show live",
             description: row[2] || "Check our schedule for the next show!",
-            image: row[3] || "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg",
+            image: row[3] || "/ourlogo.jpeg",
             start: timeToMinutes(row[6]),
             end: timeToMinutes(row[7]),
             rawStart: row[6],
@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lnImg = document.getElementById('live-now-img');
         const lnDesc = document.getElementById('live-now-desc');
         const mainTitle = document.getElementById('main-player-title');
-        const defaultImg = "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg";
+        const defaultImg = "/ourlogo.jpeg";
 
         if (liveShow) {
             if(lnTitle) lnTitle.innerText = liveShow.title;
