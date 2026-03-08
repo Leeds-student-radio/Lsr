@@ -3,18 +3,16 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gsta
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
-
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
-     const radioPlayer = document.getElementById('radio-player');
+    const radioPlayer = document.getElementById('radio-player');
     const bars = document.querySelectorAll('.bar');
 
     function updatePlayButtons(isPlaying) {
         const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
 
         allPlayIcons.forEach(icon => {
-            // Replaced .replace() with .className so it cleanly overwrites the spinner classes
             icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
         });
 
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const icon = button.querySelector('i');
 
         if (audio.paused) {
-            // Apply spinner immediately on click
             icon.className = 'fa-solid fa-circle-notch fa-spin'; 
             
             const playPromise = audio.play();
@@ -47,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ADD THIS LINE RIGHT HERE:
     window.toggleAltStream = toggleAltStream;
     
     // Initialize state
@@ -55,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function togglePlay() {
         if (radioPlayer.paused) {
-            // Apply spinner immediately on click
             const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
             allPlayIcons.forEach(icon => {
                 icon.className = 'fa-solid fa-circle-notch fa-spin';
@@ -63,14 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const playPromise = radioPlayer.play();
             if (playPromise !== undefined) {
-                // Wait for audio to actually load and start playing
                 playPromise.then(() => {
                     updatePlayButtons(true);
                 }).catch(() => {
                     updatePlayButtons(false);
                 });
             } else {
-                updatePlayButtons(true); // Fallback for very old browsers
+                updatePlayButtons(true);
             }
         } else {
             radioPlayer.pause();
@@ -84,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePlay();
         }
     });
+
     // --- 2. MOBILE MENU LOGIC ---
     const mobileBtn = document.querySelector('.mobile-toggle');
     const navMenu = document.querySelector('.nav-menu');
@@ -196,22 +191,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 box.className = 'apply-box';
                 box.innerHTML = `<h3>${category}</h3>`;
 
-               const showsContainer = document.createElement('div');
-showsContainer.className = 'shows-container';
+                const showsContainer = document.createElement('div');
+                showsContainer.className = 'shows-container';
 
-shows.forEach(show => {
-    const link = document.createElement('a');
-    link.className = 'show-link';
-    link.href = show.formLink;
-    link.target = '_blank';
-    
-    // Use innerHTML to render the Font Awesome icon tag
-    link.innerHTML = `<i class="fas fa-link"></i> ${show.showName}`;
-    
-    showsContainer.appendChild(link);
-});
+                shows.forEach(show => {
+                    const link = document.createElement('a');
+                    link.className = 'show-link';
+                    link.href = show.formLink;
+                    link.target = '_blank';
+                    
+                    link.innerHTML = `<i class="fas fa-link"></i> ${show.showName}`;
+                    
+                    showsContainer.appendChild(link);
+                });
 
-box.appendChild(showsContainer);
+                box.appendChild(showsContainer);
 
                 let footerText = `*Find out more about ${category} on our Instagram @thisislsr`;
                 const catLower = category.toLowerCase();
@@ -232,6 +226,83 @@ box.appendChild(showsContainer);
             console.error("Failed to fetch apply forms", error);
         }
     }
+
+    // --- 5.5 AWARDS LOGIC ---
+    const awardsSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=1358450835&output=csv';
+
+    async function fetchAwardsData() {
+        const grid = document.getElementById('award-grid');
+        if (!grid) return; // Guard for non-award pages
+
+        try {
+            const response = await fetch(awardsSheetUrl);
+            const csvText = await response.text();
+            const rows = parseCSV(csvText);
+            
+            // Remove the header row, and filter out any empty trailing rows
+            const data = rows.slice(1).filter(r => r.length >= 3 && r[0].trim() !== '');
+
+            // Group the data by Year
+            const awardsByYear = {};
+            data.forEach(row => {
+                const year = row[0]?.trim();
+                const place = row[1]?.trim();
+                const award = row[2]?.trim();
+                const subtitle = row[3]?.trim() || ''; 
+
+                if (!awardsByYear[year]) {
+                    awardsByYear[year] = [];
+                }
+                awardsByYear[year].push({ place, award, subtitle });
+            });
+
+            // Sort years in descending order (e.g., 2024, 2023, 2022)
+            const sortedYears = Object.keys(awardsByYear).sort((a, b) => b - a);
+
+            let html = '';
+
+            sortedYears.forEach(year => {
+                html += `
+                    <div class="award-box">
+                        <h3>${year}</h3>
+                        <div class="award-container">
+                `;
+
+                awardsByYear[year].forEach(item => {
+                    // Determine the FontAwesome icon based on the 'Place' column
+                    let iconClass = 'fa-solid fa-star'; 
+                    if (item.place === '2') iconClass = 'fa-solid fa-2';
+                    if (item.place === '3') iconClass = 'fa-solid fa-3';
+
+                    // Only generate subtitle div if a subtitle exists in the spreadsheet
+                    const subtitleHtml = item.subtitle 
+                        ? `<div class="award-subtitle">${item.subtitle}</div>` 
+                        : '';
+
+                    html += `
+                        <a class="award">
+                            <i class="${iconClass}"></i>
+                            <div class="award-details">
+                                ${item.award}
+                                ${subtitleHtml}
+                            </div>
+                        </a>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Inject into the DOM
+            grid.innerHTML = html;
+        } catch (error) {
+            console.error('Error fetching awards:', error);
+        }
+    }
+
 
     // --- 6. ENHANCED SCHEDULE & MEDIASESSION LOGIC ---
     const scheduleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=0';
@@ -586,8 +657,10 @@ updateNavLinks();
 
                 updatePlayButtons(!radioPlayer.paused);
  
+                // Initialize specific section data based on URL
                 if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
+                if (url.includes('awards')) fetchAwardsData(); // <-- ADDED: Trigger awards pull
                 if (url.includes('listen') || url.includes('schedule')) fetchScheduleData();
              if (url.includes('listen')) {
                 initChatSystem(); 
@@ -617,6 +690,7 @@ updateNavLinks();
     fetchScheduleData();
     fetchCommitteeData();
     fetchApplyData();
+    fetchAwardsData(); // <-- ADDED: Load on initial visit
   if (window.location.pathname.includes('listen')) {
         initChatSystem();
     }
