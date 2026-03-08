@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // NO LIVE SHOW: Load default non-stop data
             if(lnTitle) lnTitle.innerText = "No show currently live";
             if(lnImg) lnImg.src = defaultImg;
-            if(lnDesc) lnDesc.innerText = "No show is live right now :( Check the schedule for our next show!";
+            if(lnDesc) lnDesc.innerText = "No show is live right now :(";
 
             updateMediaSession({
                 title: "OFF AIR", 
@@ -455,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (mainTitle) {
                 mainTitle.innerText = "OFF AIR";
-                document.getElementById('main-player-host').innerText = "No show currently live";
+                document.getElementById('main-player-host').innerText = "ZZZ";
                 document.getElementById('main-player-desc').innerText = "Our hosts are sleeping now (or out enjoying the Leeds nightlife 😉) Check the schedule for our next show!";
                 document.getElementById('main-player-img').src = defaultImg;
                 document.getElementById('main-player-time').innerText = `OFF AIR`;
