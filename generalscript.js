@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateMediaSession(show) {
         if ('mediaSession' in navigator) {
-            const title = show?.title || "LSR Non-Stop";
+            const title = show?.title || "OFF AIR";
             const artist = show?.host || "Leeds Student Radio";
             const artworkUrl = show?.image || show?.img || "/ourlogo.jpeg";
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -443,22 +443,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // NO LIVE SHOW: Load default non-stop data
-            if(lnTitle) lnTitle.innerText = "LSR Non-Stop";
+            if(lnTitle) lnTitle.innerText = "No show currently live";
             if(lnImg) lnImg.src = defaultImg;
-            if(lnDesc) lnDesc.innerText = "No show is live right now, enjoy our non-stop student radio mix.";
+            if(lnDesc) lnDesc.innerText = "No show is live right now :( Check the schedule for our next show!";
 
             updateMediaSession({
-                title: "LSR Non-Stop", 
+                title: "OFF AIR", 
                 host: "Leeds Student Radio", 
                 image: defaultImg
             });
 
             if (mainTitle) {
-                mainTitle.innerText = "LSR Non-Stop";
-                document.getElementById('main-player-host').innerText = "with Leeds Student Radio";
-                document.getElementById('main-player-desc').innerText = "No show is live right now, enjoy our non-stop student radio mix.";
+                mainTitle.innerText = "OFF AIR";
+                document.getElementById('main-player-host').innerText = "No show currently live";
+                document.getElementById('main-player-desc').innerText = "Our hosts are sleeping now (or out enjoying the Leeds nightlife 😉) Check the schedule for our next show!";
                 document.getElementById('main-player-img').src = defaultImg;
-                document.getElementById('main-player-time').innerText = `LIVE NOW (24/7)`;
+                document.getElementById('main-player-time').innerText = `OFF AIR`;
             }
         }
 
