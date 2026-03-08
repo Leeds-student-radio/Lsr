@@ -2167,7 +2167,8 @@ hr {
     display: block;
     opacity: 0;
     transition: opacity 0.4s ease-in-out;
-    z-index: 1;
+    z-index: 1
+  transform:scale(1.2);
 }
 
 /* 5. The Active/Loaded State */
