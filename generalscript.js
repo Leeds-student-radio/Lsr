@@ -506,35 +506,41 @@ document.addEventListener('DOMContentLoaded', () => {
             dayCol.innerHTML += `<p class="no-shows">No shows scheduled</p>`;
         }
 
-        filteredShows.forEach(row => {
+       filteredShows.forEach(row => {
             const show = {
                 title: row[1], desc: row[2], img: row[3] || "https://via.placeholder.com/300",
                 day: row[4], week: row[5], start: row[6], end: row[7], host: row[8],
-                // ADDED: Assuming 'colour' is the 10th column in your sheet (index 9)
                 color: row[9] 
             };
             const showEl = document.createElement('div');
             showEl.className = 'show-card';
             
-            if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
-                showEl.classList.add('is-live');
-            }
+            // Check if the title is missing or entirely whitespace
+            const hasTitle = show.title && show.title.trim() !== "";
 
-            // ADDED: Apply the custom background color if it exists in the sheet
-            if (show.color && show.color.trim() !== "") {
-                showEl.style.backgroundColor = show.color.trim();
-                // Optional: You might also want to override the border color to match
-                // showEl.style.borderColor = show.color.trim(); 
-            }
+            if (!hasTitle) {
+                // If there's no title, mark it as empty and skip adding innerHTML/onclick
+                showEl.classList.add('empty-show-slot');
+            } else {
+                // Normal rendering for shows WITH a title
+                if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
+                    showEl.classList.add('is-live');
+                }
 
-            showEl.innerHTML = `
-                <img src="${show.img}" alt="${show.title}">
-                <div class="show-card-meta">
-                    <h4>${show.title}</h4>
-                    <p>${show.start} - ${show.end}</p>
-                </div>
-            `;
-            showEl.onclick = () => openShowModal(show);
+                if (show.color && show.color.trim() !== "") {
+                    showEl.style.backgroundColor = show.color.trim();
+                }
+
+                showEl.innerHTML = `
+                    <img src="${show.img}" alt="${show.title}">
+                    <div class="show-card-meta">
+                        <h4>${show.title}</h4>
+                        <p>${show.start} - ${show.end}</p>
+                    </div>
+                `;
+                showEl.onclick = () => openShowModal(show);
+            }
+            
             dayCol.appendChild(showEl);
         });
         
