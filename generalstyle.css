@@ -815,7 +815,7 @@ hr {
             height:auto;
             border-radius: 10px;
             margin-top: 10px;
-                  max-height: 360px;
+                  max-height: 345px;
         }
         
         .tip {
@@ -2122,4 +2122,59 @@ hr {
     .empty-show-slot {
         display: none !important;
     }
+}
+/* 1. The Scoped Container */
+.lsr-image-placeholder-shimmer {
+    width: 100%;
+    /* Replace with your image's actual ratio if known, e.g., 1.5 for 3:2 */
+    aspect-ratio: 16 / 9; 
+    background-color: #c92a2a;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 2. The Unique Shimmer Overlay */
+.lsr-image-placeholder-shimmer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0) 0, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: lsr-shimmer-slide 2s infinite;
+}
+
+/* 3. Unique Keyframe Name */
+@keyframes lsr-shimmer-slide {
+    100% { transform: translateX(100%); }
+}
+
+/* 4. The Image itself */
+.lsr-collage-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    z-index: 1;
+}
+
+/* 5. The Active/Loaded State */
+.lsr-image-placeholder-shimmer.lsr-is-fully-loaded::after {
+    display: none; /* Kill the animation once loaded */
+}
+
+.lsr-image-placeholder-shimmer.lsr-is-fully-loaded .lsr-collage-img {
+    opacity: 1;
 }
