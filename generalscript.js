@@ -957,12 +957,18 @@ function initChatSystem() {
         if (user) {
             messagesCollection = collection(db, "messages");
             const q = query(messagesCollection, orderBy("createdAt", "asc"));
-            onSnapshot(q, (snapshot) => {
-                if (loadingSpinner) loadingSpinner.style.display = 'none';
-                chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
-                snapshot.forEach(doc => displayMessage(doc.data()));
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            });
+           onSnapshot(q, (snapshot) => {
+    if (loadingSpinner) loadingSpinner.style.display = 'none';
+    chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
+    snapshot.forEach(doc => displayMessage(doc.data()));
+    
+    // Defer the scroll slightly to allow the browser to render new heights, especially for GIFs
+    setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 150); 
+});
+
+            
         }
     });
     signInAnonymously(auth);
