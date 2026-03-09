@@ -2202,3 +2202,48 @@ hr {
     box-shadow: 0 0 10px #00ff88;
     animation: pulse-green 2s infinite;
 }
+ @media (max-width: 768px) {
+.schedule-section {
+    overflow: visible;
+}
+
+.schedule-header {
+    margin: 0px 10px;
+    border: solid 1px #8f1818;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+    border-bottom: none;
+     position: sticky;
+    top: 60px;
+    z-index: 10;
+     background: #c23737;
+}
+.day-selector-mobile {
+   
+    margin-bottom: 0px;
+   
+}
+.schedule-controls {
+    background: #c23737;
+    margin: 0px 10px;
+    border: solid 1px #8f1818;
+    border-bottom-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-top: none;
+    padding-bottom: 5px;
+    position: sticky;
+        top: 106.5px;
+    z-index: 10;
+}
+.week-selector {
+    background: #d62828;
+}
+
+.schedule-grid {
+    background: #a02b2b38;
+    margin: 0px 10px;
+    border: solid 1px #8f1818;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+}
