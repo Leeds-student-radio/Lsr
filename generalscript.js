@@ -306,9 +306,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. ENHANCED SCHEDULE & MEDIASESSION LOGIC ---
     const scheduleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=0';
-    const TERM_START_DATE = new Date('2026-01-26');
+    const TERM_START_DATE = new Date('2026-01-26T00:00:00');
     let currentViewWeek = 'A';
     let allScheduleRows = [];
+
+    // --- NEW: Helper function to strictly force London Time ---
+    function getLondonDate() {
+        // Fetches current UTC time and converts it into a local Date object matching Europe/London
+        const londonTimeStr = new Date().toLocaleString("en-US", { timeZone: "Europe/London" });
+        return new Date(londonTimeStr); 
+    }
 
     function timeToMinutes(timeStr) {
         if (!timeStr) return -1;
@@ -318,14 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getCurrentWeekType() {
-        const now = new Date();
+        const now = getLondonDate(); // Replaced standard Date
         const diffInMs = now - TERM_START_DATE;
         const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
         return (diffInWeeks % 2 === 0) ? 'A' : 'B';
     }
 
     function isShowLive(showDay, startTime, endTime) {
-        const now = new Date();
+        const now = getLondonDate(); // Replaced standard Date
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDay = days[now.getDay()];
         if (showDay.toLowerCase() !== currentDay.toLowerCase()) return false;
@@ -378,8 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-  function updateLiveNowUI(realWeek) {
-        const now = new Date();
+    function updateLiveNowUI(realWeek) {
+        const now = getLondonDate(); // Replaced standard Date
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const currentDay = days[now.getDay()];
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -479,79 +486,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-  function renderSchedule(weekLetter) {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const grid = document.getElementById('schedule-grid');
-    if (!grid) return; 
+    function renderSchedule(weekLetter) {
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const grid = document.getElementById('schedule-grid');
+        if (!grid) return; 
 
-    const realWeek = getCurrentWeekType();
-    grid.innerHTML = ''; // Clear previous
+        const realWeek = getCurrentWeekType();
+        grid.innerHTML = ''; // Clear previous
 
-    days.forEach(day => {
-        const dayCol = document.createElement('div');
-        // Match the class used in your CSS
-        dayCol.className = `schedule-day-column day-${day}`; 
-        dayCol.innerHTML = `<h3 class="day-title">${day}</h3>`;
+        days.forEach(day => {
+            const dayCol = document.createElement('div');
+            // Match the class used in your CSS
+            dayCol.className = `schedule-day-column day-${day}`; 
+            dayCol.innerHTML = `<h3 class="day-title">${day}</h3>`;
 
-        const filteredShows = allScheduleRows.filter(row => {
-            const rowDay = row[4]?.trim() || '';
-            const rowWeek = row[5]?.trim().toUpperCase() || '';
-            return rowDay.toLowerCase() === day.toLowerCase() && 
-                   (rowWeek.includes(weekLetter) || rowWeek.includes('EVERY'));
-        });
+            const filteredShows = allScheduleRows.filter(row => {
+                const rowDay = row[4]?.trim() || '';
+                const rowWeek = row[5]?.trim().toUpperCase() || '';
+                return rowDay.toLowerCase() === day.toLowerCase() && 
+                       (rowWeek.includes(weekLetter) || rowWeek.includes('EVERY'));
+            });
 
-        filteredShows.sort((a, b) => timeToMinutes(a[6]) - timeToMinutes(b[6]));
+            filteredShows.sort((a, b) => timeToMinutes(a[6]) - timeToMinutes(b[6]));
 
-        if (filteredShows.length === 0) {
-            dayCol.innerHTML += `<p class="no-shows">No shows scheduled</p>`;
-        }
-
-       filteredShows.forEach(row => {
-            const show = {
-                title: row[1], desc: row[2], img: row[3] || "https://via.placeholder.com/300",
-                day: row[4], week: row[5], start: row[6], end: row[7], host: row[8],
-                color: row[9] 
-            };
-            const showEl = document.createElement('div');
-            showEl.className = 'show-card';
-            
-            // Check if the title is missing or entirely whitespace
-            const hasTitle = show.title && show.title.trim() !== "";
-
-            if (!hasTitle) {
-                // If there's no title, mark it as empty and skip adding innerHTML/onclick
-                showEl.classList.add('empty-show-slot');
-            } else {
-                // Normal rendering for shows WITH a title
-                if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
-                    showEl.classList.add('is-live');
-                }
-
-                if (show.color && show.color.trim() !== "") {
-                    showEl.style.backgroundColor = show.color.trim();
-                }
-
-                showEl.innerHTML = `
-                    <img src="${show.img}" alt="${show.title}">
-                    <div class="show-card-meta">
-                        <h4>${show.title}</h4>
-                        <p>${show.start} - ${show.end}</p>
-                    </div>
-                `;
-                showEl.onclick = () => openShowModal(show);
+            if (filteredShows.length === 0) {
+                dayCol.innerHTML += `<p class="no-shows">No shows scheduled</p>`;
             }
+
+            filteredShows.forEach(row => {
+                const show = {
+                    title: row[1], desc: row[2], img: row[3] || "https://via.placeholder.com/300",
+                    day: row[4], week: row[5], start: row[6], end: row[7], host: row[8],
+                    color: row[9] 
+                };
+                const showEl = document.createElement('div');
+                showEl.className = 'show-card';
+                
+                // Check if the title is missing or entirely whitespace
+                const hasTitle = show.title && show.title.trim() !== "";
+
+                if (!hasTitle) {
+                    // If there's no title, mark it as empty and skip adding innerHTML/onclick
+                    showEl.classList.add('empty-show-slot');
+                } else {
+                    // Normal rendering for shows WITH a title
+                    if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
+                        showEl.classList.add('is-live');
+                    }
+
+                    if (show.color && show.color.trim() !== "") {
+                        showEl.style.backgroundColor = show.color.trim();
+                    }
+
+                    showEl.innerHTML = `
+                        <img src="${show.img}" alt="${show.title}">
+                        <div class="show-card-meta">
+                            <h4>${show.title}</h4>
+                            <p>${show.start} - ${show.end}</p>
+                        </div>
+                    `;
+                    showEl.onclick = () => openShowModal(show);
+                }
+                
+                dayCol.appendChild(showEl);
+            });
             
-            dayCol.appendChild(showEl);
+            grid.appendChild(dayCol);
         });
-        
-        grid.appendChild(dayCol);
-    });
 
-    // Re-initialize mobile visibility after rendering
-    setTimeout(() => initMobileSchedule(), 50); 
-}
+        // Re-initialize mobile visibility after rendering
+        setTimeout(() => initMobileSchedule(), 50); 
+    }
 
-   function updateWeekUI(week) {
+    function updateWeekUI(week) {
         // Find out what the actual current week is (e.g., 'A' or 'B')
         const realCurrentWeek = getCurrentWeekType();
 
@@ -575,43 +582,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-   function openShowModal(show) {
-    const modal = document.getElementById('schedule-modal');
-    if(!modal) return;
+    function openShowModal(show) {
+        const modal = document.getElementById('schedule-modal');
+        if(!modal) return;
 
-    document.getElementById('modal-show-img').src = show.img;
-    document.getElementById('modal-show-title').innerText = show.title;
-    document.getElementById('modal-show-time').innerText = `${show.start} - ${show.end}`;
-    document.getElementById('modal-show-host').innerText = `With ${show.host}`;
-    document.getElementById('modal-show-desc').innerText = show.desc;
+        document.getElementById('modal-show-img').src = show.img;
+        document.getElementById('modal-show-title').innerText = show.title;
+        document.getElementById('modal-show-time').innerText = `${show.start} - ${show.end}`;
+        document.getElementById('modal-show-host').innerText = `With ${show.host}`;
+        document.getElementById('modal-show-desc').innerText = show.desc;
 
-    // --- NEW MODAL COLOR LOGIC ---
-    // Targets the inner modal box. If your inner box uses a different class/ID, update '.modal-content' below:
-    const modalInner = modal.querySelector('.modal-content') || modal; 
+        // --- NEW MODAL COLOR LOGIC ---
+        // Targets the inner modal box. If your inner box uses a different class/ID, update '.modal-content' below:
+        const modalInner = modal.querySelector('.modal-content') || modal; 
 
-    if (show.color && show.color.trim() !== "") {
-        modalInner.style.backgroundColor = show.color.trim();
-    } else {
-        // Clears the inline style so it falls back to your original CSS
-        modalInner.style.backgroundColor = ''; 
+        if (show.color && show.color.trim() !== "") {
+            modalInner.style.backgroundColor = show.color.trim();
+        } else {
+            // Clears the inline style so it falls back to your original CSS
+            modalInner.style.backgroundColor = ''; 
+        }
+        // -----------------------------
+
+        modal.style.display = 'block';
+        
+        const closeBtn = modal.querySelector('.close-modal');
+        if(closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+        
+        window.onclick = (e) => { 
+            if(e.target == modal) modal.style.display = 'none'; 
+        };
     }
-    // -----------------------------
-
-    modal.style.display = 'block';
-    
-    const closeBtn = modal.querySelector('.close-modal');
-    if(closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-    
-    window.onclick = (e) => { 
-        if(e.target == modal) modal.style.display = 'none'; 
-    };
-}
 
     function initMobileSchedule() {
         const buttons = document.querySelectorAll('.day-btn');
         const columns = document.querySelectorAll('.schedule-day-column');
         const selector = document.querySelector('.day-selector-mobile');
-        const todayName = new Date().toLocaleDateString('en-GB', { weekday: 'long' });
+        
+        // Replaced standard date with Intl API locked to London timezone
+        const todayName = new Intl.DateTimeFormat('en-GB', { 
+            weekday: 'long', 
+            timeZone: 'Europe/London' 
+        }).format(new Date());
         
         const setActiveDay = (dayName, clickedBtn = null) => {
             buttons.forEach(btn => {
@@ -633,24 +645,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         setActiveDay(todayName);
     }
-function updateNavLinks() {
-    const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-menu .nav-link');
 
-    navLinks.forEach(link => {
-        // Remove active class from all first
-        link.classList.remove('active');
+    function updateNavLinks() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-menu .nav-link');
 
-        // Get the href attribute (e.g., "/DesignPortfolio/listen.html")
-        const href = link.getAttribute('href');
+        navLinks.forEach(link => {
+            // Remove active class from all first
+            link.classList.remove('active');
 
-        // If the current URL path contains the href of the link, make it active
-        // This handles cases like 'listen.html' matching '/listen'
-        if (href && currentPath.includes(href.replace('.html', ''))) {
-            link.classList.add('active');
-        }
-    });
-}
+            // Get the href attribute (e.g., "/DesignPortfolio/listen.html")
+            const href = link.getAttribute('href');
+
+            // If the current URL path contains the href of the link, make it active
+            // This handles cases like 'listen.html' matching '/listen'
+            if (href && currentPath.includes(href.replace('.html', ''))) {
+                link.classList.add('active');
+            }
+        });
+    }
+
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -664,8 +678,8 @@ function updateNavLinks() {
             if (newMain && currentMain) {
                 currentMain.innerHTML = newMain.innerHTML;
                 document.title = newDoc.title;
-             window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-updateNavLinks();
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                updateNavLinks();
              
                 if (navMenu && navMenu.classList.contains('active')) toggleMenu();
 
@@ -674,11 +688,11 @@ updateNavLinks();
                 // Initialize specific section data based on URL
                 if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
-                if (url.includes('awards')) fetchAwardsData(); // <-- ADDED: Trigger awards pull
+                if (url.includes('awards')) fetchAwardsData(); 
                 if (url.includes('listen') || url.includes('schedule')) fetchScheduleData();
-             if (url.includes('listen')) {
-                initChatSystem(); 
-            }
+                if (url.includes('listen')) {
+                    initChatSystem(); 
+                }
 
                 fetchScheduleData();
             }
@@ -699,13 +713,12 @@ updateNavLinks();
     window.addEventListener('popstate', () => loadPage(window.location.href));
 
     // Start everything
-    
     updateNavLinks();
     fetchScheduleData();
     fetchCommitteeData();
     fetchApplyData();
-    fetchAwardsData(); // <-- ADDED: Load on initial visit
-  if (window.location.pathname.includes('listen')) {
+    fetchAwardsData(); 
+    if (window.location.pathname.includes('listen')) {
         initChatSystem();
     }
     setInterval(fetchScheduleData, 180000);
@@ -763,7 +776,10 @@ function initChatSystem() {
         
         if (createdAt && typeof createdAt.toDate === 'function') {
             const date = createdAt.toDate();
-            timestampString = `[${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}]`;
+            // Firebase timestamps should ideally display in London time too, but this is optional for a chatbox.
+            // Converting chat timestamps to London time just in case:
+            const chatDateOptions = { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false };
+            timestampString = `[${new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date)}]`;
         }
 
         const msgDiv = document.createElement('div');
