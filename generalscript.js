@@ -830,12 +830,16 @@ function initChatSystem() {
 
     const GIPHY_API_KEY = "zhbz8Mvx3vRQHBkQo3nnWWbyHQMOVsFn"; 
 
-    async function fetchGifs(searchTerm) {
+  async function fetchGifs(searchTerm) {
         if (!gifResults) return;
         gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Loading...</p>';
         
+        // Put your hand-picked GIF IDs here, separated by commas (no spaces)
+        const myFavoriteGifs = "l3vRlT2k2L35Cnn5C,ZqlvCTNHpqrio,FdRzET4jjKt4HVzri7,wW95fEq09hOI8,GWKQzZX7bNqRMO6bMw,mGK1g88HZRa2FlKGbz,fX5cZemSfX1cMZYuUJ,gKHGnB1ml0moQdjhEJ"; 
+        
+        // If the search is empty, fetch your specific GIFs. Otherwise, search Giphy.
         const endpoint = searchTerm.trim() === '' 
-            ? `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=pg-13`
+            ? `https://api.giphy.com/v1/gifs?api_key=${GIPHY_API_KEY}&ids=${myFavoriteGifs}`
             : `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(searchTerm)}&limit=12&rating=pg-13`;
 
         try {
