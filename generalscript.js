@@ -802,9 +802,11 @@ function initChatSystem() {
         // Build the HTML. If there's text, show it. If there's a GIF, append the image tag.
         let contentHtml = `<p><span class="message-timestamp">${timestampString}</span> <strong class="message-author">${name}</strong>: ${text}</p>`;
         
-        if (gifUrl) {
-            contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" style="max-width: 200px; border-radius: 8px; margin-top: 5px; display: block;" />`;
-        }
+       // In your displayMessage function:
+if (gifUrl) {
+    // Adding a min-height or aspect-ratio reserves the space instantly before the image even loads
+    contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+}
 
         textDiv.innerHTML = contentHtml;
         
