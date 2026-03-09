@@ -551,10 +551,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => initMobileSchedule(), 50); 
 }
 
-    function updateWeekUI(week) {
+   function updateWeekUI(week) {
+        // Find out what the actual current week is (e.g., 'A' or 'B')
+        const realCurrentWeek = getCurrentWeekType();
+
         document.querySelectorAll('.week-btn').forEach(btn => {
+            // Highlights the week you are currently viewing
             btn.classList.toggle('active', btn.dataset.week === week);
+            
+            // Adds the indicator class to the actual chronological current week
+            btn.classList.toggle('is-current-week', btn.dataset.week === realCurrentWeek);
         });
+        
         const indicator = document.getElementById('current-week-indicator');
         if (indicator) indicator.innerText = `Viewing Schedule: Week ${week}`;
     }
