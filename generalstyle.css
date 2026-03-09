@@ -903,6 +903,15 @@ hr {
         }
 
         @media (max-width: 768px) {
+
+          .gif-picker-container {
+    position: relative;
+    top: -300px;
+   
+    margin-right: auto;
+    margin-left: auto;
+   }
+            
 .visualizer  {
             display: none !important;
           
