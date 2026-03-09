@@ -817,9 +817,13 @@ function initChatSystem() {
     if (gifToggleBtn && gifPicker && closeGifBtn) {
         gifToggleBtn.addEventListener('click', () => {
             gifPicker.style.display = gifPicker.style.display === 'none' ? 'flex' : 'none';
-            if (gifPicker.style.display === 'flex') {
-                fetchGifs(''); // Load trending GIFs on open
-                if (gifSearchInput) gifSearchInput.focus({ preventScroll: true }); 
+           if (gifPicker.style.display === 'flex') {
+                fetchGifs(''); 
+                
+                // Only focus the input if the screen is wider than a typical mobile phone (e.g., 768px)
+                if (gifSearchInput && window.innerWidth > 768) {
+                    gifSearchInput.focus({ preventScroll: true }); 
+                }
             }
         });
 
