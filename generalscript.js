@@ -757,6 +757,13 @@ function initChatSystem() {
     const messageInput = document.getElementById('message-input');
     const loadingSpinner = document.getElementById('loading-spinner');
 
+    // --- 1. GIF DOM ELEMENTS ---
+    const gifPicker = document.getElementById('gif-picker');
+    const gifToggleBtn = document.getElementById('gif-toggle-btn');
+    const closeGifBtn = document.getElementById('close-gif-btn');
+    const gifSearchInput = document.getElementById('gif-search-input');
+    const gifResults = document.getElementById('gif-results');
+
     if (!chatMessages || !chatForm) return; // Guard for pages without chat
 
     const avatarColors = ['#ff4b2b', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#e67e22', '#1abc9c', '#e91e63', '#00bcd4', '#607d8b'];
@@ -768,16 +775,16 @@ function initChatSystem() {
         return avatarColors[Math.abs(hash % avatarColors.length)];
     }
 
+    // --- 2. UPDATED DISPLAY MESSAGE (NOW SUPPORTS GIFS) ---
     function displayMessage(messageData) {
         const name = messageData.name || 'Anonymous';
         const text = messageData.text || '';
+        const gifUrl = messageData.gifUrl; // Grab the GIF URL if it exists
         const createdAt = messageData.createdAt;
         let timestampString = '';
         
         if (createdAt && typeof createdAt.toDate === 'function') {
             const date = createdAt.toDate();
-            // Firebase timestamps should ideally display in London time too, but this is optional for a chatbox.
-            // Converting chat timestamps to London time just in case:
             const chatDateOptions = { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false };
             timestampString = `[${new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date)}]`;
         }
@@ -791,13 +798,109 @@ function initChatSystem() {
         iconDiv.textContent = name.charAt(0).toUpperCase();
 
         const textDiv = document.createElement('div');
-        textDiv.innerHTML = `<p><span class="message-timestamp">${timestampString}</span> <strong class="message-author">${name}</strong>: ${text}</p>`;
+        
+        // Build the HTML. If there's text, show it. If there's a GIF, append the image tag.
+        let contentHtml = `<p><span class="message-timestamp">${timestampString}</span> <strong class="message-author">${name}</strong>: ${text}</p>`;
+        
+        if (gifUrl) {
+            contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" style="max-width: 200px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+        }
+
+        textDiv.innerHTML = contentHtml;
         
         msgDiv.appendChild(iconDiv);
         msgDiv.appendChild(textDiv);
         chatMessages.appendChild(msgDiv);
     }
 
+    // --- 3. GIF PICKER LOGIC ---
+    if (gifToggleBtn && gifPicker && closeGifBtn) {
+        gifToggleBtn.addEventListener('click', () => {
+            gifPicker.style.display = gifPicker.style.display === 'none' ? 'flex' : 'none';
+            if (gifPicker.style.display === 'flex') {
+                fetchGifs(''); // Load trending GIFs on open
+                if (gifSearchInput) gifSearchInput.focus({ preventScroll: true }); 
+            }
+        });
+
+        closeGifBtn.addEventListener('click', () => {
+            gifPicker.style.display = 'none';
+        });
+    }
+
+    const GIPHY_API_KEY = "zhbz8Mvx3vRQHBkQo3nnWWbyHQMOVsFn"; 
+
+    async function fetchGifs(searchTerm) {
+        if (!gifResults) return;
+        gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Loading...</p>';
+        
+        const endpoint = searchTerm.trim() === '' 
+            ? `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=12&rating=pg-13`
+            : `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(searchTerm)}&limit=12&rating=pg-13`;
+
+        try {
+            const response = await fetch(endpoint);
+            const result = await response.json();
+            
+            gifResults.innerHTML = ''; // Clear loading text
+            
+            if (result.data && result.data.length > 0) {
+                result.data.forEach(gif => {
+                    const previewUrl = gif.images.fixed_height_small.url;
+                    const fullUrl = gif.images.downsized.url;
+
+                    const img = document.createElement('img');
+                    img.src = previewUrl;
+                    img.alt = gif.title || "GIF";
+                    
+                    img.addEventListener('click', () => {
+                        sendGifMessage(fullUrl);
+                        gifPicker.style.display = 'none'; // Close picker after sending
+                    });
+                    
+                    gifResults.appendChild(img);
+                });
+            } else {
+                gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">No GIFs found.</p>';
+            }
+        } catch (error) {
+            console.error("Error fetching GIFs:", error);
+            gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color:red;">Failed to load GIFs.</p>';
+        }
+    }
+
+    let typingTimer;
+    if (gifSearchInput) {
+        gifSearchInput.addEventListener('keyup', () => {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                fetchGifs(gifSearchInput.value);
+            }, 500);
+        });
+    }
+
+    async function sendGifMessage(gifUrl) {
+        const displayName = displayNameInput.value.trim() || 'Anonymous';
+        
+        if (!messagesCollection) {
+            console.error("Firebase messages collection not found!");
+            return;
+        }
+        
+        try {
+            await addDoc(messagesCollection, {
+                name: displayName,
+                text: "", // Leave text empty for pure GIF messages
+                gifUrl: gifUrl,
+                createdAt: serverTimestamp(),
+                expiresAt: Timestamp.fromDate(new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)))
+            });
+        } catch (err) { 
+            console.error("Send GIF Error:", err); 
+        }
+    }
+
+    // --- 4. STANDARD CHAT SEND LOGIC ---
     async function handleSendMessage(e) {
         e.preventDefault();
         const messageText = messageInput.value.trim();
