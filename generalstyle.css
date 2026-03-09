@@ -1490,7 +1490,7 @@ hr {
         .section-grid { display: grid; gap: 20px; margin-bottom: 20px; }
         .grid-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-2 { grid-template-columns: 1fr 1fr; }
- .grid-3-new { grid-template-columns: repeat(3, 1fr); }
+
         .card {
             background: #000;
             border-radius: var(--radius-md);
@@ -1644,35 +1644,12 @@ hr {
                 padding: 0 28px;
                 gap: 15px;
             }
-            .section-grid.grid-3-new { 
-                display: flex; 
-                overflow-x: auto; 
-                scroll-snap-type: x mandatory; 
-                scroll-behavior: smooth;
-                scrollbar-width: none; 
-                -ms-overflow-style: none;
-                margin: 0 -28px 20px;
-                padding: 0 28px;
-                gap: 15px;
-            }
             .section-grid.grid-3::-webkit-scrollbar, .section-grid.grid-2::-webkit-scrollbar { display: none; }
-            .section-grid.grid-3-new::-webkit-scrollbar, .section-grid.grid-2::-webkit-scrollbar { display: none; }
             
-            .section-grid.grid-2 { direction: rtl; } /* Start scrolled to the end */
-            .section-grid.grid-2 .card { direction: ltr; }
-           .section-grid.grid-3-new { direction: rtl; } /* Start scrolled to the end */
-            .section-grid.grid-3-new .card { direction: ltr; }
+            #opposite { direction: rtl; } /* Start scrolled to the end */
+            #opposite .card { direction: ltr; }
             
             .section-grid.grid-3 .card, .section-grid.grid-2 .card { 
-                min-width: 90%; 
-                flex: 0 0 90%; 
-                scroll-snap-align: center; 
-                display: flex;
-                flex-direction: column;
-                aspect-ratio: auto; 
-                height: auto;
-            }
-           .section-grid.grid-3-new .card, .section-grid.grid-2 .card { 
                 min-width: 90%; 
                 flex: 0 0 90%; 
                 scroll-snap-align: center; 
@@ -1686,15 +1663,8 @@ hr {
                 height: 60vw; 
                 max-height: 350px;
             }
-            .section-grid.grid-3-new .card img, .section-grid.grid-2 .card img {
-                height: 60vw; 
-                max-height: 350px;
-            }
             .section-grid.grid-3 .card-overlay { padding-bottom: 15px; }
             .section-grid.grid-3 .card-title { margin-top: 0; }
-
-           .section-grid.grid-3-new .card-overlay { padding-bottom: 15px; }
-            .section-grid.grid-3-new .card-title { margin-top: 0; }
           
         }
 
@@ -1778,9 +1748,8 @@ hr {
             .nav-link::after { display: none; }
 
             .section-grid.grid-3, .section-grid.grid-2 { margin: 0 -15px; }
-              .section-grid.grid-3-new, .section-grid.grid-2 { margin: 0 -15px; }
+            
             .section-grid.grid-3 { padding-bottom: 15px; }
-           .section-grid.grid-3-new { padding-bottom: 15px; }
             .card-title { font-size: 1.2rem; }
             .card-badge { top: 15px; right: 15px; font-size: 0.67rem; }
             .main-footer { margin: 0; padding: 0; border: none; box-shadow: none; }
