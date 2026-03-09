@@ -804,8 +804,8 @@ function initChatSystem() {
         
        // In your displayMessage function:
 if (gifUrl) {
-    // Adding a min-height or aspect-ratio reserves the space instantly before the image even loads
-    contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+    // The onload event forces a recalculation the exact millisecond the image expands
+    contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
 }
 
         textDiv.innerHTML = contentHtml;
@@ -955,24 +955,36 @@ if (gifUrl) {
     });
 
     // --- AUTH & CHAT SNAPSHOT ---
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            messagesCollection = collection(db, "messages");
-            const q = query(messagesCollection, orderBy("createdAt", "asc"));
-           onSnapshot(q, (snapshot) => {
-    if (loadingSpinner) loadingSpinner.style.display = 'none';
-    chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
-    snapshot.forEach(doc => displayMessage(doc.data()));
-    
-    // Defer the scroll slightly to allow the browser to render new heights, especially for GIFs
-    setTimeout(() => {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }, 150); 
-});
+   onAuthStateChanged(auth, (user) => {
+    if (user) {
+        messagesCollection = collection(db, "messages");
+        const q = query(messagesCollection, orderBy("createdAt", "asc"));
+        
+        let isFirstLoad = true; // Track the initial load
 
+        onSnapshot(q, (snapshot) => {
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
             
-        }
-    });
+            // Only clear the "No messages yet" text on the very first load
+            if (isFirstLoad) {
+                chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
+                isFirstLoad = false;
+            }
+
+            // MAGIC FIX: Only process brand new messages, do not rebuild the whole DOM!
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    displayMessage(change.doc.data());
+                }
+            });
+
+            // Standard fallback scroll for text-only messages
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 50);
+        });
+    }
+});
     signInAnonymously(auth);
 }
 
