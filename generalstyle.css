@@ -905,7 +905,7 @@ hr {
         @media (max-width: 768px) {
 
           .gif-picker-container {
-    position: relative;
+    position: relative  !important;
     top: -300px;
    
     margin-right: auto;
