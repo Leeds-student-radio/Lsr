@@ -1564,6 +1564,7 @@ hr {
                         linear-gradient(to bottom, rgba(0, 0, 0, 0.0) 0%, transparent 25%);
             z-index: -1;
             pointer-events: none;
+          border-radius:5px;
         }
 
         .footer-grid {
