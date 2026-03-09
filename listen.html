@@ -151,14 +151,28 @@
                         </svg>
                     </div>
                 </div>
-               <form id="chat-form" class="chat-input-area">
+                      <form id="chat-form" class="chat-input-area">
     <input type="text" id="display-name" placeholder="Name" class="name-input">
-    <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required>
+    
+    <div class="input-wrapper">
+        <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required>
+        <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
     <button type="submit" class="send-btn">
         <span class="btn-text">Send</span>
     </button>
 </form>
             </div>
+             <div id="gif-picker" class="gif-picker-container" style="display: none;">
+    <div class="gif-picker-header">
+        <input type="text" id="gif-search-input" placeholder="Search GIFs..." class="gif-search">
+        <button type="button" id="close-gif-btn" class="close-gif"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="gif-results" class="gif-results-grid"></div>
+</div>
         </div>
     </main>
 
