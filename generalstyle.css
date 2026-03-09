@@ -1646,8 +1646,21 @@ hr {
             }
             .section-grid.grid-3::-webkit-scrollbar, .section-grid.grid-2::-webkit-scrollbar { display: none; }
             
-            #opposite { direction: rtl; } /* Start scrolled to the end */
-            #opposite .card { direction: ltr; }
+          
+          #opposite { 
+        direction: rtl; /* Forces scrollbar to start on the right */
+    }
+          #opposite .card { 
+        direction: ltr; /* Resets text direction so your text/icons don't break */
+        min-width: 90%; 
+        flex: 0 0 90%; 
+        /* Snap center works best, but try 'end' if it feels clunky in RTL */
+        scroll-snap-align: center; 
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: auto; 
+        height: auto;
+    }
             
             .section-grid.grid-3 .card, .section-grid.grid-2 .card { 
                 min-width: 90%; 
