@@ -2270,3 +2270,157 @@ font-size:0.9rem;
     margin-top: 10px;
 }
 }
+
+/* =========================================
+   1. CHAT INPUT & GIF BUTTON
+========================================= */
+
+.chat-card {
+    position: relative; /* This traps the absolute positioned GIF picker inside the card */
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    flex-grow: 1; 
+    align-items: center;
+}
+
+.input-wrapper .msg-input {
+    width: 100%;
+    padding-right: 40px; 
+    font-family: 'Open Sans', sans-serif; /* Matching your brand fonts */
+}
+
+.gif-btn {
+    position: absolute;
+    right: 10px; 
+    background: transparent;
+    border: none;
+    color: #888; 
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.gif-btn:hover {
+    color: #ff4b2b; 
+    transform: scale(1.1);
+}
+
+/* =========================================
+   2. GIF PICKER POPUP CONTAINER
+========================================= */
+@keyframes popIn {
+    0% { opacity: 0; transform: translateY(10px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.gif-picker-container {
+    position: absolute;
+    bottom: 70px; 
+    right: 10px;
+    width: 300px; /* Slightly wider for better image display */
+    height: 380px;
+    background: rgb(212 73 73);
+    border-radius: 12px; /* Smoother, modern curves */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* Softer, deeper shadow */
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    z-index: 100;
+    animation: popIn 0.2s ease-out forwards; /* Smooth opening animation */
+    border: 2px solid rgb(131, 28, 28);
+}
+
+/* =========================================
+   3. HEADER & SEARCH BAR
+========================================= */
+.gif-picker-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.gif-search {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: none;
+    background: #f0f2f5; /* Messenger-style grey input */
+    border-radius: 20px; /* Pill-shaped input */
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.gif-search:focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 2px #ff4b2b; /* Brand color outline on focus */
+}
+
+.close-gif {
+    background: #f0f2f5;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%; /* Perfect circle button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.close-gif:hover {
+    background: #e4e6e9;
+    color: #ff4b2b;
+}
+
+/* =========================================
+   4. GIF GRID & SCROLLBAR
+========================================= */
+.gif-results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 5px; /* Room for scrollbar */
+}
+
+/* Custom Scrollbar to make it look native to the app */
+.gif-results-grid::-webkit-scrollbar {
+    width: 6px;
+}
+.gif-results-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+.gif-results-grid::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+/* Individual GIF styling */
+.gif-results-grid img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 8px; /* Softer image corners */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #f0f2f5; /* Placeholder color while loading */
+}
+
+.gif-results-grid img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 2;
+}
