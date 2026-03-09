@@ -835,7 +835,7 @@ function initChatSystem() {
         gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Loading...</p>';
         
         // Put your hand-picked GIF IDs here, separated by commas (no spaces)
-        const myFavoriteGifs = "l3vRlT2k2L35Cnn5C,ZqlvCTNHpqrio,FdRzET4jjKt4HVzri7,wW95fEq09hOI8,GWKQzZX7bNqRMO6bMw,mGK1g88HZRa2FlKGbz,fX5cZemSfX1cMZYuUJ,gKHGnB1ml0moQdjhEJ"; 
+        const myFavoriteGifs = "l3vRlT2k2L35Cnn5C,ZqlvCTNHpqrio,FdRzET4jjKt4HVzri7,wW95fEq09hOI8,GWKQzZX7bNqRMO6bMw,mGK1g88HZRa2FlKGbz,fX5cZemSfX1cMZYuUJ,gKHGnB1ml0moQdjhEJ,kCpg2FYkENfnuvXSsS,QxcSqRe0nllClKLMDn,g88xUM1rTwjfLhoRYP"; 
         
         // If the search is empty, fetch your specific GIFs. Otherwise, search Giphy.
         const endpoint = searchTerm.trim() === '' 
