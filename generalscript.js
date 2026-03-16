@@ -163,70 +163,91 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 5. GET INVOLVED LOGIC (WITH SMART FOOTERS) ---
-    const applySheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2045188384&output=csv';
+const applySheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2045188384&output=csv';
 
-    async function fetchApplyData() {
-        const grid = document.getElementById('apply-grid');
-        if (!grid) return;
+async function fetchApplyData() {
+    const grid = document.getElementById('apply-grid');
+    if (!grid) return;
 
-        try {
-            const response = await fetch(applySheetUrl);
-            const data = await response.text();
-            const rows = parseCSV(data);
-            rows.shift();
-            grid.innerHTML = '';
+    try {
+        const response = await fetch(applySheetUrl);
+        const data = await response.text();
+        const rows = parseCSV(data);
+        rows.shift(); // Remove headers
+        grid.innerHTML = '';
 
-            const categoriesMap = {};
-            rows.forEach(row => {
-                if (!row || row.length < 3 || !row[1] || row[1].trim() === '') return;
-                const category = row[1].trim();
-                const showName = row[2] ? row[2].trim() : '';
-                const formLink = row[3] ? row[3].trim() : '#';
-                if (!categoriesMap[category]) categoriesMap[category] = [];
-                categoriesMap[category].push({ showName, formLink });
+        const categoriesMap = {};
+        
+        // 1. Map the data and grab the status
+        rows.forEach(row => {
+            if (!row || row.length < 3 || !row[1] || row[1].trim() === '') return;
+            const category = row[1].trim();
+            const showName = row[2] ? row[2].trim() : '';
+            const formLink = row[3] ? row[3].trim() : '#';
+            
+            // Assuming status is in the 5th column (index 4). Adjust if needed!
+            const status = row[4] ? row[4].trim().toLowerCase() : 'open'; 
+
+            if (!categoriesMap[category]) categoriesMap[category] = [];
+            categoriesMap[category].push({ showName, formLink, status });
+        });
+
+        // 2. Render the categories
+        for (const [category, shows] of Object.entries(categoriesMap)) {
+            const box = document.createElement('div');
+            box.className = 'apply-box';
+            
+            // Critical for layover positioning
+            box.style.position = 'relative'; 
+            box.innerHTML = `<h3>${category}</h3>`;
+
+            // Check if every single show in this category is closed
+            const allShowsClosed = shows.every(show => show.status === 'closed');
+
+            // 3. Add the layover if the category is closed
+            if (allShowsClosed) {
+                const layover = document.createElement('div');
+                layover.className = 'closed-layover';
+                layover.innerHTML = '<p>Thank you for your interest, unfortunately applications are now closed... Check again next semester!</p>';
+                box.appendChild(layover);
+            }
+
+            const showsContainer = document.createElement('div');
+            showsContainer.className = 'shows-container';
+
+            shows.forEach(show => {
+                const link = document.createElement('a');
+                link.className = 'show-link';
+                link.href = show.formLink;
+                link.target = '_blank';
+                link.innerHTML = `<i class="fas fa-link"></i> ${show.showName}`;
+                showsContainer.appendChild(link);
             });
 
-            for (const [category, shows] of Object.entries(categoriesMap)) {
-                const box = document.createElement('div');
-                box.className = 'apply-box';
-                box.innerHTML = `<h3>${category}</h3>`;
+            box.appendChild(showsContainer);
 
-                const showsContainer = document.createElement('div');
-                showsContainer.className = 'shows-container';
+            // 4. Footer logic
+            let footerText = `*Find out more about ${category} on our Instagram @thisislsr`;
+            const catLower = category.toLowerCase();
+            
+            if (catLower.includes('weekend')) footerText = '*Learn more about our weekend shows over at @thisislsr_weekend';
+            else if (catLower.includes('daytime')) footerText = '*Find out more about any of LSR\'s daytime shows over on insta @thisislsr_daytime';
+            else if (catLower.includes('news')) footerText = '*Find out more about LSR\'s news team head on our dedicated news insta @thisislsr_news';
+            else if (catLower.includes('sports')) footerText = '*Got questions about our sports team? Head on over to insta @thisislsr_sport';
+            else if (catLower.includes('breakfast') || catLower.includes('hometime')) footerText = '*Find out more about Breakfast or Hometime on Instagram @thisislsr_breakfast @thisislsr_hometime';
+            else if (catLower.includes('podcast') || catLower.includes('own show')) footerText = 'Our schedule ranges from arts, comedy and music to sport, film and politics so no matter what you\'re interested in, we\'ll help you get it on-air!';
 
-                shows.forEach(show => {
-                    const link = document.createElement('a');
-                    link.className = 'show-link';
-                    link.href = show.formLink;
-                    link.target = '_blank';
-                    
-                    link.innerHTML = `<i class="fas fa-link"></i> ${show.showName}`;
-                    
-                    showsContainer.appendChild(link);
-                });
-
-                box.appendChild(showsContainer);
-
-                let footerText = `*Find out more about ${category} on our Instagram @thisislsr`;
-                const catLower = category.toLowerCase();
-                if (catLower.includes('weekend')) footerText = '*Learn more about our weekend shows over at @thisislsr_weekend';
-                else if (catLower.includes('daytime')) footerText = '*Find out more about any of LSR\'s daytime shows over on insta @thisislsr_daytime';
-                else if (catLower.includes('news')) footerText = '*Find out more about LSR\'s news team head on our dedicated news insta @thisislsr_news';
-                else if (catLower.includes('sports')) footerText = '*Got questions about our sports team? Head on over to insta @thisislsr_sport';
-                else if (catLower.includes('breakfast') || catLower.includes('hometime')) footerText = '*Find out more about Breakfast or Hometime on Instagram @thisislsr_breakfast @thisislsr_hometime';
-                else if (catLower.includes('podcast') || catLower.includes('own show')) footerText = 'Our schedule ranges from arts, comedy and music to sport, film and politics so no matter what you\'re interested in, we\'ll help you get it on-air!';
-
-                const footer = document.createElement('p');
-                footer.className = 'box-footer';
-                footer.innerText = footerText;
-                box.appendChild(footer);
-                grid.appendChild(box);
-            }
-        } catch (error) {
-            console.error("Failed to fetch apply forms", error);
+            const footer = document.createElement('p');
+            footer.className = 'box-footer';
+            footer.innerText = footerText;
+            box.appendChild(footer);
+            
+            grid.appendChild(box);
         }
+    } catch (error) {
+        console.error("Failed to fetch apply forms", error);
     }
-
+}
     // --- 5.5 AWARDS LOGIC ---
     const awardsSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=1358450835&output=csv';
 
