@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>LSR - Listen</title>
+
+    <meta name="description" content="The Sound of Students in Leeds. Live everyday during term time from the heart of Leeds University. Hear what’s happening right now!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thisislsr.com/listen">
+<meta property="og:title" content="LSR - Listen">
+<meta property="og:description" content="The Sound of Students in Leeds. Live everyday during term time from the heart of Leeds University. Hear what’s happening right now!">
+<meta property="og:image" content="https://www.thisislsr.com/IMG_3788.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="904"> 
+<link rel="canonical" href="https://www.thisislsr.com/listen/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LSR - Listen">
+<meta name="twitter:description" content="The Sound of Students in Leeds. Live everyday during term time from the heart of Leeds University. Hear what’s happening right now!">
+<meta name="twitter:image" content="https://www.thisislsr.com/IMG_3788.png">
+
+<link rel="icon" type="image/png" sizes="128x128" href="/favicon-128x128.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+
+    
+    
+    <script defer="" src="https://cloud.umami.is/script.js" data-website-id="49fb996e-063c-427b-861f-7468aa0bd1c9"></script>
+<meta name="google-site-verification" content="ypeNDZiBuCvAr5cGO3qxiHAw6sNEOCdKFra3EOYKjE8">
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Open+Sans:wght@400;600&family=Indie+Flower&family=Asap+Condensed:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="/generalstyle.css">
+    <script type="module" src="/generalscript.js" defer></script>
+
+    
+</head>
+<body>
+    <audio id="radio-player" preload="none">
+        <source src="https://streamer.radio.co/s986435880/listen" type="audio/mpeg">
+    </audio>
+
+    <div class="mobile-overlay"></div>
+    
+    <div class="player-bar">
+        <div class="player-section now-playing">
+            <button class="play-toggle" aria-label="Play Radio">
+                <i class="fas fa-play"></i>
+            </button>
+            <img src="/ourlogo.jpeg" alt="Now Playing Thumbnail" class="thumbnail" id="live-now-img">
+            
+            <div class="show-info">
+                <div class="info-header">
+                    <h4 id="live-now-title">Loading...</h4>
+                    <span style="display:flex; flex-direction:row;">
+                    <span class="live-badge">ON AIR</span>
+                    <div class="visualizer">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                 </span> </div>
+                <p class="track-desc" id="live-now-desc">Fetching live show details...</p>
+            </div>
+        </div>
+
+        <div class="player-section up-next">
+            <img src="/ourlogo.jpeg" alt="Up Next Thumbnail" class="thumbnail" id="up-next-img">
+            
+            <div class="show-info">
+                <div class="info-header">
+                    <h4 id="up-next-title">Loading...</h4>
+                    <span class="next-badge">UP NEXT</span>
+                </div>
+                <p class="track-desc" id="up-next-desc">Fetching next show details...</p>
+            </div>
+        </div>
+    </div>
+    
+     <div class="nav-container">
+        <nav class="main-nav">
+            <div class="container nav-inner">
+                <a href="/" class="brand-logo nav-link">Leeds<span> Student Radio</span></a>
+                <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+                <ul class="nav-menu">
+                    <li><a href="/schedule" class="nav-link">Our Schedule</a></li>
+                    <li><a href="/listen" class="nav-link">Listen Live</a></li>
+                    <li><a href="/apply" class="nav-link">Get Involved</a></li>
+                    <li><a href="/about" class="nav-link">About Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <main>
+        <div class="listen-grid">
+            <div class="stream-col">
+                <div class="lsr-card main-card">
+                    <div class="img-container main-player">
+                        <img id="main-player-img" src="/ourlogo.jpeg" alt="Show Artwork">
+                        <button class="card-play-btn play-toggle-main">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="card-content alt-card">
+                        <h2 id="main-player-title">Loading Show...</h2>
+                        <p class="host" id="main-player-host">With LSR Team</p>
+                        <span class="time-badge" id="main-player-time">LIVE NOW</span>
+                        <p id="main-player-desc">Loading description...</p>
+                    </div>
+                </div>
+
+             <div class="lsr-card">
+    <div class="img-container">
+        <img src="/ourlogo.jpeg" alt="LSR Logo">
+        
+        <audio id="alt-audio" src="https://s2.radio.co/seb5cdba5b/listen" preload="none"></audio>
+        
+        <button class="card-play-btn" onclick="toggleAltStream(this)">
+            <i class="fas fa-play"></i>
+        </button>
+    </div>
+    <div class="card-content">
+        <h2>Alternate Stream</h2>
+        <p>LSR alternate live stream runs 24/7 with a chilled mix of hand-picked tracks.</p>
+    </div>
+</div>
+                
+
+            </div>
+
+            <div class="lsr-card chat-card">
+                <div class="chat-header">
+                    <span class="active-count">Active: <span id="live-count">0</span></span>
+                    <h3>Live Chat</h3>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div id="loading-spinner">
+                        <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </div>
+                      <form id="chat-form" class="chat-input-area">
+    <input type="text" id="display-name" placeholder="Name" class="name-input">
+    
+    <div class="input-wrapper">
+        <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required>
+        <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
+             <i class="fa-solid fa-heart-circle-plus"></i>
+        </button>
+    </div>
+
+    <button type="submit" class="send-btn">
+        <span class="btn-text">Send</span>
+    </button>
+</form>
+            </div>
+             <div id="gif-picker" class="gif-picker-container" style="display: none;">
+    <div class="gif-picker-header">
+        <input type="text" id="gif-search-input" placeholder="Search GIFs..." class="gif-search">
+        <button type="button" id="close-gif-btn" class="close-gif"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="gif-results" class="gif-results-grid"></div>
+</div>
+        </div>
+    </main>
+
+
+ <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div class="footer-col col-banner">
+                    <p class="banner-text">Discover, develop and decide your future with appointments, events and vacancies</p>
+                    <a href="https://mycareer.leeds.ac.uk/unauth" target="_blank">
+                    <img src="/careers.avif" alt="Careers Service Banner" class="careers-banner">
+                </a></div>
+
+                <div class="footer-links-group">
+                    <div class="footer-col">
+                           <h4>MORE</h4>
+                        <ul>
+                             <li><a href="https://en.wikipedia.org/wiki/Leeds_Student_Radio" target="_blank">Wiki</a></li>
+                             <li><a href="/awards">Awards</a></li>
+                            <li><a href="/archives">Archives</a></li>
+                           
+                           
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>SOCIAL</h4>
+                        <ul>
+                            <li><a href="https://www.instagram.com/thisislsr/" target="_blank"><i class="fab fa-instagram"></i> Insta</a></li>
+                            <li><a href="https://www.tiktok.com/@thisislsr" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                            <li><a href="mailto:info@thisislsr.com"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col col-official">
+                        <h4>OFFICIAL</h4>
+                        <ul>
+                            <li><a  href="https://engage.luu.org.uk/groups/VFG/leeds-student-radio" target="_blank">L.U.U.</a></li>
+                            <li><a href="https://calendly.com/leedsstudentradio/bookstudio2" target="_blank">Studio 2</a></li>
+                            <li><a href="mailto:info@thisislsr.com">Feedback</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-col col-info">
+                    <p class="info-text">Leeds Student Radio is a student radio station broadcasting every day during term time, from the heart of Leeds University<br><br> <a href="/legal" class="zach"><u>Privacy & Terms of Use (boring)</u></a></p>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; Leeds Student Radio 2026  <br><br> <a href="/legal" class="legalsmall">Privacy & Terms of Use</a>
+               <!--  <a href="#" target="_blank" class="disclaimer-link">Website by Zach</a> -->
+            </div>
+        </div>
+    </footer>
+
+
+  
+</body>
+</html>

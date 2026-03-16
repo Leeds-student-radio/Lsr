@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://thisislsr.com/</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>1.00</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/schedule</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/listen</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/apply</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/about</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/awards</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.60</priority>
+    </url>
+    <url>
+        <loc>https://thisislsr.com/archives</loc>
+        <lastmod>2026-03-08T20:57:40+00:00</lastmod>
+        <priority>0.60</priority>
+    </url>
+   
+</urlset>
+
+
+

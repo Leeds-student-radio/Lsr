@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ON AIR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="stars">
+            <span class="star" style="top: 10%; left: 10%;"></span>
+            <span class="star" style="top: 25%; left: 5%;"></span>
+            <span class="star" id="starwe2" style="top: 50%; left: 12%;"></span>
+            <span class="star" id="starwe" style="top: 80%; right: 10%;"></span>
+            <span class="star" style="top: 30%; right: 5%;"></span>
+            <span class="star" id="starwe21" style="top: 50%; right: 15%;"></span>
+            <div class="circle" id="starwe211" style="top: 70%; left: 6%;"></div>
+             <div class="circle" id="starwe2" style="top: 40%; left: 25%;"></div>
+    <div class="circle" style="top: 15%; left: 85%;"></div>
+        </div>
+        
+        <h1 class="on-air">ON AIR</h1>
+        
+        <div class="pill-banner" id="pillBanner">
+            <div class="image">
+                <img src="https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg" class="thumbnail">
+            </div>
+            <div class="pill-content">
+                <div class="pill-top-row">
+                    <h2 style="color:white; line-height:1px; text-align:center; padding-top:10px;" class="pill-title">Loading...</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="listen-live box">LISTEN LIVE ON <br> WWW.THISISLSR.COM</div>
+            <div class="up-next box" >
+                UP NEXT: <span class="pill-title" id="upNextTitle" style="text-transform: uppercase !important;"
+>Loading...</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #d82c2c;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    box-sizing: border-box;
+    overflow: hidden;
+    
+}
+
+
+
+        /* --- STAR STYLING (From your request) --- */
+        .star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            z-index: 0;
+            
+            /* Initial rotation */
+            transform: rotate(20deg);
+
+            /* 1. Apply the border (shadow) to the PARENT container */
+            filter: drop-shadow(1px 0 0 black) 
+                   drop-shadow(-1px 0 0 black) 
+                   drop-shadow(0 1px 0 black) 
+                   drop-shadow(0 -1px 0 black);
+            
+            /* Animation applied here */
+            animation: wanderStar 10s ease-in-out infinite;
+        }
+
+        .star::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+
+            /* 2. Apply the shape to the CHILD (Pseudo-element) */
+            clip-path: polygon(50% 0%, 65% 40%, 100% 50%, 65% 60%, 50% 100%, 35% 60%, 0% 50%, 35% 40%);
+        }
+
+        /* --- CIRCLE STYLING (From your request) --- */
+        .circle {
+            position: absolute;
+            width: 10px;  
+            height: 10px;
+            background-color: white;
+            border: 1px solid black; 
+            border-radius: 50%;      
+            z-index: 0;
+
+            /* Animation applied here (different because circles don't rotate) */
+            animation: wanderCircle 10s ease-in-out infinite;
+        }
+
+        /* --- ANIMATIONS --- */
+        
+        /* Animation for Stars: Must include rotate(20deg) to maintain the star's angle */
+        @keyframes wanderStar {
+            0%   { transform: translate(0, 0) rotate(20deg); }
+            20%  { transform: translate(10px, -5px) rotate(20deg); }
+            40%  { transform: translate(5px, 10px) rotate(20deg); }
+            60%  { transform: translate(-10px, 5px) rotate(20deg); }
+            80%  { transform: translate(-5px, -10px) rotate(20deg); }
+            100% { transform: translate(0, 0) rotate(20deg); }
+        }
+
+        /* Animation for Circles: No rotation needed */
+        @keyframes wanderCircle {
+            0%   { transform: translate(0, 0); }
+            20%  { transform: translate(-8px, 8px); }
+            40%  { transform: translate(8px, 4px); }
+            60%  { transform: translate(-4px, -8px); }
+            80%  { transform: translate(5px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- RANDOMIZING SPEEDS --- */
+        /* This makes them look like they are moving randomly by offsetting their timing */
+
+        /* Odd numbered items take 12 seconds */
+        .stars span:nth-child(odd), 
+        .stars div:nth-child(odd) {
+            animation-duration: 12s;
+            animation-delay: -2s;
+        }
+
+        /* Even numbered items take 15 seconds */
+        .stars span:nth-child(even), 
+        .stars div:nth-child(even) {
+            animation-duration: 15s;
+            animation-delay: -5s;
+        }
+
+        /* Every 3rd item is faster (9s) */
+        .stars span:nth-child(3n), 
+        .stars div:nth-child(3n) {
+            animation-duration: 9s;
+            animation-delay: -1s;
+        }
+        
+        /* Every 5th item moves in reverse direction for more variety */
+        .stars span:nth-child(5n), 
+        .stars div:nth-child(5n) {
+            animation-direction: reverse;
+        }
+
+.on-air {
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    color: white;
+    text-align: center;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    line-height: 1px;
+
+    /* Animation Settings */
+    /* 4s = duration (slow), infinite = loops forever */
+    animation: light-pulse 12s ease-in-out infinite;
+}
+
+/* The Animation Logic */
+@keyframes light-pulse {
+    0%, 100% {
+        /* Normal State: Standard drop shadow, slightly lower opacity */
+        text-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+        opacity: 0.88;
+    }
+    50% {
+        /* Brighter State: Drop shadow + White Glow, full opacity */
+        text-shadow: 
+            5px 5px 0px rgba(0, 0, 0, 0.3), /* Keep original shadow */
+            0 0 20px rgba(255, 255, 255, 0.8), /* Outer soft glow */
+            0 0 10px rgba(255, 255, 255, 0.6); /* Inner intense glow */
+        opacity: 1;
+    }
+}
+
+.image {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: auto;
+    max-width: 70vw;
+    max-height: 60vh;
+    aspect-ratio: 1/1;
+    z-index:2 !important;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.bottom-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 0px;
+    box-sizing: border-box;
+}
+
+.box {
+    background-color: white;
+    color: black;
+    padding: 1vw 2vw;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    text-align: center !important;
+    flex: 0 1 auto;
+    white-space: nowrap;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    border: solid 3px black;
+}
+
+.listen-live { text-align: left; line-height: 1.2; }
+.up-next { text-align: right; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .on-air { font-size: clamp(2rem, 12vw, 3.5rem); }
+    .box { font-size: clamp(0.8rem, 2vw, 1.2rem); padding: 1.5vw 3vw; }
+}
+
+
+
+@media (min-width: 868px) {
+    .box {
+   
+    min-width: 280px;
+  
+}
+.star {
+    position: absolute;
+    width: 29px;
+    height: 29px;
+    transform: rotate(20deg);
+    z-index: 0;
+
+    /* 1. Apply the border (shadow) to the PARENT container */
+    /* Since the parent isn't clipped, the shadow is visible */
+    filter: drop-shadow(1px 0 0 black) 
+            drop-shadow(-1px 0 0 black) 
+            drop-shadow(0 1px 0 black) 
+            drop-shadow(0 -1px 0 black);
+}
+
+
+.circle {
+    position: absolute;
+    width: 19px;  /* Usually looks best smaller than the star */
+    height: 19px;
+    background-color: white;
+    border: 1px solid black; /* Standard border works perfectly here */
+    border-radius: 50%;      /* Makes it a circle */
+    z-index: 0;
+}
+
+}
+@media (min-width: 1050px) {
+#starwe21 {
+
+right:20% !important;
+
+}
+}
+
+
+@media (max-width: 480px) {
+    .on-air { font-size: clamp(2rem, 15vw, 3rem); }
+    .bottom-section { flex-direction: column; align-items: center; gap: 10px; }
+    .box { width: 80%; font-size: clamp(0.8rem, 3.5vw, 1.1rem); padding: 2vw 4vw; white-space: normal; }
+    
+    .stars,
+    .star,
+    .circle {
+   
+    z-index: 0 !important;
+
+   
+}
+.container {
+   
+    padding-bottom: 15vh;
+   
+    
+}
+#starwe {
+
+top: 60% !important;
+right: 5% !important;
+
+}
+#starwe211 {
+
+top: 60% !important;
+
+}
+#starwe2,
+#starwe21 {
+
+display:none !important;
+
+}
+
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+/** ====== Config ====== **/
+// Replaced with your URL
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv"; 
+const A_IS_EVEN_ISO_WEEK = true;
+
+// Default values if no show is found
+const FALLBACK_SHOW = {
+  title: "Leeds Student Radio",
+  description: "Non-stop music",
+  cover_image_url: "https://stepzach.github.io//leedstestradio/ab6765630000ba8a51445deb0fe8b8c4b173e6a1.jpeg"
+};
+
+const FALLBACK_NEXT = {
+  title: "Nothing Scheduled",
+  description: "",
+  cover_image_url: ""
+};
+
+/** ====== Date/Time Helpers ====== **/
+function isoWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() + 3 - dayNum);
+  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+  const diff = date - firstThursday;
+  return 1 + Math.round(diff / (7 * 24 * 3600 * 1000));
+}
+
+function getWeekTypeAB(date) {
+  const wk = isoWeekNumber(date);
+  const isEven = wk % 2 === 0;
+  return (A_IS_EVEN_ISO_WEEK ? (isEven ? "A" : "B") : (isEven ? "B" : "A"));
+}
+
+function timeToMinutes(t) {
+  if (!t) return NaN;
+  const [h, m] = t.trim().split(":").map(Number);
+  return h * 60 + (m || 0);
+}
+
+function currentDayTokens(date) {
+  const long = date.toLocaleString("en-GB", { weekday: "long" });
+  const short = long.slice(0, 3);
+  const dayIndex = (date.getDay() + 6) % 7;
+  const isWeekday = dayIndex <= 4;
+  return { long, short, isWeekday };
+}
+
+function matchesDay(showDayRaw, date) {
+  if (!showDayRaw) return false;
+  const val = String(showDayRaw).trim().toLowerCase();
+  const { long, short, isWeekday } = currentDayTokens(date);
+  
+  if (val === long.toLowerCase() || val === short.toLowerCase()) return true;
+  if (val === "daily" || val === "every day") return true;
+  if (["weekday", "weekdays", "every weekday", "mon-fri", "m-f"].includes(val)) return isWeekday;
+  if (["weekend", "weekends", "sat-sun"].includes(val)) return !isWeekday;
+  
+  return false;
+}
+
+function withinSlot(nowMin, startMin, endMin) {
+  if (isNaN(startMin) || isNaN(endMin)) return false;
+  if (startMin <= endMin) {
+    return nowMin >= startMin && nowMin < endMin;
+  } else {
+    return nowMin >= startMin || nowMin < endMin;
+  }
+}
+
+function nowInLondon() {
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+  const parts = formatter.formatToParts(new Date());
+  const get = t => parseInt(parts.find(p => p.type === t)?.value || 0, 10);
+  return new Date(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'));
+}
+
+function normalizeRows(rows) {
+  return rows.map(r => {
+    const o = {};
+    Object.keys(r).forEach(k => {
+      o[k.trim().toLowerCase().replace(/\s+/g, '_')] = (r[k] ?? "").toString().trim();
+    });
+    return o;
+  });
+}
+
+/** ====== Logic to find Shows ====== **/
+function findCurrentShow(rows) {
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+
+  return rows.find(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+    if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+    if (!weekOK) return false;
+    return withinSlot(nowMinutes, timeToMinutes(show.start_time), timeToMinutes(show.end_time));
+  });
+}
+
+function findNextShow(rows) {
+  const now = nowInLondon();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const weekType = getWeekTypeAB(now);
+
+  const candidates = rows.filter(show => {
+    const dayOK = matchesDay(show.day_of_week, now);
+    if (!dayOK) return false;
+    const wt = (show.week_type || "").toUpperCase();
+    const weekOK = !wt || wt === "*" || wt === "ALL" || wt === weekType;
+    if (!weekOK) return false;
+    // Only look for shows starting AFTER the current time
+    return timeToMinutes(show.start_time) > nowMinutes;
+  }).sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
+
+  return candidates[0] || null;
+}
+
+/** ====== Main Update Function ====== **/
+function fetchAndUpdate() {
+  Papa.parse(SHEET_CSV_URL, {
+    download: true,
+    header: true,
+    skipEmptyLines: "greedy",
+    complete: function(res) {
+      if (!res || !res.data || !res.data.length) return;
+      const rows = normalizeRows(res.data);
+
+      // 1. FIND AND UPDATE CURRENT SHOW
+      const current = findCurrentShow(rows) || FALLBACK_SHOW;
+      
+      // Update Image
+      const imgElem = document.querySelector("#pillBanner .thumbnail");
+      const showImg = current.cover_image_url || current.cover_image_url || "";
+      if (imgElem) imgElem.src = showImg;
+
+      // Update Title
+      const titleElem = document.querySelector("#pillBanner .pill-title");
+      const showTitle = current.title || current.title || "LSR";
+      if (titleElem) titleElem.textContent = showTitle;
+
+      // 2. FIND AND UPDATE UP NEXT SHOW
+      const next = findNextShow(rows) || FALLBACK_NEXT;
+      
+      // Update Up Next Title (Using the class in the bottom box)
+      // We look for the .pill-title span inside the .up-next div
+      const nextTitleElem = document.querySelector(".up-next .pill-title");
+      const nextTitle = next.title || next.title || "Nothing Scheduled";
+      
+      if (nextTitleElem) nextTitleElem.textContent = nextTitle;
+    }
+  });
+}
+
+// Run immediately, then every 60 seconds
+fetchAndUpdate();
+
+// 2. Schedule the update logic every minute (60,000 milliseconds)
+// This ensures your content is up-to-date within the hour
+setInterval(fetchAndUpdate, 60000); 
+
+// 3. Schedule the FULL PAGE RELOAD every hour (3,600,000 milliseconds)
+// This is your safety net to prevent the display from freezing
+// 60 minutes * 60 seconds * 1000 milliseconds = 3,600,000 ms
+const ONE_HOUR_MS = 3600000;
+
+setInterval(() => {
+    // This command tells the browser to refresh the entire page
+    window.location.reload(true); 
+}, ONE_HOUR_MS);
+</script>

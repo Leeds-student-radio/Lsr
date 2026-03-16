@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leeds Student Radio</title>
+<meta name="description" content="The UK's Best Student Radio Station! We broadcast live every day during term time from the heart of Leeds University. Tune in now!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://thisislsr.com">
+<meta property="og:title" content="Leeds Student Radio">
+<meta property="og:description" content="The UK's Best Student Radio Station! We broadcast live every day during term time from the heart of Leeds University. Tune in now!">
+<meta property="og:image" content="https://www.thisislsr.com/IMG_3788.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="904"> 
+<link rel="canonical" href="https://www.thisislsr.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Leeds Student Radio">
+<meta name="twitter:description" content="The UK's Best Student Radio Station! We broadcast live every day during term time from the heart of Leeds University. Tune in now!">
+<meta name="twitter:image" content="https://www.thisislsr.com/IMG_3788.png">
+
+<link rel="icon" type="image/png" sizes="128x128" href="/favicon-128x128.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+
+    
+<meta name="google-site-verification" content="ypeNDZiBuCvAr5cGO3qxiHAw6sNEOCdKFra3EOYKjE8">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="49fb996e-063c-427b-861f-7468aa0bd1c9"></script>
+
+    
+    
+   
+
+
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Open+Sans:wght@400;600&family=Indie+Flower&family=Asap+Condensed:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="/generalstyle.css">
+    <script type="module" src="/generalscript.js" defer></script>
+
+</head>
+<body>
+    <audio id="radio-player" preload="none">
+        <source src="https://streamer.radio.co/s986435880/listen" type="audio/mpeg">
+    </audio>
+
+    <div class="mobile-overlay"></div>
+    
+    <div class="player-bar">
+        <div class="player-section now-playing">
+            <button class="play-toggle" aria-label="Play Radio">
+                <i class="fas fa-play"></i>
+            </button>
+            <img src="/ourlogo.jpeg" alt="Now Playing Thumbnail" class="thumbnail" id="live-now-img">
+            
+            <div class="show-info">
+                <div class="info-header">
+                    <h4 id="live-now-title">Loading...</h4>
+                      <span style="display:flex; flex-direction:row;">
+                    <span class="live-badge">ON AIR</span>
+                    <div class="visualizer">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                 </span> </div>
+                <p class="track-desc" id="live-now-desc">Fetching live show details...</p>
+            </div>
+        </div>
+
+        <div class="player-section up-next">
+            <img src="/ourlogo.jpeg" alt="Up Next Thumbnail" class="thumbnail" id="up-next-img">
+            
+            <div class="show-info">
+                <div class="info-header">
+                    <h4 id="up-next-title">Loading...</h4>
+                    <span class="next-badge">UP NEXT</span>
+                </div>
+                <p class="track-desc" id="up-next-desc">Fetching next show details...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav-container">
+        <nav class="main-nav">
+            <div class="container nav-inner">
+                <a href="/" class="brand-logo nav-link">Leeds<span> Student Radio</span></a>
+                <div class="mobile-toggle"><i class="fas fa-bars"></i></div>
+                <ul class="nav-menu">
+                    <li><a href="/schedule" class="nav-link">Our Schedule</a></li>
+                    <li><a href="/listen" class="nav-link">Listen Live</a></li>
+                    <li><a href="/apply" class="nav-link">Get Involved</a></li>
+                    <li><a href="/about" class="nav-link">About Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+  
+    <main>
+        <div class="container-homepage">
+        <section class="section-grid grid-3">
+           <figure class="card">
+    <a href="https://www.studentradio.org.uk/awards/" target="_blank" rel="noopener noreferrer">
+        <img src="/316c00_e270ed388b21449d9bdd56622dbeb4ec~mv2.jpg.webp" alt="Leeds Student Radio - UK's best student radio 2023 and 2024 Awards">
+        <div class="card-badge"><i class="fa-solid fa-link"></i> Awards RECAP</div>
+        <figcaption class="card-overlay">
+            <h2 class="card-title font-handwritten">Officially the UK's best student radio 2023 & 2024!</h2>
+        </figcaption>
+    </a>
+</figure>
+<figure class="card">
+            <a href="https://www.instagram.com/p/DMYTWofNNZ1/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA%3D%3D" target="_blank" rel="noopener noreferrer">
+               <img src="/IMG_3624.jpeg" alt="Leeds Student Radio 2025/26 Committee members announced on Instagram">
+                <div class="card-badge"><i class="fab fa-instagram"></i> SEE THE POST</div>
+                <figcaption class="card-overlay">
+                    <h2 class="card-title font-handwritten">Meet our 2025/26 committee, announced on Instagram</h2>
+                </figcaption>
+            </a>
+            </figure>
+
+         <figure class="card">
+    <a href="https://www.tiktok.com/@bbcradio1/video/7481743748381117718" target="_blank" rel="noopener noreferrer">
+        <img src="/JadeLSR%20(1).webp" alt="BBC Radio 1 Jade surprises Leeds Student Radio interview" class="card-img-top">
+        <div class="card-badge"><i class="fab fa-tiktok"></i> WATCH THE INTERVIEW</div>
+        <figcaption class="card-overlay">
+            <h2 class="card-title font-handwritten">BBC Radio 1 Surprises LSR with JADE</h2>
+        </figcaption>
+    </a>
+</figure>
+        </section>
+        
+        
+        
+ <section class="section-grid grid-3"  id="opposite">
+     <figure class="card card-wide">
+    <a href="https://calendly.com/leedsstudentradio/bookstudio2" target="_blank" rel="noopener noreferrer">
+        <img src="/IMG_8848%20(1).webp" alt="Book Studio 2 at Leeds Student Radio for podcasts and CDJs" class="card-img-top">
+        <div class="card-badge"><i class="fas fa-link"></i> BOOK STUDIO 2</div>
+        <figcaption class="card-overlay">
+            <h2 class="card-title font-handwritten">Record your podcast or make use of our CDJs/Turntable</h2>
+        </figcaption>
+    </a>
+</figure>
+    
+          
+
+
+         <figure class="card card-wide">
+    <a href="https://open.spotify.com/show/36MV4v6eQjy2dOlDTezLoA?si=6522ae2798864694" target="_blank" rel="noopener noreferrer">
+        <img src="/IMG_3725.jpeg?raw=true" alt="Listen to Leeds Student Radio (LSR) Podcasts on Spotify" loading="lazy">
+        <div class="card-badge"><i class="fab fa-spotify"></i> Listen on SPOTIFY</div>
+        <figcaption class="card-overlay">
+            <h2 class="card-title font-handwritten">Catch up with the latest podcasts from LSR members</h2>
+        </figcaption>
+    </a>
+</figure>
+<figure class="card card-wide">
+    <a href="https://soundcloud.com/thisislsr" target="_blank" rel="noopener noreferrer">
+        <img src="/lsr_dj%202.jpg" alt="Leeds Student Radio (LSR) Resident DJs on SoundCloud" loading="lazy">
+        <div class="card-badge"><i class="fab fa-soundcloud"></i> Listen on SOUNDCLOUD</div> 
+        <figcaption class="card-overlay">
+            <h2 class="card-title font-handwritten">Listen to the latest from our resident Djs</h2>
+        </figcaption>
+    </a>
+</figure>
+          
+        </section>
+       
+        </div>
+    </main>
+
+ <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-grid">
+                <div class="footer-col col-banner">
+                    <p class="banner-text">Discover, develop and decide your future with appointments, events and vacancies</p>
+                    <a href="https://mycareer.leeds.ac.uk/unauth" target="_blank">
+                    <img src="/careers.avif" loading="lazy" alt="Careers Service Banner" class="careers-banner">
+                </a></div>
+
+                <div class="footer-links-group">
+                    <div class="footer-col">
+                           <h4>MORE</h4>
+                        <ul>
+                             <li><a href="https://en.wikipedia.org/wiki/Leeds_Student_Radio" target="_blank">Wiki</a></li>
+                             <li><a href="/awards">Awards</a></li>
+                            <li><a href="/archives">Archives</a></li>
+                           
+                           
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>SOCIAL</h4>
+                        <ul>
+                            <li><a href="https://www.instagram.com/thisislsr/" target="_blank"><i class="fab fa-instagram"></i> Insta</a></li>
+                            <li><a href="https://www.tiktok.com/@thisislsr" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a></li>
+                            <li><a href="mailto:info@thisislsr.com"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col col-official">
+                        <h4>OFFICIAL</h4>
+                        <ul>
+                            <li><a  href="https://engage.luu.org.uk/groups/VFG/leeds-student-radio" target="_blank">L.U.U.</a></li>
+                            <li><a href="https://calendly.com/leedsstudentradio/bookstudio2" target="_blank">Studio 2</a></li>
+                            <li><a href="mailto:info@thisislsr.com">Feedback</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-col col-info">
+                    <p class="info-text">Leeds Student Radio is a student radio station broadcasting every day during term time, from the heart of Leeds University<br><br> <a href="/legal" class="zach"><u>Privacy & Terms of Use (boring)</u></a></p>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; Leeds Student Radio 2026  <br><br> <a href="/legal" class="legalsmall">Privacy & Terms of Use</a>
+               <!--  <a href="#" target="_blank" class="disclaimer-link">Website by Zach</a> -->
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+   
+</html>
