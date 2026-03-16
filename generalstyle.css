@@ -2163,6 +2163,7 @@ hr {
     display: flex;
     align-items: center;
     justify-content: center;
+  max-height:320px;
 }
 
 /* 2. The Unique Shimmer Overlay */
