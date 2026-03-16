@@ -752,8 +752,7 @@ function getLondonTimeDetails() {
 // --- CONFIGS ---
 const chatConfig = {
     apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
-    authDomain: "lsrchat-6ffb1.firebaseapp.com
-",
+    authDomain: "lsrchat-6ffb1.firebaseapp.com", 
     projectId: "lsrchat-6ffb1",
     storageBucket: "lsrchat-6ffb1.firebasestorage.app
 ",
