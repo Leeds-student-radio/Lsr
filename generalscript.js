@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
     const radioPlayer = document.getElementById('radio-player');
-    const bars = document.querySelectorAll('.bar');
+    const bars = document.querySelectorAll('.bar'); 
 
     function updatePlayButtons(isPlaying) {
         const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
