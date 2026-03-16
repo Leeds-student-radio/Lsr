@@ -2156,7 +2156,7 @@ hr {
     width: 100%;
     /* Replace with your image's actual ratio if known, e.g., 1.5 for 3:2 */
     aspect-ratio: 16 / 9; 
-    background-color: #c92a2a;
+   
     border-radius: 12px;
     position: relative;
     overflow: hidden;
@@ -2165,7 +2165,12 @@ hr {
     justify-content: center;
   max-height:320px;
 }
-
+.lsr-image-placeholder-shimmer img {
+    max-width: 600px;
+    height: auto;
+    max-height: 320px;
+    border-radius: 12px;
+}
 /* 2. The Unique Shimmer Overlay */
 .lsr-image-placeholder-shimmer::after {
     content: "";
