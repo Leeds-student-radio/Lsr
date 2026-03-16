@@ -760,7 +760,7 @@ const chatConfig = {
     messagingSenderId: "333921149565
 ",
     appId: "1:333921149565:web:c5dcced8299b1527994714"
-};
+}; 
 
 const counterConfig = {
     apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
