@@ -18,7 +18,7 @@ jobs:
         run: npm install firebase dotenv
 
       - name: Run deletion script
-        run: node delete_messages.yml # Replace with your actual filename
+        run: node delete.js # Replace with your actual filename
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
