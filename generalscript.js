@@ -751,7 +751,7 @@ function getLondonTimeDetails() {
 
 // --- CONFIGS ---
 const chatConfig = {
-    apiKey: "AIzaSyDO_b2n7gUqeTIOnU84qGdvYatWOKkZ6-I",
+    apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
     authDomain: "lsrchat-6ffb1.firebaseapp.com
 ",
     projectId: "lsrchat-6ffb1",
@@ -763,13 +763,14 @@ const chatConfig = {
 }; 
 
 const counterConfig = {
-    apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
+    apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
     authDomain: "lsrlivecount.firebaseapp.com",
     databaseURL: "https://lsrlivecount-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "lsrlivecount",
     storageBucket: "lsrlivecount.firebasestorage.app",
-    messagingSenderId: "540310303767",
-    appId: "1:540310303767:web:82125bd428eaee173c1852"
+    messagingSenderId: "",
+     appId: ""
+   
 };
 
 // Global variables to be shared
