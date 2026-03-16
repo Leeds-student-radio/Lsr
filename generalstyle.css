@@ -1615,7 +1615,15 @@ hr {
         .banner-text, .info-text { font-size: 1rem; line-height: 1.2; text-align: center; margin-bottom: 15px; }
         .careers-banner { width: 100%; max-width: 360px; border-radius: 4px; object-fit: contain; margin: 0 auto; }
         
-        .disclaimer-link, .zach { text-align: center; line-height: 1; cursor: pointer; justify-content: space-around; }
+        .disclaimer-link, .zach { gap: 5px;
+    color: #ffffffd9;
+    text-align: center;
+    font-size: 0.9rem !important;
+    line-height: 0;
+    height: 7px;
+    cursor: pointer;
+    justify-content: center;
+}
         .disclaimer-link:hover, .zach:hover { text-decoration: underline; }
 
         .copyright { text-align: center; font-size: 0.85rem; font-weight: 100; line-height: 1; }
