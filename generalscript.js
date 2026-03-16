@@ -760,13 +760,14 @@ const chatConfig = {
 }; 
 
 const counterConfig = {
-    apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
+    apiKey: "#{FIREBASE_API_KEY}#",
     authDomain: "lsrlivecount.firebaseapp.com",
     databaseURL: "https://lsrlivecount-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "lsrlivecount",
     storageBucket: "lsrlivecount.firebasestorage.app",
-    messagingSenderId: "540310303767",
-    appId: "1:540310303767:web:82125bd428eaee173c1852"
+    messagingSenderId: "#{FIREBASE_MESSAGING_SENDER_ID2}#",
+     appId: "#{FIREBASE_APP_ID2}#"
+   
 };
 
 // Global variables to be shared
