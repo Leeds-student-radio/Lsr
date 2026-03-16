@@ -311,11 +311,39 @@ document.addEventListener('DOMContentLoaded', () => {
     let allScheduleRows = [];
 
     // --- NEW: Helper function to strictly force London Time ---
-    function getLondonDate() {
-        // Fetches current UTC time and converts it into a local Date object matching Europe/London
-        const londonTimeStr = new Date().toLocaleString("en-US", { timeZone: "Europe/London" });
-        return new Date(londonTimeStr); 
+function getLondonTimeDetails() {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London',
+            weekday: 'long',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false
+        });
+        
+        const parts = formatter.formatToParts(now);
+        let day = '', hour = 0, minute = 0;
+        
+        parts.forEach(part => {
+            if (part.type === 'weekday') day = part.value;
+            if (part.type === 'hour') hour = parseInt(part.value, 10);
+            if (part.type === 'minute') minute = parseInt(part.value, 10);
+        });
+        
+        // Handle edge cases where midnight is occasionally formatted as 24
+        if (hour === 24) hour = 0;
+        
+        return { 
+            day: day, 
+            minutes: (hour * 60) + minute 
+        };
     }
+
+    // Add 'Z' to lock this to UTC. (Midnight UTC in Jan exactly matches Midnight London)
+    // We append .getTime() so we are just doing math with raw milliseconds.
+    const TERM_START_DATE = new Date('2026-01-26T00:00:00Z').getTime(); 
+    let currentViewWeek = 'A';
+    let allScheduleRows = [];
 
     function timeToMinutes(timeStr) {
         if (!timeStr) return -1;
@@ -325,19 +353,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getCurrentWeekType() {
-        const now = getLondonDate(); // Replaced standard Date
-        const diffInMs = now - TERM_START_DATE;
+        const nowMs = Date.now(); // Date.now() is universally the exact same millisecond everywhere
+        const diffInMs = nowMs - TERM_START_DATE;
         const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
         return (diffInWeeks % 2 === 0) ? 'A' : 'B';
     }
 
     function isShowLive(showDay, startTime, endTime) {
-        const now = getLondonDate(); // Replaced standard Date
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const currentDay = days[now.getDay()];
-        if (showDay.toLowerCase() !== currentDay.toLowerCase()) return false;
+        const london = getLondonTimeDetails();
         
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        if (showDay.toLowerCase() !== london.day.toLowerCase()) return false;
+        
+        const currentMinutes = london.minutes;
         const start = timeToMinutes(startTime);
         const end = timeToMinutes(endTime);
         
@@ -385,11 +412,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateLiveNowUI(realWeek) {
-        const now = getLondonDate(); // Replaced standard Date
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const currentDay = days[now.getDay()];
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+   function updateLiveNowUI(realWeek) {
+        const london = getLondonTimeDetails();
+        const currentDay = london.day;
+        const currentMinutes = london.minutes;
 
         const todayShows = allScheduleRows.filter(row => {
             const day = row[4]?.trim() || '';
@@ -485,7 +511,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if(nextD) nextD.innerText = "Check the schedule for our next show!";
         }
     }
-
     function renderSchedule(weekLetter) {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         const grid = document.getElementById('schedule-grid');
