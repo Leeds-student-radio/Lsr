@@ -306,9 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. ENHANCED SCHEDULE & MEDIASESSION LOGIC ---
     const scheduleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=0';
-    const TERM_START_DATE = new Date('2026-01-26T00:00:00');
-    let currentViewWeek = 'A';
-    let allScheduleRows = [];
+   
 
     // --- NEW: Helper function to strictly force London Time ---
 function getLondonTimeDetails() {
