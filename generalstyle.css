@@ -2450,21 +2450,32 @@ font-size:0.9rem;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black background */
+    background-color: #89444454;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 20px;
+    /* padding-top: 70px; */
     box-sizing: border-box;
-    z-index: 10; /* Ensures it sits above the links */
-    border-radius: inherit; /* Matches your apply-box corners if you have rounded corners */
+    z-index: 10;
+    border-radius: inherit;
 }
 
+
 .closed-layover p {
-    font-family: 'Open Sans', sans-serif; /* Matches your loading text font */
+   
     font-weight: bold;
     line-height: 1.5;
     margin: 0;
+    height: 100%;
+    padding: 20px;
+    background: rgb(160 43 43 / 79%);
+    border-radius: 12Px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #8f1818;
+    max-height: 160px;
 }
