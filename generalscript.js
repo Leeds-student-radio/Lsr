@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
     const radioPlayer = document.getElementById('radio-player');
-    const bars = document.querySelectorAll('.bar');
+    const bars = document.querySelectorAll('.bar'); 
 
     function updatePlayButtons(isPlaying) {
         const allPlayIcons = document.querySelectorAll('.play-toggle i, .play-toggle-main i');
@@ -754,10 +754,8 @@ const chatConfig = {
     apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
     authDomain: "lsrchat-6ffb1.firebaseapp.com", 
     projectId: "lsrchat-6ffb1",
-    storageBucket: "lsrchat-6ffb1.firebasestorage.app
-",
-    messagingSenderId: "333921149565
-",
+    storageBucket: "lsrchat-6ffb1.firebasestorage.app",
+    messagingSenderId: "333921149565",
     appId: "1:333921149565:web:c5dcced8299b1527994714"
 }; 
 
