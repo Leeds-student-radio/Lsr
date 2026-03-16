@@ -2438,3 +2438,33 @@ font-size:0.9rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     z-index: 2;
 }
+.apply-box {
+    /* Make sure the box has relative positioning so the absolute layover sticks to it */
+    position: relative;
+    overflow: hidden; 
+}
+
+.closed-layover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent black background */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 10; /* Ensures it sits above the links */
+    border-radius: inherit; /* Matches your apply-box corners if you have rounded corners */
+}
+
+.closed-layover p {
+    font-family: 'Open Sans', sans-serif; /* Matches your loading text font */
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 0;
+}
