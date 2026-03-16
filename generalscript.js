@@ -750,14 +750,14 @@ function getLondonTimeDetails() {
 // --- FIREBASE IMPORTS ---
 
 // --- CONFIGS ---
-const chatConfig = { 
-    apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc", 
-    authDomain: "lsrchat-6ffb1.firebaseapp.com", 
-    projectId: "lsrchat-6ffb1", 
-    storageBucket: "lsrchat-6ffb1.firebasestorage.app", 
-    messagingSenderId: "333921149565", 
-    appId: "1:333921149565:web:c5dcced8299b1527994714" 
-}; 
+const chatConfig = {
+    apiKey: "__FIREBASE_API_KEY__",
+    authDomain: "__FIREBASE_AUTH_DOMAIN__",
+    projectId: "__FIREBASE_PROJECT_ID__",
+    storageBucket: "__FIREBASE_STORAGE_BUCKET__",
+    messagingSenderId: "__FIREBASE_MESSAGING_SENDER_ID__",
+    appId: "__FIREBASE_APP_ID__"
+};
 
 const counterConfig = {
     apiKey: "AIzaSyAiqChgrcb4pn4LKjRO-zILVRs59CBCFes",
