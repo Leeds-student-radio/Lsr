@@ -722,6 +722,19 @@ function getLondonTimeDetails() {
             if (newMain && currentMain) {
                 currentMain.innerHTML = newMain.innerHTML;
                 document.title = newDoc.title;
+
+                const metaTags = newDoc.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"], meta[name="description"]');
+    metaTags.forEach(newMeta => {
+        const property = newMeta.getAttribute('property');
+        const name = newMeta.getAttribute('name');
+        const selector = property ? `meta[property="${property}"]` : `meta[name="${name}"]`;
+        const currentMeta = document.querySelector(selector);
+        
+        if (currentMeta) {
+            currentMeta.setAttribute('content', newMeta.getAttribute('content'));
+        }
+    });
+                
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 updateNavLinks();
              
