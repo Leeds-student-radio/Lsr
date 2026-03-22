@@ -2066,11 +2066,11 @@ hr {
     height: auto;
     border: none;
     transform: none;
-              background: #980000a1;
+                    background: #fff;
         padding: 7px 10px;
         /* width: 1110px; */
         border-radius: 40%;
-        border: solid 1px #0000003b;
+       
 }
 }
 /* Mobile Specific Optimizations */
