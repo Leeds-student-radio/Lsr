@@ -790,14 +790,17 @@ hr {
         .msg-input { width: 50%; flex: 1; }
 
         .send-btn {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 5px;
+          
+         
             cursor: pointer;
             font-weight: bold;
               height: 35px;
+
+          background: white;
+    border: 1px solid #806e6eb8;
+    color: #6b0a0a;
+    padding: 5px 15px;
+    border-radius: 10px;
         }
         
         .send-btn:hover {
@@ -2689,18 +2692,18 @@ font-size:0.9rem;
 }
 /* Modern Browsers */
 input::placeholder {
-    color: white;
+    color: rgb(160, 43, 43);
     opacity: 1; /* Firefox renders placeholders with default opacity */
 }
 
 /* For older versions of Internet Explorer */
 input:-ms-input-placeholder {
-    color: white;
+    color: rgb(160, 43, 43);
 }
 
 /* For Edge */
 input::-ms-input-placeholder {
-    color: white;
+    color: rgb(160, 43, 43);
 }
 input:focus {
   /* Adjust the px value to match your average mobile keyboard height */
