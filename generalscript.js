@@ -877,7 +877,7 @@ function initChatSystem() {
     } else {
    
    // Using the Adventurer style, randomized IDs, and flipping the avatar horizontally
-   avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=d84be5,059ff2,d9915b,71cf62,fcbc34,FF595E&backgroundType=gradientLinear&mouth=cute,drip,kissHeart,lilSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,shades,stars,wink2,crying`;   }
+   avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E&scale=90&backgroundType=gradientLinear&mouth=cute,lilSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,shades,stars,wink2,crying`;   }
 
     // Fallback handler if DiceBear fails
     avatarImg.onerror = function() {
