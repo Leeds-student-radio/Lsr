@@ -1077,6 +1077,7 @@ hr {
 
   /* 1. The Full-Screen Blurred Background */
 .gif-picker-overlay {
+  display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -1099,7 +1100,8 @@ hr {
 
 /* 2. Your Adjusted Picker Styles */
 .gif-picker-container {
-    /* We remove 'fixed' and 'top/left' because the parent Flexbox handles it now */
+  display: block !important; 
+  
     position: relative !important; 
     
     /* Your original aesthetic styles */
