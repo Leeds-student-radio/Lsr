@@ -800,7 +800,6 @@ const counterConfig = {
     storageBucket: "lsrlivecount.firebasestorage.app",
     messagingSenderId: "#{FIREBASE_MESSAGING_SENDER_ID2}#",
      appId: "#{FIREBASE_APP_ID2}#"
-   
 };
 
 // Global variables to be shared
@@ -814,7 +813,6 @@ function initChatSystem() {
     const messageInput = document.getElementById('message-input');
     const loadingSpinner = document.getElementById('loading-spinner');
 
-    // --- 1. GIF DOM ELEMENTS ---
     const gifPicker = document.getElementById('gif-picker');
     const gifToggleBtn = document.getElementById('gif-toggle-btn');
     const closeGifBtn = document.getElementById('close-gif-btn');
@@ -823,17 +821,16 @@ function initChatSystem() {
 
     if (!chatMessages || !chatForm) return;
 
-    // --- 2. UPDATED DISPLAY MESSAGE ---
-    // ⭐ NEW: We now pass the whole document (messageDoc) instead of just the data
-    function displayMessage(messageDoc) {
-        const messageData = messageDoc.data();
-        const docId = messageDoc.id; // We need this to delete it later
+    function displayMessage(messageDoc, prepend = false) {
+        // ⭐ FIX: Estimate the timestamp immediately so it isn't blank
+        const messageData = messageDoc.data({ serverTimestamps: 'estimate' });
+        const docId = messageDoc.id; 
         
         const name = messageData.name || 'Anonymous';
         const text = messageData.text || '';
         const gifUrl = messageData.gifUrl; 
         const createdAt = messageData.createdAt;
-        const senderUid = messageData.uid; // ⭐ NEW: Get the UID of the sender
+        const senderUid = messageData.uid; 
         let timestampString = '';
         
         if (createdAt && typeof createdAt.toDate === 'function') {
@@ -850,7 +847,7 @@ function initChatSystem() {
 
         const msgDiv = document.createElement('div');
         msgDiv.className = 'message-entry';
-        msgDiv.id = `msg-${docId}`; // ⭐ NEW: Give the div an ID so we can remove it later
+        msgDiv.id = `msg-${docId}`; 
         
         // --- AVATAR LOGIC START ---
         const iconDiv = document.createElement('div');
@@ -899,44 +896,40 @@ function initChatSystem() {
 
         textDiv.innerHTML = contentHtml;
         
-        // ⭐ NEW: DELETE MESSAGE LOGIC
-        // Check if the current user is the one who sent this message
         if (auth.currentUser && senderUid === auth.currentUser.uid) {
-            msgDiv.style.cursor = 'pointer'; // Make it look clickable
+            msgDiv.style.cursor = 'pointer'; 
             
             const deleteBtn = document.createElement('span');
-            deleteBtn.innerHTML = ' ❌';
-            deleteBtn.style.display = 'none'; // Hidden by default
+            deleteBtn.innerHTML = ' X';
+            deleteBtn.style.display = 'none'; 
             deleteBtn.style.cursor = 'pointer';
-            deleteBtn.style.fontSize = '12px';
+            deleteBtn.style.fontSize = '14px';
             deleteBtn.title = "Delete Message";
             
-            // Append the X to the header next to the timestamp
             textDiv.querySelector('.message-header').appendChild(deleteBtn);
 
-            // Toggle the X when the message is clicked
             msgDiv.addEventListener('click', () => {
                 deleteBtn.style.display = deleteBtn.style.display === 'none' ? 'inline' : 'none';
             });
 
-            // Handle the actual deletion
             deleteBtn.addEventListener('click', async (e) => {
-                e.stopPropagation(); // Prevent the message click event from firing too
-                if (confirm('Are you sure you want to delete this message?')) {
-                    try {
-                        // Needs 'doc' and 'deleteDoc' imported from firebase/firestore
-                        await deleteDoc(doc(db, "messages", docId));
-                    } catch (error) {
-                        console.error("Error deleting message:", error);
-                        alert("Could not delete message.");
-                    }
+                e.stopPropagation(); 
+                try {
+                    await deleteDoc(doc(db, "messages", docId));
+                } catch (error) {
+                    console.error("Error deleting message:", error);
                 }
             });
         }
         
         msgDiv.appendChild(iconDiv);
         msgDiv.appendChild(textDiv);
-        chatMessages.appendChild(msgDiv);
+
+        if (prepend) {
+            chatMessages.insertBefore(msgDiv, chatMessages.firstChild);
+        } else {
+            chatMessages.appendChild(msgDiv);
+        }
     }
 
     // --- 3. GIF PICKER LOGIC ---
@@ -1016,7 +1009,7 @@ function initChatSystem() {
         try {
             await addDoc(messagesCollection, {
                 name: displayName,
-                uid: auth.currentUser ? auth.currentUser.uid : null, // ⭐ NEW: Save user ID
+                uid: auth.currentUser ? auth.currentUser.uid : null,
                 text: "", 
                 gifUrl: gifUrl,
                 createdAt: serverTimestamp(),
@@ -1036,7 +1029,7 @@ function initChatSystem() {
         try {
             await addDoc(messagesCollection, {
                 name: displayName,
-                uid: auth.currentUser ? auth.currentUser.uid : null, // ⭐ NEW: Save user ID
+                uid: auth.currentUser ? auth.currentUser.uid : null, 
                 text: messageText,
                 createdAt: serverTimestamp(),
                 expiresAt: Timestamp.fromDate(new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)))
@@ -1079,20 +1072,36 @@ function initChatSystem() {
             const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
             
             let isFirstLoad = true; 
+            let newestMessageTime = 0; 
             
             onSnapshot(q, (snapshot) => {
                 if (loadingSpinner) loadingSpinner.style.display = 'none';
                 
                 if (isFirstLoad) {
                     chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
-                    isFirstLoad = false;
                 }
 
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
-                        displayMessage(change.doc); // ⭐ NEW: Passing the whole doc!
+                        // ⭐ FIX: Estimate the timestamp for our sorting logic too
+                        const data = change.doc.data({ serverTimestamps: 'estimate' });
+                        const msgTime = data.createdAt.toMillis();
+
+                        if (isFirstLoad) {
+                            displayMessage(change.doc); 
+                            if (msgTime > newestMessageTime) newestMessageTime = msgTime;
+                        } else {
+                            if (msgTime >= newestMessageTime) {
+                                displayMessage(change.doc, false); 
+                                if (msgTime > newestMessageTime) newestMessageTime = msgTime;
+                                
+                                setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
+                            } else {
+                                displayMessage(change.doc, true); 
+                            }
+                        }
                     }
-                    // ⭐ NEW: Handle what happens when a message is deleted from the database
+                    
                     if (change.type === "removed") {
                         const messageToRemove = document.getElementById(`msg-${change.doc.id}`);
                         if (messageToRemove) {
@@ -1101,9 +1110,7 @@ function initChatSystem() {
                     }
                 });
 
-                setTimeout(() => {
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 50);
+                isFirstLoad = false;
             });
         }
     });
