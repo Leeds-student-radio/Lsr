@@ -151,7 +151,7 @@
                         </svg>
                     </div>
                 </div>
-                     <div class="chat-input-area">
+                     <div class="chat-input-area" style="flex-direction: column; align-items: stretch;">
     
     <div id="join-area" class="join-wrapper">
         <span class="join-prompt">Start chatting:</span>
@@ -159,19 +159,30 @@
         <button type="button" id="join-btn" class="send-btn">
             <span class="btn-text">OK</span>
         </button>
+        <button type="button" id="anon-btn" class="send-btn anon-btn">
+            <span class="btn-text">Anonymous</span>
+        </button>
     </div>
 
     <form id="chat-form" class="message-wrapper" style="display: none;">
-        <div class="input-wrapper" style="flex: 1; display: flex;">
-            <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required style="width: 100%;">
-            <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
-                 <i class="fa-solid fa-heart-circle-plus"></i>
-            </button>
+        
+        <div class="user-label-area">
+            Chatting as: <strong id="chatting-as-name">Anonymous</strong>
+            <span id="change-name-btn" title="Change Name">Change</span>
         </div>
 
-        <button type="submit" class="send-btn">
-            <span class="btn-text">Send</span>
-        </button>
+        <div class="input-row">
+            <div class="input-wrapper" style="flex: 1; display: flex;">
+                <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required style="width: 100%;">
+                <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
+                     <i class="fa-solid fa-heart-circle-plus"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="send-btn">
+                <span class="btn-text">Send</span>
+            </button>
+        </div>
     </form>
     
 </div>
