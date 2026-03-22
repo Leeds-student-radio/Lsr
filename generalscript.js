@@ -876,7 +876,8 @@ function initChatSystem() {
         avatarImg.src = fallbackImage; 
     } else {
    
-    avatarImg.src = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(name)}&randomizeIds=true`;
+   // Using the Adventurer style, randomized IDs, and flipping the avatar horizontally
+    avatarImg.src = `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&flip=true`;
     }
 
     // Fallback handler if DiceBear fails
