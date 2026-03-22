@@ -870,14 +870,15 @@ function initChatSystem() {
     avatarImg.loading = 'lazy';
 
     // Define your fallback image URL in one place
-    const fallbackImage = "https://thisislsr.com/favicon-48x48.png"; // <-- PASTE YOUR IMAGE URL HERE
+    const fallbackImage = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=FF9296&scale=85&mouth=lilSmile&eyes=closed2`; 
+
 
     if (name === 'Anonymous') {
         avatarImg.src = fallbackImage; 
     } else {
    
    // Using the Adventurer style, randomized IDs, and flipping the avatar horizontally
-   avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FF9296,FF7B7F,FDCA5C,89D67D&scale=90&mouth=cute,lilSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;   }
+   avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FDCA5C,89D67D&scale=90&mouth=cute,wideSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;   }
 
     // Fallback handler if DiceBear fails
     avatarImg.onerror = function() {
