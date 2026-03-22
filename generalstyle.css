@@ -787,8 +787,7 @@ hr {
           outline: none !important;
     
     /* 2. Prevent the browser from centering the input vertically on click */
-    scroll-margin-top: 0;
-    scroll-margin-bottom: 0;
+
         }
 
         .name-input { width: 30%; }
@@ -2713,4 +2712,7 @@ input::-ms-input-placeholder {
 }
 input:focus {
  outline:none !important;
+}
+.gif-search input {
+ font-size:16px !important;
 }
