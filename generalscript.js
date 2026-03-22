@@ -1002,9 +1002,9 @@ function initChatSystem() {
             msgDiv.style.padding = '8px';
             
             const deleteBtn = document.createElement('span');
-            deleteBtn.innerHTML = '✖'; 
+           deleteBtn.innerHTML = '&times;';
             deleteBtn.style.cursor = 'pointer';
-            deleteBtn.style.fontSize = '14px';
+            deleteBtn.style.fontSize = '16px';
             deleteBtn.style.color = '#FF595E';
             
             deleteBtn.style.alignSelf = 'center'; 
