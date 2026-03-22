@@ -803,6 +803,71 @@ hr {
             background: white;
             color: #D62828;
         }
+
+
+/* Update the main container if needed */
+.chat-input-area {
+    padding: 15px;
+    background: rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+/* New layout wrappers */
+.join-wrapper, .message-wrapper {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.join-prompt {
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Ensure inputs take up the right space */
+.name-input { 
+    flex: 1; /* Takes up remaining space */
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.msg-input { 
+    flex: 1; 
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+/* Layout wrappers for the two states */
+.join-wrapper, .message-wrapper {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+/* Styling for the new text prompt */
+.join-prompt {
+    color: white; /* Adjust to match your theme */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Ensure the name input stretches to fill empty space */
+#join-area .name-input {
+    flex: 1;
+}
+
         .get-involved-intro {
             color: #fff;
             padding: 0px 28px;
