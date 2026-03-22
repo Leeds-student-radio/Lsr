@@ -2045,6 +2045,10 @@ hr {
     border: none;
     transform: none;
 }
+   #join-btn .send-btn {
+   background:none !important;
+}
+  
     #join-btn::before {
     /* Font Awesome setup */
     content: '\f00c';             /* Unicode for fa-paper-plane */
@@ -2062,6 +2066,11 @@ hr {
     height: auto;
     border: none;
     transform: none;
+              background: #980000a1;
+        padding: 7px 10px;
+        /* width: 1110px; */
+        border-radius: 40%;
+        border: solid 1px #0000003b;
 }
 }
 /* Mobile Specific Optimizations */
