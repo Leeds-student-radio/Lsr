@@ -823,13 +823,21 @@ function initChatSystem() {
 
     // --- CUSTOM DELETE POPUP ---
     function showDeleteConfirmation(docId) {
+        // Find the wrapper holding the chat so we can lock the overlay inside it
+        const chatContainer = chatMessages.parentElement;
+        
+        // Ensure the parent container has relative positioning so 'absolute' works correctly
+        if (window.getComputedStyle(chatContainer).position === 'static') {
+            chatContainer.style.position = 'relative';
+        }
+
         // Create the overlay
         const modalOverlay = document.createElement('div');
-       modalOverlay.style.position = 'absolute'; // Changed from fixed
+        modalOverlay.style.position = 'absolute'; 
         modalOverlay.style.top = '0';
         modalOverlay.style.left = '0';
-        modalOverlay.style.width = '100%'; // Changed from 100vw
-        modalOverlay.style.height = '100%'; // Changed from 100vh
+        modalOverlay.style.width = '100%'; 
+        modalOverlay.style.height = '100%'; 
         modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
         modalOverlay.style.display = 'flex';
         modalOverlay.style.alignItems = 'center';
@@ -849,7 +857,7 @@ function initChatSystem() {
         modalBox.style.textAlign = 'center';
         modalBox.style.fontFamily = 'inherit';
     
-        modalBox.style.maxWidth = '250px'; // Made slightly smaller to fit well inside a chat widget
+        modalBox.style.maxWidth = '250px'; 
 
         // Add text
         const text = document.createElement('p');
@@ -887,7 +895,8 @@ function initChatSystem() {
         modalBox.appendChild(confirmBtn);
         modalBox.appendChild(cancelBtn);
         modalOverlay.appendChild(modalBox);
-       // Append to the chat container instead of document.body
+        
+        // Append to the chat container
         chatContainer.appendChild(modalOverlay);
         
 
@@ -899,15 +908,17 @@ function initChatSystem() {
             } catch (error) {
                 console.error("Error deleting message:", error);
             } finally {
-                if (document.body.contains(modalOverlay)) {
-                    document.body.removeChild(modalOverlay);
+                // FIXED: Changed document.body to chatContainer
+                if (chatContainer.contains(modalOverlay)) {
+                    chatContainer.removeChild(modalOverlay);
                 }
             }
         });
 
         cancelBtn.addEventListener('click', () => {
-            if (document.body.contains(modalOverlay)) {
-                document.body.removeChild(modalOverlay);
+            // FIXED: Changed document.body to chatContainer
+            if (chatContainer.contains(modalOverlay)) {
+                chatContainer.removeChild(modalOverlay);
             }
         });
     }
