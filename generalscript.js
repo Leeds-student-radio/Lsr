@@ -828,8 +828,8 @@ function initChatSystem() {
         modalOverlay.style.position = 'fixed';
         modalOverlay.style.top = '0';
         modalOverlay.style.left = '0';
-        modalOverlay.style.width = '90vw';
-        modalOverlay.style.height = '40vh';
+        modalOverlay.style.width = '100vw';
+        modalOverlay.style.height = '100vh';
         modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
         modalOverlay.style.display = 'flex';
         modalOverlay.style.alignItems = 'center';
@@ -839,7 +839,7 @@ function initChatSystem() {
 
         // Create the modal box
         const modalBox = document.createElement('div');
-        modalBox.style.backgroundColor = '#fff';
+        modalBox.style.backgroundColor = 'rgb(205, 50, 50)';
         modalBox.style.padding = '24px';
         modalBox.style.borderRadius = '12px';
         modalBox.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
@@ -851,7 +851,7 @@ function initChatSystem() {
         const text = document.createElement('p');
         text.innerText = "Are you sure you want to delete your message?";
         text.style.margin = '0 0 20px 0';
-        text.style.color = '#333';
+        text.style.color = 'white';
         text.style.fontSize = '16px';
         text.style.fontWeight = '500';
 
@@ -860,9 +860,9 @@ function initChatSystem() {
         confirmBtn.innerText = "Delete";
         confirmBtn.style.marginRight = '12px';
         confirmBtn.style.padding = '10px 18px';
-        confirmBtn.style.backgroundColor = '#FF595E';
+        confirmBtn.style.backgroundColor = 'rgb(160, 43, 43)';
         confirmBtn.style.color = '#fff';
-        confirmBtn.style.border = 'none';
+        confirmBtn.style.border = 'solid 1px #8f1818;';
         confirmBtn.style.borderRadius = '6px';
         confirmBtn.style.cursor = 'pointer';
         confirmBtn.style.fontWeight = 'bold';
@@ -873,8 +873,8 @@ function initChatSystem() {
         cancelBtn.style.padding = '10px 18px';
         cancelBtn.style.backgroundColor = '#E0E0E0';
         cancelBtn.style.color = '#333';
-        cancelBtn.style.border = 'none';
-        cancelBtn.style.borderRadius = '6px';
+        cancelBtn.style.border = 'solid 1px rgb(207 198 198)';
+        cancelBtn.style.borderRadius = 'px';
         cancelBtn.style.cursor = 'pointer';
         cancelBtn.style.fontWeight = 'bold';
 
