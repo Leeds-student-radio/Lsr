@@ -813,11 +813,13 @@ function initChatSystem() {
     const messageInput = document.getElementById('message-input');
     const loadingSpinner = document.getElementById('loading-spinner');
 
-    const gifPicker = document.getElementById('gif-picker');
-    const gifToggleBtn = document.getElementById('gif-toggle-btn');
-    const closeGifBtn = document.getElementById('close-gif-btn');
-    const gifSearchInput = document.getElementById('gif-search-input');
-    const gifResults = document.getElementById('gif-results');
+    
+
+  const gifOverlay = document.querySelector('.gif-picker-overlay'); // The blur layer
+const gifToggleBtn = document.getElementById('gif-toggle-btn');
+const closeGifBtn = document.getElementById('close-gif-btn');
+const gifSearchInput = document.getElementById('gif-search-input');
+const gifResults = document.getElementById('gif-results');
 
   const joinArea = document.getElementById('join-area');
     const joinBtn = document.getElementById('join-btn');
@@ -1087,22 +1089,36 @@ function initChatSystem() {
     
 
     // --- 3. GIF PICKER LOGIC ---
-    if (gifToggleBtn && gifPicker && closeGifBtn) {
-        gifToggleBtn.addEventListener('click', () => {
-            gifPicker.style.display = gifPicker.style.display === 'none' ? 'flex' : 'none';
-            if (gifPicker.style.display === 'flex') {
-                fetchGifs(''); 
-                if (gifSearchInput && window.innerWidth > 768) {
-                    gifSearchInput.focus({ preventScroll: true }); 
-                }
-            }
-        });
+   // Make sure this variable selects the OVERLAY, not just the container
 
+
+if (gifToggleBtn && gifPicker) {
+    gifToggleBtn.addEventListener('click', () => {
+        // Toggle the OVERLAY (which uses Flex for centering)
+        const isHidden = gifPicker.style.display === 'none' || gifPicker.style.display === '';
+        gifPicker.style.display = isHidden ? 'flex' : 'none';
+
+        if (gifPicker.style.display === 'flex') {
+            fetchGifs(''); 
+            if (gifSearchInput && window.innerWidth > 768) {
+                gifSearchInput.focus({ preventScroll: true }); 
+            }
+        }
+    });
+
+    if (closeGifBtn) {
         closeGifBtn.addEventListener('click', () => {
             gifPicker.style.display = 'none';
         });
     }
 
+    // EXTRA CREDIT: Close if they click the blurred area (outside the picker)
+    gifPicker.addEventListener('click', (e) => {
+        if (e.target === gifPicker) {
+            gifPicker.style.display = 'none';
+        }
+    });
+}
     const GIPHY_API_KEY = "zhbz8Mvx3vRQHBkQo3nnWWbyHQMOVsFn"; 
 
     async function fetchGifs(searchTerm) {
