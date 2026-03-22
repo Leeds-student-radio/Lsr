@@ -2698,3 +2698,7 @@ input:-ms-input-placeholder {
 input::-ms-input-placeholder {
     color: white;
 }
+input:focus {
+  /* Adjust the px value to match your average mobile keyboard height */
+  scroll-margin-bottom: 40vh; 
+}
