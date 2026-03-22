@@ -1005,9 +1005,9 @@ function initChatSystem() {
             deleteBtn.innerHTML = '✖'; 
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.style.fontSize = '14px';
-            deleteBtn.style.color = '#FF595E !important';
+            deleteBtn.style.color = '#FF595E';
             
-            deleteBtn.style.alignSelf = 'flex-start'; 
+            deleteBtn.style.alignSelf = 'center'; 
            
             deleteBtn.title = "Delete Message";
             
