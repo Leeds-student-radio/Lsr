@@ -868,6 +868,74 @@ hr {
     flex: 1;
 }
 
+/* Step 1: Join Area Layout */
+.join-wrapper {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.join-prompt {
+    color: white; 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+#join-area .name-input {
+    flex: 1;
+}
+
+/* Subdued style for the Anonymous button */
+.anon-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.8);
+}
+
+.anon-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Step 2: Message Area Layout */
+.message-wrapper {
+    display: flex;
+    flex-direction: column; /* Stacks the label on top of the input */
+    width: 100%;
+    gap: 5px; /* Space between label and input */
+}
+
+/* Input row inside the message form */
+.input-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+/* Small label above the chat */
+.user-label-area {
+    align-self: flex-start;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Montserrat', sans-serif;
+    margin-left: 2px;
+}
+
+#chatting-as-name {
+    color: white;
+}
+
+#change-name-btn {
+    margin-left: 10px;
+    font-size: 0.75rem;
+    text-decoration: underline;
+    cursor: pointer;
+    color: #8fff8f; /* Matches your active-count green */
+}
         .get-involved-intro {
             color: #fff;
             padding: 0px 28px;
