@@ -1081,16 +1081,31 @@ hr {
         transform: translate(0%, -60%) !important;
 
             
-        width: 100% !important;
-        margin-right: auto;
-        margin-left: auto;
+               width: auto !important;
+        margin-right: 5px;
+        margin-left: 15px;
         left: 0px;
                 border: 2px solid rgb(118 25 25);
             background: rgb(215 66 66);
   
     box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.85);
    }
-            
+            .gif-picker-container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* The Magic */
+  background: rgba(0, 0, 0, 0.3); /* Darkens the background */
+  backdrop-filter: blur(6px);    /* Blurs the content behind */
+  
+  /* Positioning */
+  z-index: -1; /* Puts it behind the picker content */
+  transform: translate(-50%, -50%); /* Adjusts for the parent's translate */
+}
 .visualizer  {
             display: none !important;
           
