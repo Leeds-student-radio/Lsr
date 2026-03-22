@@ -819,7 +819,30 @@ function initChatSystem() {
     const gifSearchInput = document.getElementById('gif-search-input');
     const gifResults = document.getElementById('gif-results');
 
+   const joinArea = document.getElementById('join-area');
+    const joinBtn = document.getElementById('join-btn');
+
     if (!chatMessages || !chatForm) return;
+
+    // --- NEW: ONBOARDING LOGIC ---
+    if (joinBtn && joinArea) {
+        joinBtn.addEventListener('click', () => {
+            // Hide the join area
+            joinArea.style.display = 'none';
+            // Show the chat form
+            chatForm.style.display = 'flex';
+            // Optional: Immediately focus the message input so they can type
+            messageInput.focus(); 
+        });
+
+        // Allow pressing "Enter" in the name input to trigger the "OK" button
+        displayNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                joinBtn.click();
+            }
+        });
+    }
 
     // --- CUSTOM DELETE POPUP ---
     function showDeleteConfirmation(docId) {
