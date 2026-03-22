@@ -504,46 +504,72 @@ hr {
 
 
      /* Essential styles for the dynamic message list */
-        .chat-messages {
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 0px 15px;
-            width:100%;
-            height: auto; /* Adjust based on your design */
-        }
-        .message-entry {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            animation: fadeIn 0.3s ease;
-             font-size: 0.85rem;
-             color:whitesmoke;
-             font-family: 'Montserrat', sans-serif;
-        }
-        .message-icon {
-            background: #ff4b2b;
-            color: white;
-            min-width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-        .message-timestamp {
-            font-size: 0.7rem;
-            color: #ffb7b7;
-            margin-right: 5px;
-        }
-        .message-author {
-        font-size: 1.05rem;
-            color: white;
-            font-weight: 800;
-        }
+  .chat-messages {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px 15px;
+    width: 100%;
+    height: auto; /* Adjust based on your design */
+}
+
+.message-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+    font-size: 0.85rem;
+    color: whitesmoke;
+    font-family: 'Montserrat', sans-serif;
+    width: 100%; /* Ensures the row spans the whole container */
+}
+
+.message-icon {
+    background: #ff4b2b;
+    color: white;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+/* NEW: The container holding the header and the text */
+.message-content {
+    flex: 1; /* Tells this div to stretch and fill the remaining space next to the avatar */
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Prevents text from breaking out of the flex container */
+}
+
+/* NEW: The header row splitting the name and timestamp */
+.message-header {
+    display: flex;
+    justify-content: space-between; /* Pushes author left, timestamp right */
+    align-items: baseline; /* Aligns the bottom of the text nicely */
+    margin-bottom: 2px;
+}
+
+.message-author {
+    font-size: 1.05rem;
+    color: white;
+    font-weight: 800;
+}
+
+.message-timestamp {
+    font-size: 0.7rem;
+    color: #ffb7b7;
+    /* Removed the margin-right, no longer needed */
+}
+
+/* NEW: Just ensures long single words don't break your layout */
+.message-body {
+    word-wrap: break-word;
+}
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
