@@ -815,12 +815,16 @@ function initChatSystem() {
 
     
 
-  const gifOverlay = document.querySelector('.gif-picker-overlay'); // The blur layer
+
+    const gifResults = document.getElementById('gif-results');
+    const gifPicker = document.getElementById('gif-picker');
 const gifToggleBtn = document.getElementById('gif-toggle-btn');
 const closeGifBtn = document.getElementById('close-gif-btn');
 const gifSearchInput = document.getElementById('gif-search-input');
-const gifResults = document.getElementById('gif-results');
 
+
+
+    
   const joinArea = document.getElementById('join-area');
     const joinBtn = document.getElementById('join-btn');
     const anonBtn = document.getElementById('anon-btn');
@@ -1093,12 +1097,15 @@ const gifResults = document.getElementById('gif-results');
 
 
 if (gifToggleBtn && gifPicker) {
-    gifToggleBtn.addEventListener('click', () => {
-        // Toggle the OVERLAY (which uses Flex for centering)
-        const isHidden = gifPicker.style.display === 'none' || gifPicker.style.display === '';
-        gifPicker.style.display = isHidden ? 'flex' : 'none';
+    // We target the wrapper (the blur) specifically
+    const blurOverlay = gifPicker.parentElement;
 
-        if (gifPicker.style.display === 'flex') {
+    gifToggleBtn.addEventListener('click', () => {
+        // Toggle the wrapper's display
+        const isHidden = blurOverlay.style.display === 'none' || blurOverlay.style.display === '';
+        blurOverlay.style.display = isHidden ? 'flex' : 'none';
+
+        if (blurOverlay.style.display === 'flex') {
             fetchGifs(''); 
             if (gifSearchInput && window.innerWidth > 768) {
                 gifSearchInput.focus({ preventScroll: true }); 
@@ -1108,14 +1115,14 @@ if (gifToggleBtn && gifPicker) {
 
     if (closeGifBtn) {
         closeGifBtn.addEventListener('click', () => {
-            gifPicker.style.display = 'none';
+            blurOverlay.style.display = 'none';
         });
     }
 
-    // EXTRA CREDIT: Close if they click the blurred area (outside the picker)
-    gifPicker.addEventListener('click', (e) => {
-        if (e.target === gifPicker) {
-            gifPicker.style.display = 'none';
+    // Close if they click the blurred background area
+    blurOverlay.addEventListener('click', (e) => {
+        if (e.target === blurOverlay) {
+            blurOverlay.style.display = 'none';
         }
     });
 }
