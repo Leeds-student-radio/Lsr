@@ -782,7 +782,6 @@ function getLondonTimeDetails() {
 });
 
 // --- FIREBASE IMPORTS ---
-
 // --- CONFIGS ---
 const chatConfig = {
     apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
@@ -824,44 +823,62 @@ function initChatSystem() {
 
     if (!chatMessages || !chatForm) return; // Guard for pages without chat
 
-    const avatarColors = ['#ff4b2b', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', '#e67e22', '#1abc9c', '#e91e63', '#00bcd4', '#607d8b'];
+    // Note: getAvatarColor function and avatarColors array were removed 
+    // because we are using image avatars now!
 
-    function getAvatarColor(name) {
-        let hash = 0;
-        const searchName = name.toLowerCase().trim();
-        for (let i = 0; i < searchName.length; i++) { hash = searchName.charCodeAt(i) + ((hash << 5) - hash); }
-        return avatarColors[Math.abs(hash % avatarColors.length)];
-    }
-
-    // --- 2. UPDATED DISPLAY MESSAGE (NOW SUPPORTS GIFS) ---
+    // --- 2. UPDATED DISPLAY MESSAGE (SUPPORTS GIFS & DICEBEAR AVATARS) ---
  function displayMessage(messageData) {
     const name = messageData.name || 'Anonymous';
     const text = messageData.text || '';
-    const gifUrl = messageData.gifUrl; // Grab the GIF URL if it exists
+    const gifUrl = messageData.gifUrl; 
     const createdAt = messageData.createdAt;
     let timestampString = '';
     
-    if (createdAt && typeof createdAt.toDate === 'function') {
-        const date = createdAt.toDate();
-        // Added weekday: 'long' to get the day of the week
-        const chatDateOptions = { timeZone: 'Europe/London', weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false };
-        // The replace(',', '') removes the comma Intl.DateTimeFormat usually puts between the day and time
-        timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
-    }
+   if (createdAt && typeof createdAt.toDate === 'function') {
+    const date = createdAt.toDate();
+    
+    const chatDateOptions = { 
+        timeZone: 'Europe/London', 
+        weekday: 'short', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false 
+    };
+    
+    timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
+}
 
     const msgDiv = document.createElement('div');
     msgDiv.className = 'message-entry';
     
+    // --- AVATAR LOGIC START ---
     const iconDiv = document.createElement('div');
     iconDiv.className = 'message-icon';
-    // Assuming getAvatarColor is defined elsewhere in your code
-    iconDiv.style.backgroundColor = getAvatarColor(name);
-    iconDiv.textContent = name.charAt(0).toUpperCase();
+    iconDiv.style.background = 'transparent'; // Ensure no conflicting background colors
+    
+    const avatarImg = document.createElement('img');
+    avatarImg.alt = `${name}'s Avatar`;
+    // Basic inline styles to ensure the image fits your existing iconDiv nicely
+    avatarImg.style.width = '100%';
+    avatarImg.style.height = '100%';
+    avatarImg.style.borderRadius = '50%'; 
+    avatarImg.style.objectFit = 'cover';
+
+    if (name === 'Anonymous') {
+        // Fallback image for anonymous users
+        avatarImg.src = "https://thisislsr.com/favicon-48x48.png"; // <-- PASTE YOUR IMAGE URL HERE
+    } else {
+        // DiceBear Big Smile Avatar based on the user's name
+        // Added standard background colors so the SVGs aren't transparent
+        avatarImg.src = `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+    }
+
+    iconDiv.appendChild(avatarImg);
+    // --- AVATAR LOGIC END ---
 
     const textDiv = document.createElement('div');
-    textDiv.className = 'message-content'; // Added a class here so we can style it via Flexbox
+    textDiv.className = 'message-content'; 
     
-    // Build the HTML: Header (Name + Timestamp) and then the Body (Text)
     let contentHtml = `
         <div class="message-header">
             <strong class="message-author">${name}</strong>
@@ -871,7 +888,6 @@ function initChatSystem() {
     `;
     
     if (gifUrl) {
-        // The onload event forces a recalculation the exact millisecond the image expands
         contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
     }
 
