@@ -2045,6 +2045,24 @@ hr {
     border: none;
     transform: none;
 }
+    #join-btn::before {
+    /* Font Awesome setup */
+    content: '\f14a';             /* Unicode for fa-paper-plane */
+    font-family: "Font Awesome 6 Free"; /* Ensure this matches your FA version */
+    font-weight: 900;             /* Required for 'fa-solid' icons */
+    
+    /* Styling */
+    color: var(--brand-dark);
+    font-size: 16px;              /* Adjust size as needed */
+    margin-right: 3px;           
+    
+    /* Remove the old arrow properties */
+    display: inline-block;
+    width: auto;
+    height: auto;
+    border: none;
+    transform: none;
+}
 }
 /* Mobile Specific Optimizations */
 @media (max-width: 600px) {
