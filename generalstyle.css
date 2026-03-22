@@ -870,10 +870,11 @@ hr {
 
 /* Step 1: Join Area Layout */
 .join-wrapper {
-    display: flex;
+     display: flex;
     gap: 10px;
     width: 100%;
     align-items: center;
+    flex-direction: column;
 }
 
 .join-prompt {
