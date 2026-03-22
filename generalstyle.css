@@ -1091,29 +1091,7 @@ hr {
     z-index: 9999; /* Ensure the picker stays on top */
 }
 
-.gif-picker-container::before {
-    content: "";
-    position: fixed;
-    /* We reset the positioning relative to the VIEWPORT, not the parent */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    
-    /* Removed the translate(-50%, -50%) because it's not needed 
-       when top/left are 0 and width/height are 100vw/vh */
-    transform: translate(0, 0) !important; 
-    
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px); /* Safari support */
-    
-    /* This sits directly behind the picker content */
-    z-index: -1; 
-    
-    /* Prevents the overlay from catching clicks meant for the picker */
-    pointer-events: none; 
-}
+
 .visualizer  {
             display: none !important;
           
