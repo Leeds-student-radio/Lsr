@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, limitToLast } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -782,7 +782,6 @@ function getLondonTimeDetails() {
     setInterval(fetchScheduleData, 180000);
 });
 
-// --- FIREBASE IMPORTS ---
 // --- CONFIGS ---
 const chatConfig = {
     apiKey: "AIzaSyDSGLLwH1BVYQVY1FLkAUe3XUmIYu2Nfhc",
@@ -822,104 +821,130 @@ function initChatSystem() {
     const gifSearchInput = document.getElementById('gif-search-input');
     const gifResults = document.getElementById('gif-results');
 
-    if (!chatMessages || !chatForm) return; // Guard for pages without chat
+    if (!chatMessages || !chatForm) return;
 
-    // Note: getAvatarColor function and avatarColors array were removed 
-    // because we are using image avatars now!
-
-    // --- 2. UPDATED DISPLAY MESSAGE (SUPPORTS GIFS & DICEBEAR AVATARS) ---
- function displayMessage(messageData) {
-    const name = messageData.name || 'Anonymous';
-    const text = messageData.text || '';
-    const gifUrl = messageData.gifUrl; 
-    const createdAt = messageData.createdAt;
-    let timestampString = '';
-    
-   if (createdAt && typeof createdAt.toDate === 'function') {
-    const date = createdAt.toDate();
-    
-    const chatDateOptions = { 
-        timeZone: 'Europe/London', 
-        weekday: 'short', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        hour12: false 
-    };
-    
-    timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
-}
-
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message-entry';
-    
-    // --- AVATAR LOGIC START ---
-  // --- AVATAR LOGIC START ---
-    const iconDiv = document.createElement('div');
-    iconDiv.className = 'message-icon';
-    iconDiv.style.background = 'transparent'; 
-    
-    const avatarImg = document.createElement('img');
-    avatarImg.alt = `${name}'s Avatar`;
-    avatarImg.style.width = '100%';
-    avatarImg.style.height = '100%';
-    avatarImg.style.borderRadius = '50%'; 
-    avatarImg.style.objectFit = 'cover';
-
-    // THE MAGIC LINE: Only loads the image if it's visible on screen.
-    // Because the newest messages are at the bottom, they get loaded first!
-    avatarImg.loading = 'lazy';
-
-    // Define your fallback image URL in one place
-    const fallbackImage = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=FF9296&scale=85&mouth=lilSmile&eyes=closed2`; 
-
-
-    if (name === 'Anonymous') {
-        avatarImg.src = fallbackImage; 
-    } else {
-   
-   // Using the Adventurer style, randomized IDs, and flipping the avatar horizontally
-   avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FDCA5C,89D67D&scale=90&mouth=cute,wideSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;   }
-
-    // Fallback handler if DiceBear fails
-    avatarImg.onerror = function() {
-        if (this.src !== fallbackImage) {
-            this.src = fallbackImage;
+    // --- 2. UPDATED DISPLAY MESSAGE ---
+    // ⭐ NEW: We now pass the whole document (messageDoc) instead of just the data
+    function displayMessage(messageDoc) {
+        const messageData = messageDoc.data();
+        const docId = messageDoc.id; // We need this to delete it later
+        
+        const name = messageData.name || 'Anonymous';
+        const text = messageData.text || '';
+        const gifUrl = messageData.gifUrl; 
+        const createdAt = messageData.createdAt;
+        const senderUid = messageData.uid; // ⭐ NEW: Get the UID of the sender
+        let timestampString = '';
+        
+        if (createdAt && typeof createdAt.toDate === 'function') {
+            const date = createdAt.toDate();
+            const chatDateOptions = { 
+                timeZone: 'Europe/London', 
+                weekday: 'short', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            };
+            timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
         }
-    };
 
-    iconDiv.appendChild(avatarImg);
-    // --- AVATAR LOGIC END ---
-    // --- AVATAR LOGIC END ---
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message-entry';
+        msgDiv.id = `msg-${docId}`; // ⭐ NEW: Give the div an ID so we can remove it later
+        
+        // --- AVATAR LOGIC START ---
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'message-icon';
+        iconDiv.style.background = 'transparent'; 
+        
+        const avatarImg = document.createElement('img');
+        avatarImg.alt = `${name}'s Avatar`;
+        avatarImg.style.width = '100%';
+        avatarImg.style.height = '100%';
+        avatarImg.style.borderRadius = '50%'; 
+        avatarImg.style.objectFit = 'cover';
+        avatarImg.loading = 'lazy';
 
-    const textDiv = document.createElement('div');
-    textDiv.className = 'message-content'; 
-    
-    let contentHtml = `
-        <div class="message-header">
-            <strong class="message-author">${name}</strong>
-            <span class="message-timestamp">${timestampString}</span>
-        </div>
-        <div class="message-body">${text}</div>
-    `;
-    
-    if (gifUrl) {
-        contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+        const fallbackImage = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=FF9296&scale=85&mouth=lilSmile&eyes=closed2`; 
+
+        if (name === 'Anonymous') {
+            avatarImg.src = fallbackImage; 
+        } else {
+            avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FDCA5C,89D67D&scale=90&mouth=cute,wideSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;   
+        }
+
+        avatarImg.onerror = function() {
+            if (this.src !== fallbackImage) {
+                this.src = fallbackImage;
+            }
+        };
+
+        iconDiv.appendChild(avatarImg);
+        // --- AVATAR LOGIC END ---
+
+        const textDiv = document.createElement('div');
+        textDiv.className = 'message-content'; 
+        
+        let contentHtml = `
+            <div class="message-header">
+                <strong class="message-author">${name}</strong>
+                <span class="message-timestamp">${timestampString}</span>
+            </div>
+            <div class="message-body">${text}</div>
+        `;
+        
+        if (gifUrl) {
+            contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+        }
+
+        textDiv.innerHTML = contentHtml;
+        
+        // ⭐ NEW: DELETE MESSAGE LOGIC
+        // Check if the current user is the one who sent this message
+        if (auth.currentUser && senderUid === auth.currentUser.uid) {
+            msgDiv.style.cursor = 'pointer'; // Make it look clickable
+            
+            const deleteBtn = document.createElement('span');
+            deleteBtn.innerHTML = ' ❌';
+            deleteBtn.style.display = 'none'; // Hidden by default
+            deleteBtn.style.cursor = 'pointer';
+            deleteBtn.style.fontSize = '12px';
+            deleteBtn.title = "Delete Message";
+            
+            // Append the X to the header next to the timestamp
+            textDiv.querySelector('.message-header').appendChild(deleteBtn);
+
+            // Toggle the X when the message is clicked
+            msgDiv.addEventListener('click', () => {
+                deleteBtn.style.display = deleteBtn.style.display === 'none' ? 'inline' : 'none';
+            });
+
+            // Handle the actual deletion
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent the message click event from firing too
+                if (confirm('Are you sure you want to delete this message?')) {
+                    try {
+                        // Needs 'doc' and 'deleteDoc' imported from firebase/firestore
+                        await deleteDoc(doc(db, "messages", docId));
+                    } catch (error) {
+                        console.error("Error deleting message:", error);
+                        alert("Could not delete message.");
+                    }
+                }
+            });
+        }
+        
+        msgDiv.appendChild(iconDiv);
+        msgDiv.appendChild(textDiv);
+        chatMessages.appendChild(msgDiv);
     }
 
-    textDiv.innerHTML = contentHtml;
-    
-    msgDiv.appendChild(iconDiv);
-    msgDiv.appendChild(textDiv);
-    chatMessages.appendChild(msgDiv);
-}
     // --- 3. GIF PICKER LOGIC ---
     if (gifToggleBtn && gifPicker && closeGifBtn) {
         gifToggleBtn.addEventListener('click', () => {
             gifPicker.style.display = gifPicker.style.display === 'none' ? 'flex' : 'none';
-           if (gifPicker.style.display === 'flex') {
+            if (gifPicker.style.display === 'flex') {
                 fetchGifs(''); 
-                
-                // Only focus the input if the screen is wider than a typical mobile phone (e.g., 768px)
                 if (gifSearchInput && window.innerWidth > 768) {
                     gifSearchInput.focus({ preventScroll: true }); 
                 }
@@ -933,14 +958,12 @@ function initChatSystem() {
 
     const GIPHY_API_KEY = "zhbz8Mvx3vRQHBkQo3nnWWbyHQMOVsFn"; 
 
-  async function fetchGifs(searchTerm) {
+    async function fetchGifs(searchTerm) {
         if (!gifResults) return;
         gifResults.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">Loading...</p>';
         
-        // Put your hand-picked GIF IDs here, separated by commas (no spaces)
         const myFavoriteGifs = "l3vRlT2k2L35Cnn5C,mBdbauuNxUpnqr1B1u,FdRzET4jjKt4HVzri7,wW95fEq09hOI8,GWKQzZX7bNqRMO6bMw,mGK1g88HZRa2FlKGbz,SDeVLvFCqFsSA,RX7N03MEUafW8,gKHGnB1ml0moQdjhEJ,qzlUJOV5ON8XkHbO53,kCpg2FYkENfnuvXSsS,QxcSqRe0nllClKLMDn,g88xUM1rTwjfLhoRYP,13hxeOYjoTWtK8,3o72FcJmLzIdYJdmDe,ujTVMASREzuRbH6zy5"; 
         
-        // If the search is empty, fetch your specific GIFs. Otherwise, search Giphy.
         const endpoint = searchTerm.trim() === '' 
             ? `https://api.giphy.com/v1/gifs?api_key=${GIPHY_API_KEY}&ids=${myFavoriteGifs}`
             : `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(searchTerm)}&limit=12&rating=pg-13`;
@@ -949,7 +972,7 @@ function initChatSystem() {
             const response = await fetch(endpoint);
             const result = await response.json();
             
-            gifResults.innerHTML = ''; // Clear loading text
+            gifResults.innerHTML = ''; 
             
             if (result.data && result.data.length > 0) {
                 result.data.forEach(gif => {
@@ -962,7 +985,7 @@ function initChatSystem() {
                     
                     img.addEventListener('click', () => {
                         sendGifMessage(fullUrl);
-                        gifPicker.style.display = 'none'; // Close picker after sending
+                        gifPicker.style.display = 'none'; 
                     });
                     
                     gifResults.appendChild(img);
@@ -988,16 +1011,13 @@ function initChatSystem() {
 
     async function sendGifMessage(gifUrl) {
         const displayName = displayNameInput.value.trim() || 'Anonymous';
-        
-        if (!messagesCollection) {
-            console.error("Firebase messages collection not found!");
-            return;
-        }
+        if (!messagesCollection) return;
         
         try {
             await addDoc(messagesCollection, {
                 name: displayName,
-                text: "", // Leave text empty for pure GIF messages
+                uid: auth.currentUser ? auth.currentUser.uid : null, // ⭐ NEW: Save user ID
+                text: "", 
                 gifUrl: gifUrl,
                 createdAt: serverTimestamp(),
                 expiresAt: Timestamp.fromDate(new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)))
@@ -1016,6 +1036,7 @@ function initChatSystem() {
         try {
             await addDoc(messagesCollection, {
                 name: displayName,
+                uid: auth.currentUser ? auth.currentUser.uid : null, // ⭐ NEW: Save user ID
                 text: messageText,
                 createdAt: serverTimestamp(),
                 expiresAt: Timestamp.fromDate(new Date(Date.now() + (30 * 24 * 60 * 60 * 1000)))
@@ -1052,38 +1073,41 @@ function initChatSystem() {
     });
 
     // --- AUTH & CHAT SNAPSHOT ---
-   onAuthStateChanged(auth, (user) => {
-    if (user) {
-        messagesCollection = collection(db, "messages");
-      const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
-        
-        let isFirstLoad = true; // Track the initial load
-        
-        onSnapshot(q, (snapshot) => {
-            if (loadingSpinner) loadingSpinner.style.display = 'none';
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            messagesCollection = collection(db, "messages");
+            const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
             
-            // Only clear the "No messages yet" text on the very first load
-            if (isFirstLoad) {
-                chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
-                isFirstLoad = false;
-            }
-
-            // MAGIC FIX: Only process brand new messages, do not rebuild the whole DOM!
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    displayMessage(change.doc.data());
+            let isFirstLoad = true; 
+            
+            onSnapshot(q, (snapshot) => {
+                if (loadingSpinner) loadingSpinner.style.display = 'none';
+                
+                if (isFirstLoad) {
+                    chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
+                    isFirstLoad = false;
                 }
-            });
 
-            // Standard fallback scroll for text-only messages
-            setTimeout(() => {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 50);
-        });
-    }
-});
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        displayMessage(change.doc); // ⭐ NEW: Passing the whole doc!
+                    }
+                    // ⭐ NEW: Handle what happens when a message is deleted from the database
+                    if (change.type === "removed") {
+                        const messageToRemove = document.getElementById(`msg-${change.doc.id}`);
+                        if (messageToRemove) {
+                            messageToRemove.remove();
+                        }
+                    }
+                });
+
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 50);
+            });
+        }
+    });
     signInAnonymously(auth);
 }
 
-// Ensure the function is available to your router
 window.initChatSystem = initChatSystem;
