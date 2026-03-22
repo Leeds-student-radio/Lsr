@@ -875,7 +875,7 @@ function initChatSystem() {
     if (name === 'Anonymous') {
         avatarImg.src = fallbackImage; 
     } else {
-        avatarImg.src = `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&randomizeIds=true`;
+        avatarImg.src = `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(name)}&backgroundColor=rgb(160, 43, 43)&randomizeIds=true`;
     }
 
     // Fallback handler if DiceBear fails
