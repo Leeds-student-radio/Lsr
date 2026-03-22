@@ -842,7 +842,7 @@ function initChatSystem() {
         modalOverlay.style.display = 'flex';
         modalOverlay.style.alignItems = 'center';
         modalOverlay.style.justifyContent = 'center';
-        modalOverlay.style.zIndex = '9999';
+        modalOverlay.style.zIndex = '99';
         modalOverlay.style.backdropFilter = 'blur(2px)';
         modalOverlay.style.borderRadius = '12px';
         
