@@ -151,18 +151,22 @@
                         </svg>
                     </div>
                 </div>
-                     <div class="chat-input-area" style="flex-direction: column; align-items: stretch;">
+                     <div class="chat-input-area" style="    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;">
     
     <div id="join-area" class="join-wrapper">
         <span class="join-prompt">Please choose a display name</span>
         <div style="display:flex">
         <input type="text" id="display-name" placeholder="Name" class="name-input">
+             <button type="button" id="anon-btn" class="send-btn anon-btn">
+            <span class="btn-text">Anonymous</span>
+        </button>
         <button type="button" id="join-btn" class="send-btn">
             <span class="btn-text">Start <br>Chatting</span>
         </button>
-        <button type="button" id="anon-btn" class="send-btn anon-btn">
-            <span class="btn-text">Anonymous</span>
-        </button>
+       
         </div>
     </div>
 
