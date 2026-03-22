@@ -844,9 +844,7 @@ function initChatSystem() {
         modalOverlay.style.justifyContent = 'center';
         modalOverlay.style.zIndex = '9999';
         modalOverlay.style.backdropFilter = 'blur(2px)';
-
-        // Optional: Match the border radius of your chat container so it looks clean
-        modalOverlay.style.borderRadius = window.getComputedStyle(chatContainer).borderRadius;
+        modalOverlay.style.borderRadius = '12px';
         
         // Create the modal box
         const modalBox = document.createElement('div');
@@ -1007,10 +1005,10 @@ function initChatSystem() {
             deleteBtn.innerHTML = '✖'; 
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.style.fontSize = '14px';
-            deleteBtn.style.color = '#FF595E';
-            deleteBtn.style.marginRight = '12px';
+            deleteBtn.style.color = '#FF595E !important';
+            
             deleteBtn.style.alignSelf = 'flex-start'; 
-            deleteBtn.style.marginTop = '4px'; 
+           
             deleteBtn.title = "Delete Message";
             
             // ⭐ Call our custom popup instead of immediately deleting
