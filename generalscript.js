@@ -1004,7 +1004,7 @@ function initChatSystem() {
             const deleteBtn = document.createElement('span');
            deleteBtn.innerHTML = '&times;';
             deleteBtn.style.cursor = 'pointer';
-            deleteBtn.style.fontSize = '16px';
+            deleteBtn.style.fontSize = '19px';
             deleteBtn.style.color = '#FF595E';
             
             deleteBtn.style.alignSelf = 'center'; 
