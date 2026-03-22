@@ -825,18 +825,21 @@ function initChatSystem() {
     function showDeleteConfirmation(docId) {
         // Create the overlay
         const modalOverlay = document.createElement('div');
-        modalOverlay.style.position = 'fixed';
+       modalOverlay.style.position = 'absolute'; // Changed from fixed
         modalOverlay.style.top = '0';
         modalOverlay.style.left = '0';
-        modalOverlay.style.width = '100vw';
-        modalOverlay.style.height = '100vh';
+        modalOverlay.style.width = '100%'; // Changed from 100vw
+        modalOverlay.style.height = '100%'; // Changed from 100vh
         modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
         modalOverlay.style.display = 'flex';
         modalOverlay.style.alignItems = 'center';
         modalOverlay.style.justifyContent = 'center';
         modalOverlay.style.zIndex = '9999';
-        modalOverlay.style.backdropFilter = 'blur(2px)'; // Slight modern blur
+        modalOverlay.style.backdropFilter = 'blur(2px)';
 
+        // Optional: Match the border radius of your chat container so it looks clean
+        modalOverlay.style.borderRadius = window.getComputedStyle(chatContainer).borderRadius;
+        
         // Create the modal box
         const modalBox = document.createElement('div');
         modalBox.style.backgroundColor = 'rgb(205, 50, 50)';
@@ -845,7 +848,8 @@ function initChatSystem() {
         modalBox.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
         modalBox.style.textAlign = 'center';
         modalBox.style.fontFamily = 'inherit';
-        modalBox.style.maxWidth = '300px';
+    
+        modalBox.style.maxWidth = '250px'; // Made slightly smaller to fit well inside a chat widget
 
         // Add text
         const text = document.createElement('p');
@@ -862,7 +866,7 @@ function initChatSystem() {
         confirmBtn.style.padding = '10px 18px';
         confirmBtn.style.backgroundColor = 'rgb(160, 43, 43)';
         confirmBtn.style.color = '#fff';
-        confirmBtn.style.border = 'solid 1px #8f1818;';
+        confirmBtn.style.border = 'solid 1px #8f1818';
         confirmBtn.style.borderRadius = '6px';
         confirmBtn.style.cursor = 'pointer';
         confirmBtn.style.fontWeight = 'bold';
@@ -874,7 +878,7 @@ function initChatSystem() {
         cancelBtn.style.backgroundColor = '#E0E0E0';
         cancelBtn.style.color = '#333';
         cancelBtn.style.border = 'solid 1px rgb(207 198 198)';
-        cancelBtn.style.borderRadius = 'px';
+        cancelBtn.style.borderRadius = '6px';
         cancelBtn.style.cursor = 'pointer';
         cancelBtn.style.fontWeight = 'bold';
 
@@ -883,7 +887,9 @@ function initChatSystem() {
         modalBox.appendChild(confirmBtn);
         modalBox.appendChild(cancelBtn);
         modalOverlay.appendChild(modalBox);
-        document.body.appendChild(modalOverlay);
+       // Append to the chat container instead of document.body
+        chatContainer.appendChild(modalOverlay);
+        
 
         // Actions
         confirmBtn.addEventListener('click', async () => {
