@@ -1975,7 +1975,7 @@ hr {
     align-items: center;
 }
 
-.chat-input-area input {
+.join-area .chat-input-area input {
     border: none;
     border-radius: 8px; /* Slightly rounder for modern feel */
     padding: 12px;
