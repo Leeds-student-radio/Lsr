@@ -151,20 +151,30 @@
                         </svg>
                     </div>
                 </div>
-                      <form id="chat-form" class="chat-input-area">
-    <input type="text" id="display-name" placeholder="Name" class="name-input">
+                     <div class="chat-input-area">
     
-    <div class="input-wrapper">
-        <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required>
-        <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
-             <i class="fa-solid fa-heart-circle-plus"></i>
+    <div id="join-area" class="join-wrapper">
+        <span class="join-prompt">Start chatting:</span>
+        <input type="text" id="display-name" placeholder="Name" class="name-input">
+        <button type="button" id="join-btn" class="send-btn">
+            <span class="btn-text">OK</span>
         </button>
     </div>
 
-    <button type="submit" class="send-btn">
-        <span class="btn-text">Send</span>
-    </button>
-</form>
+    <form id="chat-form" class="message-wrapper" style="display: none;">
+        <div class="input-wrapper" style="flex: 1; display: flex;">
+            <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required style="width: 100%;">
+            <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
+                 <i class="fa-solid fa-heart-circle-plus"></i>
+            </button>
+        </div>
+
+        <button type="submit" class="send-btn">
+            <span class="btn-text">Send</span>
+        </button>
+    </form>
+    
+</div>
             </div>
              <div id="gif-picker" class="gif-picker-container" style="display: none;">
     <div class="gif-picker-header">
