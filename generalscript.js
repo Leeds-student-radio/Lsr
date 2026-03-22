@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+import { getFirestore, collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, Timestamp, limitToLast } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -852,28 +853,40 @@ function initChatSystem() {
     msgDiv.className = 'message-entry';
     
     // --- AVATAR LOGIC START ---
+  // --- AVATAR LOGIC START ---
     const iconDiv = document.createElement('div');
     iconDiv.className = 'message-icon';
-    iconDiv.style.background = 'transparent'; // Ensure no conflicting background colors
+    iconDiv.style.background = 'transparent'; 
     
     const avatarImg = document.createElement('img');
     avatarImg.alt = `${name}'s Avatar`;
-    // Basic inline styles to ensure the image fits your existing iconDiv nicely
     avatarImg.style.width = '100%';
     avatarImg.style.height = '100%';
     avatarImg.style.borderRadius = '50%'; 
     avatarImg.style.objectFit = 'cover';
 
+    // THE MAGIC LINE: Only loads the image if it's visible on screen.
+    // Because the newest messages are at the bottom, they get loaded first!
+    avatarImg.loading = 'lazy';
+
+    // Define your fallback image URL in one place
+    const fallbackImage = "https://thisislsr.com/favicon-48x48.png"; // <-- PASTE YOUR IMAGE URL HERE
+
     if (name === 'Anonymous') {
-        // Fallback image for anonymous users
-        avatarImg.src = "https://thisislsr.com/favicon-48x48.png"; // <-- PASTE YOUR IMAGE URL HERE
+        avatarImg.src = fallbackImage; 
     } else {
-        // DiceBear Big Smile Avatar based on the user's name
-        // Added standard background colors so the SVGs aren't transparent
-        avatarImg.src = `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+        avatarImg.src = `https://api.dicebear.com/9.x/big-smile/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&randomizeIds=true`;
     }
 
+    // Fallback handler if DiceBear fails
+    avatarImg.onerror = function() {
+        if (this.src !== fallbackImage) {
+            this.src = fallbackImage;
+        }
+    };
+
     iconDiv.appendChild(avatarImg);
+    // --- AVATAR LOGIC END ---
     // --- AVATAR LOGIC END ---
 
     const textDiv = document.createElement('div');
@@ -1040,10 +1053,10 @@ function initChatSystem() {
    onAuthStateChanged(auth, (user) => {
     if (user) {
         messagesCollection = collection(db, "messages");
-        const q = query(messagesCollection, orderBy("createdAt", "asc"));
+      const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
         
         let isFirstLoad = true; // Track the initial load
-
+        
         onSnapshot(q, (snapshot) => {
             if (loadingSpinner) loadingSpinner.style.display = 'none';
             
