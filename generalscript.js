@@ -821,8 +821,92 @@ function initChatSystem() {
 
     if (!chatMessages || !chatForm) return;
 
+    // --- CUSTOM DELETE POPUP ---
+    function showDeleteConfirmation(docId) {
+        // Create the overlay
+        const modalOverlay = document.createElement('div');
+        modalOverlay.style.position = 'fixed';
+        modalOverlay.style.top = '0';
+        modalOverlay.style.left = '0';
+        modalOverlay.style.width = '90vw';
+        modalOverlay.style.height = '40vh';
+        modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+        modalOverlay.style.display = 'flex';
+        modalOverlay.style.alignItems = 'center';
+        modalOverlay.style.justifyContent = 'center';
+        modalOverlay.style.zIndex = '9999';
+        modalOverlay.style.backdropFilter = 'blur(2px)'; // Slight modern blur
+
+        // Create the modal box
+        const modalBox = document.createElement('div');
+        modalBox.style.backgroundColor = '#fff';
+        modalBox.style.padding = '24px';
+        modalBox.style.borderRadius = '12px';
+        modalBox.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+        modalBox.style.textAlign = 'center';
+        modalBox.style.fontFamily = 'inherit';
+        modalBox.style.maxWidth = '300px';
+
+        // Add text
+        const text = document.createElement('p');
+        text.innerText = "Are you sure you want to delete your message?";
+        text.style.margin = '0 0 20px 0';
+        text.style.color = '#333';
+        text.style.fontSize = '16px';
+        text.style.fontWeight = '500';
+
+        // Add Delete Button
+        const confirmBtn = document.createElement('button');
+        confirmBtn.innerText = "Delete";
+        confirmBtn.style.marginRight = '12px';
+        confirmBtn.style.padding = '10px 18px';
+        confirmBtn.style.backgroundColor = '#FF595E';
+        confirmBtn.style.color = '#fff';
+        confirmBtn.style.border = 'none';
+        confirmBtn.style.borderRadius = '6px';
+        confirmBtn.style.cursor = 'pointer';
+        confirmBtn.style.fontWeight = 'bold';
+
+        // Add Cancel Button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.innerText = "Cancel";
+        cancelBtn.style.padding = '10px 18px';
+        cancelBtn.style.backgroundColor = '#E0E0E0';
+        cancelBtn.style.color = '#333';
+        cancelBtn.style.border = 'none';
+        cancelBtn.style.borderRadius = '6px';
+        cancelBtn.style.cursor = 'pointer';
+        cancelBtn.style.fontWeight = 'bold';
+
+        // Assemble the popup
+        modalBox.appendChild(text);
+        modalBox.appendChild(confirmBtn);
+        modalBox.appendChild(cancelBtn);
+        modalOverlay.appendChild(modalBox);
+        document.body.appendChild(modalOverlay);
+
+        // Actions
+        confirmBtn.addEventListener('click', async () => {
+            try {
+                confirmBtn.innerText = "Deleting...";
+                await deleteDoc(doc(db, "messages", docId));
+            } catch (error) {
+                console.error("Error deleting message:", error);
+            } finally {
+                if (document.body.contains(modalOverlay)) {
+                    document.body.removeChild(modalOverlay);
+                }
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            if (document.body.contains(modalOverlay)) {
+                document.body.removeChild(modalOverlay);
+            }
+        });
+    }
+
     function displayMessage(messageDoc, prepend = false) {
-        // ⭐ FIX: Estimate the timestamp immediately so it isn't blank
         const messageData = messageDoc.data({ serverTimestamps: 'estimate' });
         const docId = messageDoc.id; 
         
@@ -896,30 +980,29 @@ function initChatSystem() {
 
         textDiv.innerHTML = contentHtml;
         
+        // --- OWN MESSAGE LOGIC (Tint & Delete Button) ---
         if (auth.currentUser && senderUid === auth.currentUser.uid) {
-            msgDiv.style.cursor = 'pointer'; 
+            msgDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.04)'; 
+            msgDiv.style.borderRadius = '8px';
+            msgDiv.style.padding = '8px';
             
             const deleteBtn = document.createElement('span');
-            deleteBtn.innerHTML = ' X';
-            deleteBtn.style.display = 'none'; 
+            deleteBtn.innerHTML = '✖'; 
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.style.fontSize = '14px';
+            deleteBtn.style.color = '#FF595E';
+            deleteBtn.style.marginRight = '12px';
+            deleteBtn.style.alignSelf = 'flex-start'; 
+            deleteBtn.style.marginTop = '4px'; 
             deleteBtn.title = "Delete Message";
             
-            textDiv.querySelector('.message-header').appendChild(deleteBtn);
-
-            msgDiv.addEventListener('click', () => {
-                deleteBtn.style.display = deleteBtn.style.display === 'none' ? 'inline' : 'none';
-            });
-
-            deleteBtn.addEventListener('click', async (e) => {
+            // ⭐ Call our custom popup instead of immediately deleting
+            deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); 
-                try {
-                    await deleteDoc(doc(db, "messages", docId));
-                } catch (error) {
-                    console.error("Error deleting message:", error);
-                }
+                showDeleteConfirmation(docId);
             });
+
+            msgDiv.appendChild(deleteBtn);
         }
         
         msgDiv.appendChild(iconDiv);
@@ -1083,7 +1166,6 @@ function initChatSystem() {
 
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === "added") {
-                        // ⭐ FIX: Estimate the timestamp for our sorting logic too
                         const data = change.doc.data({ serverTimestamps: 'estimate' });
                         const msgTime = data.createdAt.toMillis();
 
