@@ -1085,17 +1085,7 @@ function initChatSystem() {
         }
     }
     
-const input = document.querySelector('input');
 
-input.addEventListener('focus', (e) => {
-  // Use a slight timeout to let the keyboard begin to slide up
-  setTimeout(() => {
-    e.target.scrollIntoView({
-      block: 'end',      // Aligns the bottom of the element with the bottom of the view
-      behavior: 'smooth' // Optional: makes it look less jarring
-    });
-  }, 300);
-});
     // --- 3. GIF PICKER LOGIC ---
     if (gifToggleBtn && gifPicker && closeGifBtn) {
         gifToggleBtn.addEventListener('click', () => {
