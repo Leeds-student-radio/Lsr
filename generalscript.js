@@ -834,45 +834,53 @@ function initChatSystem() {
     }
 
     // --- 2. UPDATED DISPLAY MESSAGE (NOW SUPPORTS GIFS) ---
-    function displayMessage(messageData) {
-        const name = messageData.name || 'Anonymous';
-        const text = messageData.text || '';
-        const gifUrl = messageData.gifUrl; // Grab the GIF URL if it exists
-        const createdAt = messageData.createdAt;
-        let timestampString = '';
-        
-        if (createdAt && typeof createdAt.toDate === 'function') {
-            const date = createdAt.toDate();
-            const chatDateOptions = { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false };
-            timestampString = `[${new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date)}]`;
-        }
-
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message-entry';
-        
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'message-icon';
-        iconDiv.style.backgroundColor = getAvatarColor(name);
-        iconDiv.textContent = name.charAt(0).toUpperCase();
-
-        const textDiv = document.createElement('div');
-        
-        // Build the HTML. If there's text, show it. If there's a GIF, append the image tag.
-        let contentHtml = `<p><span class="message-timestamp">${timestampString}</span> <strong class="message-author">${name}</strong>: ${text}</p>`;
-        
-       // In your displayMessage function:
-if (gifUrl) {
-    // The onload event forces a recalculation the exact millisecond the image expands
-    contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
-}
-
-        textDiv.innerHTML = contentHtml;
-        
-        msgDiv.appendChild(iconDiv);
-        msgDiv.appendChild(textDiv);
-        chatMessages.appendChild(msgDiv);
+ function displayMessage(messageData) {
+    const name = messageData.name || 'Anonymous';
+    const text = messageData.text || '';
+    const gifUrl = messageData.gifUrl; // Grab the GIF URL if it exists
+    const createdAt = messageData.createdAt;
+    let timestampString = '';
+    
+    if (createdAt && typeof createdAt.toDate === 'function') {
+        const date = createdAt.toDate();
+        // Added weekday: 'long' to get the day of the week
+        const chatDateOptions = { timeZone: 'Europe/London', weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false };
+        // The replace(',', '') removes the comma Intl.DateTimeFormat usually puts between the day and time
+        timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
     }
 
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'message-entry';
+    
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'message-icon';
+    // Assuming getAvatarColor is defined elsewhere in your code
+    iconDiv.style.backgroundColor = getAvatarColor(name);
+    iconDiv.textContent = name.charAt(0).toUpperCase();
+
+    const textDiv = document.createElement('div');
+    textDiv.className = 'message-content'; // Added a class here so we can style it via Flexbox
+    
+    // Build the HTML: Header (Name + Timestamp) and then the Body (Text)
+    let contentHtml = `
+        <div class="message-header">
+            <strong class="message-author">${name}</strong>
+            <span class="message-timestamp">${timestampString}</span>
+        </div>
+        <div class="message-body">${text}</div>
+    `;
+    
+    if (gifUrl) {
+        // The onload event forces a recalculation the exact millisecond the image expands
+        contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+    }
+
+    textDiv.innerHTML = contentHtml;
+    
+    msgDiv.appendChild(iconDiv);
+    msgDiv.appendChild(textDiv);
+    chatMessages.appendChild(msgDiv);
+}
     // --- 3. GIF PICKER LOGIC ---
     if (gifToggleBtn && gifPicker && closeGifBtn) {
         gifToggleBtn.addEventListener('click', () => {
