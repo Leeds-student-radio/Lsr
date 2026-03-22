@@ -784,6 +784,11 @@ hr {
             border-radius: 5px;
             padding: 10px;
             font-family: 'Open Sans', sans-serif;
+          outline: none !important;
+    
+    /* 2. Prevent the browser from centering the input vertically on click */
+    scroll-margin-top: 0;
+    scroll-margin-bottom: 0;
         }
 
         .name-input { width: 30%; }
@@ -2514,6 +2519,7 @@ font-size:0.9rem;
 .input-wrapper .msg-input {
     width: 100%;
     padding-right: 40px; 
+  font-size: 16px !important;
     font-family: 'Open Sans', sans-serif; /* Matching your brand fonts */
 }
 
