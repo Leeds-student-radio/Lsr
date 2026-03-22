@@ -825,8 +825,10 @@ hr {
     color: white;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
-    font-weight: bold;
+  
     white-space: nowrap;
+      text-align: left;
+    width: 100%;
 }
 
 /* Ensure inputs take up the right space */
@@ -859,7 +861,7 @@ hr {
     color: white; /* Adjust to match your theme */
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
-    font-weight: bold;
+   
     white-space: nowrap;
 }
 
@@ -871,7 +873,7 @@ hr {
 /* Step 1: Join Area Layout */
 .join-wrapper {
      display: flex;
-    gap: 10px;
+    gap: 5px;
     width: 100%;
     align-items: center;
     flex-direction: column;
@@ -881,7 +883,7 @@ hr {
     color: white; 
     font-family: 'Montserrat', sans-serif;
     font-size: 0.9rem;
-    font-weight: bold;
+  
     white-space: nowrap;
 }
 
