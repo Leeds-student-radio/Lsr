@@ -2781,7 +2781,10 @@ display: flex;
     font-size: 0.85rem;
     line-height: 1.3;
     }
-
+.card-content p {
+ 
+    line-height: 1.3;
+    }
 .alt-stream-hide {
     display:none;
    
