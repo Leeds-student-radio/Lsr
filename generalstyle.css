@@ -800,17 +800,17 @@ hr {
             font-weight: bold;
               height: 35px;
 
-          background: white;
-    border: 1px solid #806e6eb8;
-    color: #6b0a0a;
+           cursor: pointer;
+    background: #ffffff;
+    color: var(--brand-dark);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+          
     padding: 5px 15px;
     border-radius: 10px;
         }
         
-        .send-btn:hover {
-            background: white;
-            color: #D62828;
-        }
+      
 
 
 /* Update the main container if needed */
@@ -1399,6 +1399,12 @@ hr {
        .get-involved-intro {
     padding-bottom: 20px;
 }
+     .send-btn:hover {
+           
+            color: #D62828;
+          transform: scale(1.07); 
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
 
 .schedule-section,
 .get-involved-intro,
