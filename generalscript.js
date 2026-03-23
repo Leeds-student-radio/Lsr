@@ -80,6 +80,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+     async function updateNowPlaying() {
+    const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
+    
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // Only update if the station is online
+        if (data.status === 'online') {
+            const currentTrackName = data.current_track.title;
+            const artworkUrl = data.current_track.artwork_url;
+
+            // 1. Update the Track Title
+            // The API returns artist and title combined, so we output the raw string.
+            document.getElementById('np-title').textContent = currentTrackName;
+
+            // 2. Update the Artwork
+            const artworkImg = document.getElementById('alt-artwork');
+            if (artworkUrl) {
+                // If the track has artwork, use it
+                artworkImg.src = artworkUrl;
+            } else {
+                // Fallback to your logo if artwork_url is null
+                artworkImg.src = '/ourlogo.jpeg';
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching Radio.co track info:', error);
+        document.getElementById('np-title').textContent = "Stream Offline";
+    }
+}
+
+// Run immediately on page load
+updateNowPlaying();
+
+// Poll the API every 15 seconds (15000 milliseconds) to catch track changes
+setInterval(updateNowPlaying, 15000);
+    
     // --- 2. MOBILE MENU LOGIC ---
     const mobileBtn = document.querySelector('.mobile-toggle');
     const navMenu = document.querySelector('.nav-menu');
