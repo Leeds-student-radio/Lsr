@@ -805,13 +805,19 @@ document.querySelector('#main-player-time .time-text').innerText =
                 if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
                 if (url.includes('awards')) fetchAwardsData(); 
-                if (url.includes('listen') || url.includes('schedule')) fetchScheduleData();
                 if (url.includes('listen')) {
-                    initChatSystem(); 
-                }
+    // 1. Immediately fetch the Radio.co JSON data for the "Now Playing" section
+    updateNowPlaying(); 
+    
+    // 2. Initialize the Firebase Chat
+    initChatSystem(); 
+}
+
 
                 fetchScheduleData();
             }
+
+            
         } catch (e) {
             window.location.assign(url);
         }
