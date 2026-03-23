@@ -218,7 +218,63 @@ setInterval(updateNowPlaying, 15000);
             console.error("Failed to fetch committee data", error);
         }
     }
+// Your published Google Sheet CSV link
+/* PapaParse v5.4.1 (Minified) */
+  !function(e){"use strict";var t="undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:void 0;if("function"==typeof define&&define.amd)define(function(){return e});else if("undefined"!=typeof exports)module.exports=e;else{var n=t.Papa;e.noConflict=function(){return t.Papa=n,e},t.Papa=e}}(function(){"use strict";function e(e){var t=this;this._originalChunkSize=e.chunkSize,this._userChunkSize=e.chunkSize,this._chunkSize=e.chunkSize,this._config=e,this._handle=null,this._paused=!1,this._counter=0,this._lastCharPos=0,this._finished=!1,this._input=null,this._baseIndex=0,this._canStep=!1,this._stepCallback=null,this._resumeCallback=null,this._abort=!1,this._worker=null,this.parse=function(e){return this._input=e,this._chunkSize=this._originalChunkSize,this._config.chunk?this._stepCallback=this._config.chunk:this._config.step&&(this._stepCallback=this._config.step,this._canStep=!0),this._canStep?this._parse():this._parse()},this.pause=function(){this._paused=!0},this.resume=function(){this._paused=!1,this._resumeCallback&&this._resumeCallback()},this.abort=function(){this._abort=!0}}var t={};return t.parse=function(e,n){if(n=n||{},n.worker&&t.WORKERS_SUPPORTED){var r=new Worker(t.SCRIPT_PATH);return r.onmessage=function(e){var t=e.data;if("error"===t.error)n.error(t.error);else if("finished"===t.finished)n.complete(t.results);else n.step(t.results)},void r.postMessage({input:e,config:n,type:"parse"})}if(n.download){var i=new XMLHttpRequest;return i.onreadystatechange=function(){if(4===i.readyState&&200===i.status){var r=t.parse(i.responseText,n);n.complete&&n.complete(r)}},i.open("GET",e,!0),void i.send()}return function(e,n){var r=new FileReader;r.onload=function(e){var r=t.parse(e.target.result,n);n.complete&&n.complete(r)},r.readAsText(e)}(e,n)},t}());
 
+  // --- YOUR CUSTOM SCRIPT START ---
+
+  // Your published Google Sheet CSV link
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
+
+  Papa.parse(sheetUrl, {
+      download: true,
+      header: true, // Tells the parser to use your top row (image_url, title, caption) as keys
+      skipEmptyLines: true,
+      complete: function(results) {
+          const data = results.data;
+          const grid = document.getElementById('dynamic-archive-grid');
+          let htmlContent = '';
+
+          // Loop through every row in your Google Sheet
+          data.forEach(item => {
+              // Ensure we have an image URL before trying to render
+              if (item.image_url) {
+                  
+                  // Check if title or caption exists, otherwise leave blank
+                  const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+                  const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+                  
+                  // Build the HTML for this specific item
+                  htmlContent += `
+                    <div class="archive-item">
+                      <img src="${item.image_url}" alt="LSR archive image">
+                      <div class="caption">
+                        ${titleHtml}
+                        ${captionHtml}
+                      </div>
+                    </div>
+                  `;
+              }
+          });
+
+          // Inject the generated HTML into the grid, replacing the "Loading..." text
+          grid.innerHTML = htmlContent;
+      },
+      error: function(error) {
+          console.error("Error fetching data:", error);
+          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
+      }
+  });
+
+          // Inject the generated HTML into the grid, replacing the "Loading..." text
+          grid.innerHTML = htmlContent;
+      },
+      error: function(error) {
+          console.error("Error fetching data:", error);
+          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
+      }
+  });
     // --- 5. GET INVOLVED LOGIC (WITH SMART FOOTERS) ---
 const applySheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2045188384&output=csv';
 
@@ -918,7 +974,7 @@ const newMsgIndicator = document.createElement('div');
 newMsgIndicator.id = 'new-message-indicator';
 newMsgIndicator.innerHTML = '<span>1 new message</span> <i style="border: solid white; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(45deg); margin-bottom:2px; margin-left:5px;"></i>';
 newMsgIndicator.style = `
-    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 75px; left: 50%; transform: translateX(-50%);
     background: #FF595E; color: white; padding: 8px 16px; border-radius: 20px;
     cursor: pointer; font-size: 13px; font-weight: bold; display: none; z-index: 10;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.3s;
