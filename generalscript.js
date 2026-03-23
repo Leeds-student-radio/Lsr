@@ -1200,9 +1200,10 @@ function hideIndicator() {
         iconDiv.appendChild(avatarImg);
         // --- AVATAR LOGIC END ---
 
-        const textDiv = document.createElement('div');
+       const textDiv = document.createElement('div');
         textDiv.className = 'message-content'; 
         
+        // 1. Build the text part of the message
         let contentHtml = `
             <div class="message-header">
                 <strong class="message-author">${name}</strong>
@@ -1211,24 +1212,33 @@ function hideIndicator() {
             <div class="message-body">${text}</div>
         `;
         
-       if (gifUrl) {
-    const gifImg = document.createElement('img');
-    gifImg.src = gifUrl;
-    gifImg.alt = "GIF";
-    gifImg.className = "chat-message-gif";
-    gifImg.style = "max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;";
+        // 2. Set the innerHTML FIRST so it doesn't overwrite anything later
+        textDiv.innerHTML = contentHtml;
+        
+        // 3. NOW create and append the GIF if it exists
+        if (gifUrl) {
+            const gifImg = document.createElement('img');
+            gifImg.src = gifUrl;
+            gifImg.alt = "GIF";
+            gifImg.className = "chat-message-gif";
+            // Applying the styles directly to the element
+            gifImg.style.maxWidth = "200px";
+            gifImg.style.minHeight = "120px";
+            gifImg.style.borderRadius = "8px";
+            gifImg.style.marginTop = "5px";
+            gifImg.style.display = "block";
 
-    // This is the critical fix:
-    gifImg.onload = () => {
-        // Re-check if we should scroll only after the image is fully rendered
-        const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 150; 
-        if (isAtBottom && !isFirstLoad) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Wait for it to load, then check if we should scroll
+            gifImg.onload = () => {
+                const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 150;
+                if (isAtBottom) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            };
+
+            // Append it safely to the bottom of the textDiv
+            textDiv.appendChild(gifImg);
         }
-    };
-
-    textDiv.appendChild(gifImg);
-}
 
         textDiv.innerHTML = contentHtml;
         
