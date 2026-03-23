@@ -549,7 +549,8 @@ function getLondonTimeDetails() {
                 document.getElementById('main-player-desc').innerText = liveShow.description;
                 document.getElementById('main-player-img').src = liveShow.image;
               // This only updates the text, leaving the dot span untouched
-document.querySelector('#main-player-time .time-text').innerText = 
+// Target the specific ID where the text lives
+document.querySelector('#live-text').innerText = 
   `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             }
         } else {
