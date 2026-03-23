@@ -2884,7 +2884,7 @@ display: flex;
     width: 12px;
     height: 12px;
     border: 2px solid rgba(0,0,0,0.1);
-    border-left-color: #000; /* Change color to match your theme */
+    border-left-color: #8fff8f;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     vertical-align: middle;
