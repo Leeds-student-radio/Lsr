@@ -1384,21 +1384,33 @@ function hideIndicator() {
 });
 
     // --- LIVE COUNTER LOGIC ---
-    const liveId = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
-    sessionStorage.setItem('liveId', liveId);
-    const userRef = ref(rtdb, 'active/' + liveId);
-    
-    set(userRef, Date.now());
-    setInterval(() => set(userRef, Date.now()), 30000);
-    window.addEventListener("beforeunload", () => remove(userRef));
+   const liveId = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
+sessionStorage.setItem('liveId', liveId);
 
-    const activeRef = ref(rtdb, 'active');
-    onValue(activeRef, snap => {
-        const data = snap.val() || {};
-        const activeUsers = Object.values(data).filter(ts => Date.now() - ts < 300000).length;
-        const countEl = document.getElementById("live-count");
-        if (countEl) countEl.textContent = activeUsers;
-    });
+const userRef = ref(rtdb, 'active/' + liveId);
+set(userRef, Date.now());
+setInterval(() => set(userRef, Date.now()), 30000);
+window.addEventListener("beforeunload", () => remove(userRef));
+
+const activeRef = ref(rtdb, 'active');
+const countEl = document.getElementById("live-count");
+
+// 1. Set initial loading state immediately
+if (countEl) {
+    countEl.innerHTML = '<span class="spinneractive"></span>'; 
+    // Or simply: countEl.textContent = "...";
+}
+
+onValue(activeRef, snap => {
+    const data = snap.val() || {};
+    // Calculate users active in the last 5 minutes
+    const activeUsers = Object.values(data).filter(ts => Date.now() - ts < 300000).length;
+
+    if (countEl) {
+        // 2. Replace spinner with the actual number
+        countEl.textContent = activeUsers;
+    }
+});
 
     // --- AUTH & CHAT SNAPSHOT ---
     onAuthStateChanged(auth, (user) => {
