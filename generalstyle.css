@@ -2803,6 +2803,69 @@ display: flex;
 
 
 }
+
+/* --- LSR MASONRY SKELETON OVERRIDES --- */
+
+/* 1. Force the caption to be visible on the skeletons (overriding your opacity: 0) */
+.archive-item.lsr-skel-item .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Shape the skeleton text lines */
+.lsr-skel-text {
+  background-color: #555; /* Darker grey to stand out against your black gradient overlay */
+  border-radius: 4px;
+}
+
+.lsr-skel-title {
+  width: 70%;
+  height: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.lsr-skel-year {
+  width: 30%;
+  height: 0.9rem;
+}
+
+/* 3. Fake the Masonry heights! 
+   Using nth-child to give the boxes staggered heights 
+   so it looks like a real masonry layout while loading. */
+.lsr-skel-img {
+  width: 100%;
+  background-color: #e0e0e0;
+}
+.lsr-skel-item:nth-child(3n+1) .lsr-skel-img { height: 350px; } /* Column 1 pattern */
+.lsr-skel-item:nth-child(3n+2) .lsr-skel-img { height: 220px; } /* Column 2 pattern */
+.lsr-skel-item:nth-child(3n+3) .lsr-skel-img { height: 420px; } /* Column 3 pattern */
+
+/* Mobile height adjustments so they don't look awkwardly tall on phones */
+@media (max-width: 768px) {
+  .lsr-skel-item:nth-child(3n+1) .lsr-skel-img { height: 200px; }
+  .lsr-skel-item:nth-child(3n+2) .lsr-skel-img { height: 150px; }
+  .lsr-skel-item:nth-child(3n+3) .lsr-skel-img { height: 250px; }
+}
+
+/* 4. The Shimmer Animation */
+@keyframes lsr-skel-shimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+/* Apply shimmer to the images */
+.lsr-skel-img {
+  animation: lsr-skel-shimmer 1.5s infinite linear;
+  background: linear-gradient(to right, #e0e0e0 8%, #f0f0f0 18%, #e0e0e0 33%);
+  background-size: 800px 104px;
+}
+
+/* Apply a darker shimmer to the text (since it sits on a black gradient) */
+.lsr-skel-text {
+  animation: lsr-skel-shimmer 1.5s infinite linear;
+  background: linear-gradient(to right, #666 8%, #888 18%, #666 33%);
+  background-size: 800px 104px;
+}
  @media screen and (min-width: 688px) { 
 .now-playing-container {
    
@@ -2813,3 +2876,5 @@ display: flex;
         background: rgba(0, 0, 0, 0.1);
    width:auto;
 }
+}
+
