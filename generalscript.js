@@ -22,28 +22,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function toggleAltStream(button) {
-        const audio = document.getElementById('alt-audio');
-        const icon = button.querySelector('i');
+   function toggleAltStream(button) {
+    const audio = document.getElementById('alt-audio');
+    const icon = button.querySelector('i');
 
-        if (audio.paused) {
-            icon.className = 'fa-solid fa-circle-notch fa-spin'; 
-            
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    icon.className = 'fas fa-pause';
-                }).catch(() => {
-                    icon.className = 'fas fa-play';
-                });
-            } else {
+    if (audio.paused) {
+        icon.className = 'fa-solid fa-circle-notch fa-spin'; 
+        
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
                 icon.className = 'fas fa-pause';
-            }
+
+                // --- NEW: Update MediaSession for Alt Stream ---
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: "Alternative Stream",
+                        artist: "Leeds Student Radio",
+                        artwork: [
+                            { src: '/ourlogo.jpeg', sizes: '512x512', type: 'image/jpeg' }
+                        ]
+                    });
+                }
+                // -----------------------------------------------
+
+            }).catch(() => {
+                icon.className = 'fas fa-play';
+            });
         } else {
-            audio.pause();
-            icon.className = 'fas fa-play';
+            icon.className = 'fas fa-pause';
         }
+    } else {
+        audio.pause();
+        icon.className = 'fas fa-play';
+
+        // --- NEW: Restore Main Stream Metadata ---
+        const realWeek = getCurrentWeekType();
+        updateLiveNowUI(realWeek);
+        // -----------------------------------------
     }
+}
 
     window.toggleAltStream = toggleAltStream;
     
@@ -530,7 +548,9 @@ function getLondonTimeDetails() {
                 document.getElementById('main-player-host').innerText = "with " + liveShow.host;
                 document.getElementById('main-player-desc').innerText = liveShow.description;
                 document.getElementById('main-player-img').src = liveShow.image;
-                document.getElementById('main-player-time').innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+              // This only updates the text, leaving the dot span untouched
+document.querySelector('#main-player-time .time-text').innerText = 
+  `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             }
         } else {
             // NO LIVE SHOW: Load default non-stop data
