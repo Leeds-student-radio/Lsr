@@ -2814,7 +2814,7 @@ display: flex;
 
 /* 2. Shape the skeleton text lines */
 .lsr-skel-text {
-  background-color: #555; /* Darker grey to stand out against your black gradient overlay */
+  background-color: #8f1818;
   border-radius: 4px;
 }
 
@@ -2834,7 +2834,7 @@ display: flex;
    so it looks like a real masonry layout while loading. */
 .lsr-skel-img {
   width: 100%;
-  background-color: #e0e0e0;
+  background-color: var(--brand-dark);
 }
 .lsr-skel-item:nth-child(3n+1) .lsr-skel-img { height: 350px; } /* Column 1 pattern */
 .lsr-skel-item:nth-child(3n+2) .lsr-skel-img { height: 220px; } /* Column 2 pattern */
@@ -2854,9 +2854,9 @@ display: flex;
 }
 
 /* Apply shimmer to the images */
-.lsr-skel-img {
+.lsr-skel-img { 
   animation: lsr-skel-shimmer 1.5s infinite linear;
-  background: linear-gradient(to right, #e0e0e0 8%, #f0f0f0 18%, #e0e0e0 33%);
+  background: linear-gradient(to right, var(--brand-dark); 8%, #8f1818 18%, var(--brand-dark); 33%);
   background-size: 800px 104px;
 }
 
