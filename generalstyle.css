@@ -1075,6 +1075,11 @@ hr {
 
         @media (max-width: 768px) {
 
+
+          .card-play-btn:hover {
+    background: rgb(0 0 0 / 30%) !important;
+
+              }
     .gif-picker-container {
     position: fixed !important;
     top: 50%;
