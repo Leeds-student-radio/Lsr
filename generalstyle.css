@@ -1954,7 +1954,7 @@ hr {
               
             .nav-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
             .nav-menu li { width: 100%; }
-            .nav-link { display: block; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); }
+            .nav-link { display: block; padding: 15px 20px; border-radius: var(--radius-sm); }
          
             .nav-link::after { display: none; }
 
@@ -2718,3 +2718,9 @@ input:focus {
 .gif-search input {
  font-size:16px !important;
 }
+@media (max-width: 600px) {
+   #join-area .send-btn {
+        width: auto !important;
+
+  }
+  }
