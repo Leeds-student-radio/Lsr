@@ -1,4 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
@@ -768,7 +769,49 @@ document.querySelector('#live-text').innerText =
             }
         });
     }
+function loadArchiveGrid() {
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
+    // It is now safe to use Papa because we control when this function is called
+    Papa.parse(sheetUrl, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const data = results.data;
+            const grid = document.getElementById('dynamic-archive-grid');
+            
+            // Check if grid exists on the page before trying to modify it
+            if (!grid) return; 
+
+            let htmlContent = '';
+
+            data.forEach(item => {
+                if (item.image_url) {
+                    const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+                    const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+                    
+                    htmlContent += `
+                      <div class="archive-item">
+                        <img src="${item.image_url}" alt="LSR archive image">
+                        <div class="caption">
+                          ${titleHtml}
+                          ${captionHtml}
+                        </div>
+                      </div>
+                    `;
+                }
+            });
+
+            grid.innerHTML = htmlContent;
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+            const grid = document.getElementById('dynamic-archive-grid');
+            if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
+        }
+    });
+}
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -814,29 +857,24 @@ document.querySelector('#live-text').innerText =
         initChatSystem(); 
     }
 
-    // --- NEW ARCHIVES LOGIC ---
-   if (url.includes('archives')) { 
-
-    // Check if PapaParse needs to be loaded
+  // Inside your URL checking logic...
+if (url.includes('archives')) { 
+    // Check if Papa is already loaded
     if (typeof Papa === 'undefined') {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
         
-        // WAIT for the script to finish downloading
+        // This is the magic lock. It waits for the download to finish.
         script.onload = () => {
-            console.log("PapaParse loaded successfully.");
-            // ONLY call your parsing function AFTER the script is loaded
-            fetchArchiveData(); 
+            console.log("PapaParse loaded. Building grid...");
+            loadArchiveGrid(); 
         };
         
         document.head.appendChild(script);
-
-        // ❌ WARNING: If you put Papa.parse() or fetchArchiveData() here, 
-        // it will crash because the script hasn't finished downloading yet!
-
     } else {
-        // PapaParse is already loaded from a previous visit
-        fetchArchiveData();
+        // Papa was already loaded on a previous visit, safe to run immediately
+        console.log("PapaParse already exists. Building grid...");
+        loadArchiveGrid();
     }
 }
     fetchScheduleData();
@@ -859,17 +897,31 @@ document.querySelector('#live-text').innerText =
     window.addEventListener('popstate', () => loadPage(window.location.href));
 
     // Start everything
+   // Start everything
     updateNavLinks();
     fetchScheduleData();
     fetchCommitteeData();
     fetchApplyData();
     fetchAwardsData(); 
+    
     if (window.location.pathname.includes('listen')) {
         initChatSystem();
     }
+
+    // --- NEW: Handle direct visits to the archives page ---
+    if (window.location.pathname.includes('archives')) { 
+        if (typeof Papa === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+            script.onload = () => loadArchiveGrid(); 
+            document.head.appendChild(script);
+        } else {
+            loadArchiveGrid();
+        }
+    }
+
     setInterval(fetchScheduleData, 180000);
 });
-
 // --- CONFIGS ---
 const chatConfig = {
     apiKey: "#{FIREBASE_API_KEY}#",
@@ -891,7 +943,9 @@ const counterConfig = {
 };
 
 // Global variables to be shared
+
 let db, auth, messagesCollection;
+let chatUnsubscribe = null; // NEW: Holds the active listener
 
 // --- CHAT & COUNTER SYSTEM ---
 function initChatSystem() {
@@ -1308,9 +1362,16 @@ function hideIndicator() {
     chatForm.addEventListener('submit', handleSendMessage);
     
     // Initialize Apps
-    const chatApp = initializeApp(chatConfig, "chat");
-    const counterApp = initializeApp(counterConfig, "counter");
-
+   // Initialize Apps (Safely check if they already exist so the SPA doesn't crash)
+    const allApps = getApps();
+    const chatApp = allApps.some(app => app.name === "chat") 
+        ? getApp("chat") 
+        : initializeApp(chatConfig, "chat");
+        
+    const counterApp = allApps.some(app => app.name === "counter") 
+        ? getApp("counter") 
+        : initializeApp(counterConfig, "counter");
+    
     db = getFirestore(chatApp);
     auth = getAuth(chatApp);
     const rtdb = getDatabase(counterApp);
@@ -1346,9 +1407,15 @@ function hideIndicator() {
             const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
             
             let isFirstLoad = true; 
-            let newestMessageTime = 0; 
+          // ...
+          let newestMessageTime = 0; 
+          
+          // NEW: If a listener already exists from a previous page visit, kill it first.
+          if (chatUnsubscribe) {
+              chatUnsubscribe();
+          }
             
-          onSnapshot(q, (snapshot) => {
+          chatUnsubscribe = onSnapshot(q, (snapshot) => {
     if (loadingSpinner) loadingSpinner.style.display = 'none';
     
     // Check if user is at the bottom BEFORE adding new messages
@@ -1407,44 +1474,3 @@ function hideIndicator() {
 }
 
 window.initChatSystem = initChatSystem;
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
-
-  Papa.parse(sheetUrl, {
-      download: true,
-      header: true, // Tells the parser to use your top row (image_url, title, caption) as keys
-      skipEmptyLines: true,
-      complete: function(results) {
-          const data = results.data;
-          const grid = document.getElementById('dynamic-archive-grid');
-          let htmlContent = '';
-
-          // Loop through every row in your Google Sheet
-          data.forEach(item => {
-              // Ensure we have an image URL before trying to render
-              if (item.image_url) {
-                  
-                  // Check if title or caption exists, otherwise leave blank
-                  const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
-                  const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
-                  
-                  // Build the HTML for this specific item
-                  htmlContent += `
-                    <div class="archive-item">
-                      <img src="${item.image_url}" alt="LSR archive image">
-                      <div class="caption">
-                        ${titleHtml}
-                        ${captionHtml}
-                      </div>
-                    </div>
-                  `;
-              }
-          });
-
-          // Inject the generated HTML into the grid, replacing the "Loading..." text
-          grid.innerHTML = htmlContent;
-      },
-      error: function(error) {
-          console.error("Error fetching data:", error);
-          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
-      }
-  });
