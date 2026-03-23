@@ -2082,7 +2082,7 @@ hr {
                     background: #fff;
         padding: 7px 10px;
         /* width: 1110px; */
-        border-radius: 40%;
+        border-radius: 14px;
        
 }
 }
@@ -2723,4 +2723,5 @@ input:focus {
         width: auto !important;
 
   }
-  }
+ 
+   }
