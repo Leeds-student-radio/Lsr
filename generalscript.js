@@ -768,7 +768,47 @@ document.querySelector('#live-text').innerText =
             }
         });
     }
+const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
+  Papa.parse(sheetUrl, {
+      download: true,
+      header: true, // Tells the parser to use your top row (image_url, title, caption) as keys
+      skipEmptyLines: true,
+      complete: function(results) {
+          const data = results.data;
+          const grid = document.getElementById('dynamic-archive-grid');
+          let htmlContent = '';
+
+          // Loop through every row in your Google Sheet
+          data.forEach(item => {
+              // Ensure we have an image URL before trying to render
+              if (item.image_url) {
+                  
+                  // Check if title or caption exists, otherwise leave blank
+                  const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+                  const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+                  
+                  // Build the HTML for this specific item
+                  htmlContent += `
+                    <div class="archive-item">
+                      <img src="${item.image_url}" alt="LSR archive image">
+                      <div class="caption">
+                        ${titleHtml}
+                        ${captionHtml}
+                      </div>
+                    </div>
+                  `;
+              }
+          });
+
+          // Inject the generated HTML into the grid, replacing the "Loading..." text
+          grid.innerHTML = htmlContent;
+      },
+      error: function(error) {
+          console.error("Error fetching data:", error);
+          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
+      }
+  });
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -798,26 +838,45 @@ document.querySelector('#live-text').innerText =
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 updateNavLinks();
              
-                if (navMenu && navMenu.classList.contains('active')) toggleMenu();
+            if (navMenu && navMenu.classList.contains('active')) toggleMenu();
 
-                updatePlayButtons(!radioPlayer.paused);
- 
-                // Initialize specific section data based on URL
-                if (url.includes('apply')) fetchApplyData();
-                if (url.includes('about')) fetchCommitteeData();
-                if (url.includes('awards')) fetchAwardsData(); 
-                if (url.includes('listen')) {
-    // 1. Immediately fetch the Radio.co JSON data for the "Now Playing" section
-    updateNowPlaying(); 
+    updatePlayButtons(!radioPlayer.paused);
+
+    // Initialize specific section data based on URL
+    if (url.includes('apply')) fetchApplyData();
+    if (url.includes('about')) fetchCommitteeData();
+    if (url.includes('awards')) fetchAwardsData(); 
     
-    // 2. Initialize the Firebase Chat
-    initChatSystem(); 
+    if (url.includes('listen')) {
+        // 1. Immediately fetch the Radio.co JSON data for the "Now Playing" section
+        updateNowPlaying(); 
+        // 2. Initialize the Firebase Chat
+        initChatSystem(); 
+    }
+
+    // --- NEW ARCHIVES LOGIC ---
+    if (url.includes('archives')) { 
+        // Check if PapaParse is already loaded to avoid duplicates
+        if (typeof Papa === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+            
+            // Wait for the script to finish downloading before trying to use it
+            script.onload = () => {
+                console.log("PapaParse loaded successfully.");
+                // Call your archive fetching function here, for example:
+                // fetchArchiveData(); 
+            };
+            
+            document.head.appendChild(script);
+        } else {
+            // PapaParse is already loaded from a previous visit to this page
+            // fetchArchiveData();
+        }
+    }
+
+    fetchScheduleData();
 }
-
-
-                fetchScheduleData();
-            }
-
             
         } catch (e) {
             window.location.assign(url);
