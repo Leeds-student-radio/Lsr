@@ -98,35 +98,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-     async function updateNowPlaying() {
+   async function updateNowPlaying() {
     const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
     
+    // 1. Grab the elements first
+    const titleElement = document.getElementById('np-title');
+    const artworkImg = document.getElementById('alt-artwork');
+
+    // 2. If the main element doesn't exist, exit the function early
+    if (!titleElement) return; 
+
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
 
-        // Only update if the station is online
         if (data.status === 'online') {
             const currentTrackName = data.current_track.title;
             const artworkUrl = data.current_track.artwork_url;
 
-            // 1. Update the Track Title
-            // The API returns artist and title combined, so we output the raw string.
-            document.getElementById('np-title').textContent = currentTrackName;
+            titleElement.textContent = currentTrackName;
 
-            // 2. Update the Artwork
-            const artworkImg = document.getElementById('alt-artwork');
-            if (artworkUrl) {
-                // If the track has artwork, use it
-                artworkImg.src = artworkUrl;
-            } else {
-                // Fallback to your logo if artwork_url is null
-                artworkImg.src = '/ourlogo.jpeg';
+            if (artworkImg) { // Check if artwork element exists too
+                artworkImg.src = artworkUrl || '/ourlogo.jpeg';
             }
         }
     } catch (error) {
         console.error('Error fetching Radio.co track info:', error);
-        document.getElementById('np-title').textContent = "Stream Offline";
+        if (titleElement) {
+            titleElement.textContent = "Stream Offline";
+        }
     }
 }
 
