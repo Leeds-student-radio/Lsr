@@ -41,8 +41,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Open+Sans:wght@400;600&family=Indie+Flower&family=Asap+Condensed:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <link rel="stylesheet" href="/generalstyle.css">
-    <script type="module" src="/generalscript.js" defer></script>
+     <link rel="stylesheet" href="https://thisislsr.com/generalstyle.css">
+    <script type="module" src="https://thisislsr.com/generalscript.js" defer></script>
 
     
 </head>
@@ -119,7 +119,7 @@
                     </div>
                 </div>
 
-           <div class="lsr-card">
+           <div class="lsr-card" id="alternative-card">
     <div class="img-container">
         <img src="/ourlogo.jpeg" alt="LSR Logo" id="alt-artwork">
         
@@ -130,12 +130,12 @@
         </button>
     </div>
     <div class="card-content">
-        <h2>Alternate Stream</h2>
-        <p>LSR alternate live stream runs 24/7 with a chilled mix of hand-picked tracks.</p>
+        <h2>Alternative Stream</h2>
+        <p class="alt-stream-hide">LSR alternate live stream runs 24/7 with a chilled mix of hand-picked tracks.</p>
         
         <div class="now-playing-container">
             <div class="status-indicator">
-                <span class="green-dot"></span> Now Playing
+                <span class="green-dot2"></span> Now Playing
             </div>
             <div class="track-info">
                 <span id="np-title">Loading track info...</span>
@@ -267,7 +267,109 @@
         </div>
     </footer>
 
+<style>
 
-  
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 5px;
+}
+
+/* The Pulsing Green Dot */
+.green-dot2 {
+    width: 8px;
+    height: 8px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    box-shadow: 0 0 5px #4caf50;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+.track-info {
+    font-size: 0.95em;
+    font-weight: 500;
+    color: whitesmoke;
+    /* Optional: Truncate long track names with an ellipsis */
+   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+  @media screen and (max-width: 687px) { 
+#alternative-card h2 {
+    font-size: 1.2rem;
+   
+}
+
+.alt-stream-hide {
+    display:none;
+   
+}
+
+
+}
+ @media screen and (min-width: 688px) { 
+.now-playing-container {
+   
+    border-radius:12px;
+    padding:5px;
+    font-size: 0.85rem;
+        background: rgba(0, 0, 0, 0.1);
+   width:auto;
+}
+</style>
+  <script>
+  async function updateNowPlaying() {
+    const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
+    
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // Only update if the station is online
+        if (data.status === 'online') {
+            const currentTrackName = data.current_track.title;
+            const artworkUrl = data.current_track.artwork_url;
+
+            // 1. Update the Track Title
+            // The API returns artist and title combined, so we output the raw string.
+            document.getElementById('np-title').textContent = currentTrackName;
+
+            // 2. Update the Artwork
+            const artworkImg = document.getElementById('alt-artwork');
+            if (artworkUrl) {
+                // If the track has artwork, use it
+                artworkImg.src = artworkUrl;
+            } else {
+                // Fallback to your logo if artwork_url is null
+                artworkImg.src = '/ourlogo.jpeg';
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching Radio.co track info:', error);
+        document.getElementById('np-title').textContent = "Stream Offline";
+    }
+}
+
+// Run immediately on page load
+updateNowPlaying();
+
+// Poll the API every 15 seconds (15000 milliseconds) to catch track changes
+setInterval(updateNowPlaying, 15000);
+</script>
 </body>
 </html>
