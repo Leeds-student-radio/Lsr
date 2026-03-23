@@ -2725,3 +2725,72 @@ input:focus {
   }
  
    }
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 5px;
+}
+
+/* The Pulsing Green Dot */
+.green-dot2 {
+    width: 8px;
+    height: 8px;
+    background-color: #4caf50;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    box-shadow: 0 0 5px #4caf50;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+.track-info {
+    font-size: 0.95em;
+    font-weight: 500;
+    color: whitesmoke;
+    /* Optional: Truncate long track names with an ellipsis */
+   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+#alternative-card .card-content { 
+display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+}
+
+  @media screen and (max-width: 687px) { 
+#alternative-card h2 {
+    font-size: 1.2rem;
+   
+}
+
+.alt-stream-hide {
+    display:none;
+   
+}
+
+
+}
+ @media screen and (min-width: 688px) { 
+.now-playing-container {
+   
+    border-radius:12px;
+    margin-top:5px;
+    padding:8px 15px;
+    font-size: 0.85rem;
+        background: rgba(0, 0, 0, 0.1);
+   width:auto;
+}
