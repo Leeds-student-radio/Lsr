@@ -1211,9 +1211,24 @@ function hideIndicator() {
             <div class="message-body">${text}</div>
         `;
         
-        if (gifUrl) {
-            contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
+       if (gifUrl) {
+    const gifImg = document.createElement('img');
+    gifImg.src = gifUrl;
+    gifImg.alt = "GIF";
+    gifImg.className = "chat-message-gif";
+    gifImg.style = "max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;";
+
+    // This is the critical fix:
+    gifImg.onload = () => {
+        // Re-check if we should scroll only after the image is fully rendered
+        const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 150; 
+        if (isAtBottom && !isFirstLoad) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+    };
+
+    textDiv.appendChild(gifImg);
+}
 
         textDiv.innerHTML = contentHtml;
         
