@@ -913,6 +913,31 @@ function initChatSystem() {
         if (messageInput) messageInput.focus();
     }
 
+    // Add New Message Indicator UI
+const newMsgIndicator = document.createElement('div');
+newMsgIndicator.id = 'new-message-indicator';
+newMsgIndicator.innerHTML = '<span>1 new message</span> <i style="border: solid white; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(45deg); margin-bottom:2px; margin-left:5px;"></i>';
+newMsgIndicator.style = `
+    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%);
+    background: #FF595E; color: white; padding: 8px 16px; border-radius: 20px;
+    cursor: pointer; font-size: 13px; font-weight: bold; display: none; z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.3s;
+`;
+chatMessages.parentElement.appendChild(newMsgIndicator);
+
+let unreadCount = 0;
+
+// Click to scroll down
+newMsgIndicator.addEventListener('click', () => {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    hideIndicator();
+});
+
+function hideIndicator() {
+    unreadCount = 0;
+    newMsgIndicator.style.display = 'none';
+}
+    
     if (joinBtn && joinArea) {
         // 1. User clicks OK
         joinBtn.addEventListener('click', () => enterChat(false));
@@ -1267,6 +1292,13 @@ function initChatSystem() {
     auth = getAuth(chatApp);
     const rtdb = getDatabase(counterApp);
 
+    chatMessages.addEventListener('scroll', () => {
+    const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 20;
+    if (isAtBottom) {
+        hideIndicator();
+    }
+});
+
     // --- LIVE COUNTER LOGIC ---
     const liveId = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
     sessionStorage.setItem('liveId', liveId);
@@ -1293,32 +1325,45 @@ function initChatSystem() {
             let isFirstLoad = true; 
             let newestMessageTime = 0; 
             
-            onSnapshot(q, (snapshot) => {
-                if (loadingSpinner) loadingSpinner.style.display = 'none';
-                
-                if (isFirstLoad) {
-                    chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
-                }
+          onSnapshot(q, (snapshot) => {
+    if (loadingSpinner) loadingSpinner.style.display = 'none';
+    
+    // Check if user is at the bottom BEFORE adding new messages
+    const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
 
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added") {
-                        const data = change.doc.data({ serverTimestamps: 'estimate' });
-                        const msgTime = data.createdAt.toMillis();
+    if (isFirstLoad) {
+        chatMessages.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#888;">No messages yet.</p>' : '';
+    }
 
-                        if (isFirstLoad) {
-                            displayMessage(change.doc); 
-                            if (msgTime > newestMessageTime) newestMessageTime = msgTime;
-                        } else {
-                            if (msgTime >= newestMessageTime) {
-                                displayMessage(change.doc, false); 
-                                if (msgTime > newestMessageTime) newestMessageTime = msgTime;
-                                
-                                setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
-                            } else {
-                                displayMessage(change.doc, true); 
-                            }
-                        }
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+            const data = change.doc.data({ serverTimestamps: 'estimate' });
+            const msgTime = data.createdAt ? data.createdAt.toMillis() : Date.now();
+
+            if (isFirstLoad) {
+                displayMessage(change.doc);
+                if (msgTime > newestMessageTime) newestMessageTime = msgTime;
+            } else {
+                if (msgTime >= newestMessageTime) {
+                    displayMessage(change.doc, false);
+                    if (msgTime > newestMessageTime) newestMessageTime = msgTime;
+
+                    // SMART SCROLL LOGIC
+                    if (isAtBottom) {
+                        // User is at bottom, auto-scroll and hide indicator
+                        setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
+                        hideIndicator();
+                    } else {
+                        // User has scrolled up, show/update indicator
+                        unreadCount++;
+                        newMsgIndicator.querySelector('span').innerText = `${unreadCount} new message${unreadCount > 1 ? 's' : ''}`;
+                        newMsgIndicator.style.display = 'block';
                     }
+                } else {
+                    displayMessage(change.doc, true);
+                }
+            }
+        }
                     
                     if (change.type === "removed") {
                         const messageToRemove = document.getElementById(`msg-${change.doc.id}`);
@@ -1328,7 +1373,10 @@ function initChatSystem() {
                     }
                 });
 
-                isFirstLoad = false;
+               if (isFirstLoad) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        isFirstLoad = false;
+    }
             });
         }
     });
