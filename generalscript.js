@@ -855,26 +855,30 @@ const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuR
     }
 
     // --- NEW ARCHIVES LOGIC ---
-    if (url.includes('archives')) { 
-        // Check if PapaParse is already loaded to avoid duplicates
-        if (typeof Papa === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
-            
-            // Wait for the script to finish downloading before trying to use it
-            script.onload = () => {
-                console.log("PapaParse loaded successfully.");
-                // Call your archive fetching function here, for example:
-                // fetchArchiveData(); 
-            };
-            
-            document.head.appendChild(script);
-        } else {
-            // PapaParse is already loaded from a previous visit to this page
-            // fetchArchiveData();
-        }
-    }
+   if (url.includes('archives')) { 
 
+    // Check if PapaParse needs to be loaded
+    if (typeof Papa === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+        
+        // WAIT for the script to finish downloading
+        script.onload = () => {
+            console.log("PapaParse loaded successfully.");
+            // ONLY call your parsing function AFTER the script is loaded
+            fetchArchiveData(); 
+        };
+        
+        document.head.appendChild(script);
+
+        // ❌ WARNING: If you put Papa.parse() or fetchArchiveData() here, 
+        // it will crash because the script hasn't finished downloading yet!
+
+    } else {
+        // PapaParse is already loaded from a previous visit
+        fetchArchiveData();
+    }
+}
     fetchScheduleData();
 }
             
