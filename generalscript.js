@@ -768,47 +768,7 @@ document.querySelector('#live-text').innerText =
             }
         });
     }
-const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
-  Papa.parse(sheetUrl, {
-      download: true,
-      header: true, // Tells the parser to use your top row (image_url, title, caption) as keys
-      skipEmptyLines: true,
-      complete: function(results) {
-          const data = results.data;
-          const grid = document.getElementById('dynamic-archive-grid');
-          let htmlContent = '';
-
-          // Loop through every row in your Google Sheet
-          data.forEach(item => {
-              // Ensure we have an image URL before trying to render
-              if (item.image_url) {
-                  
-                  // Check if title or caption exists, otherwise leave blank
-                  const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
-                  const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
-                  
-                  // Build the HTML for this specific item
-                  htmlContent += `
-                    <div class="archive-item">
-                      <img src="${item.image_url}" alt="LSR archive image">
-                      <div class="caption">
-                        ${titleHtml}
-                        ${captionHtml}
-                      </div>
-                    </div>
-                  `;
-              }
-          });
-
-          // Inject the generated HTML into the grid, replacing the "Loading..." text
-          grid.innerHTML = htmlContent;
-      },
-      error: function(error) {
-          console.error("Error fetching data:", error);
-          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
-      }
-  });
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -1447,3 +1407,44 @@ function hideIndicator() {
 }
 
 window.initChatSystem = initChatSystem;
+const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
+
+  Papa.parse(sheetUrl, {
+      download: true,
+      header: true, // Tells the parser to use your top row (image_url, title, caption) as keys
+      skipEmptyLines: true,
+      complete: function(results) {
+          const data = results.data;
+          const grid = document.getElementById('dynamic-archive-grid');
+          let htmlContent = '';
+
+          // Loop through every row in your Google Sheet
+          data.forEach(item => {
+              // Ensure we have an image URL before trying to render
+              if (item.image_url) {
+                  
+                  // Check if title or caption exists, otherwise leave blank
+                  const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+                  const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+                  
+                  // Build the HTML for this specific item
+                  htmlContent += `
+                    <div class="archive-item">
+                      <img src="${item.image_url}" alt="LSR archive image">
+                      <div class="caption">
+                        ${titleHtml}
+                        ${captionHtml}
+                      </div>
+                    </div>
+                  `;
+              }
+          });
+
+          // Inject the generated HTML into the grid, replacing the "Loading..." text
+          grid.innerHTML = htmlContent;
+      },
+      error: function(error) {
+          console.error("Error fetching data:", error);
+          document.getElementById('dynamic-archive-grid').innerHTML = "<p>Sorry, could not load the archive.</p>";
+      }
+  });
