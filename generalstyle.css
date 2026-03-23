@@ -2856,14 +2856,14 @@ display: flex;
 /* Apply shimmer to the images */
 .lsr-skel-img { 
   animation: lsr-skel-shimmer 1.5s infinite linear;
-  background: linear-gradient(to right, var(--brand-dark); 8%, #8f1818 18%, var(--brand-dark); 33%);
+  background: linear-gradient(to right, var(--brand-dark) 8%, #8f1818 18%, var(--brand-dark) 33%);
   background-size: 800px 104px;
 }
 
 /* Apply a darker shimmer to the text (since it sits on a black gradient) */
 .lsr-skel-text {
   animation: lsr-skel-shimmer 1.5s infinite linear;
-  background: linear-gradient(to right, #666 8%, #888 18%, #666 33%);
+  background: linear-gradient(to right, var(--brand-dark) 8%, #8f1818 18%, var(--brand-dark) 33%);
   background-size: 800px 104px;
 }
  @media screen and (min-width: 688px) { 
