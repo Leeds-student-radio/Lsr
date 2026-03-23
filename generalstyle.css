@@ -667,7 +667,7 @@ hr {
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.6);
-            
+                    border: none !important;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -681,7 +681,7 @@ hr {
         }
 
         .card-play-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.35);
             transform: translate(-50%, -50%) scale(1.1);
         }
 
