@@ -2951,8 +2951,8 @@ display: flex;
     display: flex;
     flex-direction: column;
     justify-content: center;
-   padding:5px;
-        margin-right: 10px;
+ 
+    
   }
 
   .lsr-shazam-content {
@@ -3014,7 +3014,7 @@ display: flex;
   }
   .lsr-btn:hover { background-color: #b81d26; color: white; }
   .lsr-btn:active { transform: scale(0.98); }
-  .lsr-btn:disabled { background-color: #ff999f; cursor: not-allowed; }
+  .lsr-btn:disabled { background-color: none; cursor: not-allowed; }
 
   /* Unique Skeleton Loading State */
   .lsr-skeleton-container {
@@ -3045,6 +3045,17 @@ display: flex;
     background-size: 200% 100%;
     animation: lsr-shimmer-anim 1.5s infinite linear;
   }
+.btn-content {
+  display: flex;
+  align-items: center;    /* Vertically centers icon with the text */
+  justify-content: center; /* Horizontally centers the group */
+  gap: 12px;              /* Adjusts the space between icon and text */
+  text-align: left;       /* Keeps the "Identify Song" lines left-aligned to each other */
+}
+
+.fa-music {
+  font-size: 1.2rem;      /* Adjust icon size as needed */
+}
 
   @keyframes lsr-shimmer-anim {
     to { background-position: -200% 0; }
