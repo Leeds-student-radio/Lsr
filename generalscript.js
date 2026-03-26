@@ -217,7 +217,7 @@ setInterval(updateNowPlaying, 15000);
         } finally {
             skeleton.style.display = "none"; 
             btn.disabled = false;
-            btn.innerText = "Identify Current Song";
+          btn.innerHTML = '<i class="fas fa-redo"></i>';
         }
     });
     // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT) ---
