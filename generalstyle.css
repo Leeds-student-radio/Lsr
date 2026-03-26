@@ -2941,9 +2941,9 @@ display: flex;
     /* column-gap: 10px; */
     align-items: center;
     /* align-self: flex-start; */
-    /* background: rgba(0, 0, 0, 0.1); */
+    background: rgba(0, 0, 0, 0.1);
     padding: 10px;
-    padding-left: 0px;
+   
   }
 
   .lsr-artwork-area {
