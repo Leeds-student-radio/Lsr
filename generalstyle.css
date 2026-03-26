@@ -2927,6 +2927,13 @@ display: flex;
         margin-top: 5px;
     }
 }
+
+@media screen and (max-width: 1023px) {
+   .lsr-shazam-widget {
+   display:none !important
+  }
+   }
+  
   .lsr-shazam-widget {
     border-radius: 10px;
     width: fit-content;
