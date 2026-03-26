@@ -99,6 +99,81 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.body.addEventListener('click', function (e) {
+        const btn = e.target.closest('.play-toggle, .play-toggle-main');
+        if (btn) {
+            togglePlay();
+        }
+    });
+
+    // --- PASTE SHAZAM IDENTIFICATION LOGIC HERE ---
+    document.body.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#shazam-btn');
+        if (!btn) return; 
+
+        const statusText = document.getElementById('shazam-status');
+        const contentBox = document.getElementById('shazam-content');
+        const skeleton = document.getElementById('shazam-skeleton'); 
+        const coverArt = document.getElementById('shazam-cover');
+        const titleText = document.getElementById('shazam-title');
+        const artistText = document.getElementById('shazam-artist');
+
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinneractive"></span>`;
+        if (statusText) statusText.innerText = ""; 
+        
+        if (contentBox) contentBox.style.display = "none"; 
+        if (skeleton) skeleton.style.display = "flex"; 
+        
+        const renderApiUrl = "https://lsr-shazam-api.onrender.com/identify";
+        const radioStreamUrl = "https://streamer.radio.co/s986435880/listen"; 
+
+        try { 
+            const response = await fetch(`${renderApiUrl}?stream_url=${encodeURIComponent(radioStreamUrl)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                if (titleText) titleText.innerText = data.title;
+                if (artistText) artistText.innerText = data.artist;
+                
+                if (data.image && coverArt) {
+                    coverArt.src = data.image;
+                    coverArt.style.display = "block";
+                } else if (coverArt) {
+                    coverArt.style.display = "none";
+                }
+
+                if (contentBox) contentBox.style.display = "flex";
+
+                // --- SAVE TO FIREBASE ---
+                try {
+                    // Uses shazamDb so it doesn't conflict with your chat db
+                    await addDoc(collection(shazamDb, "detected_songs"), {
+                        title: data.title,
+                        artist: data.artist,
+                        image: data.image || "No image",
+                        detectedAt: serverTimestamp() 
+                    });
+                    console.log("Song successfully logged to Firebase!");
+                } catch (firebaseError) {
+                    console.error("Error logging to Firebase: ", firebaseError);
+                }
+
+            } else {
+                if (statusText) statusText.innerText = "No song detected.";
+            }
+        } catch (error) {
+            if (statusText) statusText.innerText = "Connection error.";
+        } finally {
+            if (skeleton) skeleton.style.display = "none"; 
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-redo"></i>';
+        }
+    });
+  
+
+        
+
   async function updateNowPlaying() {
     const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
     
@@ -171,55 +246,7 @@ setInterval(updateNowPlaying, 15000);
         return arr;
     }
 
-    // --- 1.5 SHAZAM IDENTIFICATION LOGIC ---
-    document.body.addEventListener('click', async (e) => {
-        const btn = e.target.closest('#shazam-btn');
-        if (!btn) return; // If the click wasn't on the shazam button, ignore it.
-
-        const statusText = document.getElementById('shazam-status');
-        const contentBox = document.getElementById('shazam-content');
-        const skeleton = document.getElementById('shazam-skeleton'); 
-        const coverArt = document.getElementById('shazam-cover');
-        const titleText = document.getElementById('shazam-title');
-        const artistText = document.getElementById('shazam-artist');
-
-        btn.disabled = true;
-     btn.innerHTML = `<span class="spinneractive"></span>`;
-        statusText.innerText = ""; 
-        
-        contentBox.style.display = "none"; 
-        skeleton.style.display = "flex"; 
-        
-        const renderApiUrl = "https://lsr-shazam-api.onrender.com/identify";
-        const radioStreamUrl = "https://streamer.radio.co/s986435880/listen"; 
-
-        try { 
-            const response = await fetch(`${renderApiUrl}?stream_url=${encodeURIComponent(radioStreamUrl)}`);
-            const data = await response.json();
-
-            if (data.success) {
-                titleText.innerText = data.title;
-                artistText.innerText = data.artist;
-                
-                if (data.image) {
-                    coverArt.src = data.image;
-                    coverArt.style.display = "block";
-                } else {
-                    coverArt.style.display = "none";
-                }
-
-                contentBox.style.display = "flex";
-            } else {
-                statusText.innerText = "No song detected.";
-            }
-        } catch (error) {
-            statusText.innerText = "Connection error.";
-        } finally {
-            skeleton.style.display = "none"; 
-            btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-redo"></i>';
-        }
-    });
+   
     // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT) ---
     const committeeSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2123499295&output=csv';
 
@@ -980,6 +1007,25 @@ const counterConfig = {
     messagingSenderId: "",
      appId: ""
 };
+// 1. ADD YOUR SHAZAM CONFIG HERE
+const shazamConfig = {
+ apiKey: "AIzaSyDPSQw2pPTBb9CSYkhQ2TOfwXo2XN6mgiQ",
+  authDomain: "shazam-453c8.firebaseapp.com",
+  projectId: "shazam-453c8",
+  storageBucket: "shazam-453c8.firebasestorage.app",
+  messagingSenderId: "765247641391",
+  appId: "1:765247641391:web:87f011c239fbd808e033da"
+};
+
+// 2. INITIALIZE SHAZAM DB (Safely handling SPA reloads)
+const allApps = getApps();
+const shazamApp = allApps.some(app => app.name === "shazam") 
+    ? getApp("shazam") 
+    : initializeApp(shazamConfig, "shazam");
+
+const shazamDb = getFirestore(shazamApp);
+
+
 
 // Global variables to be shared
 
@@ -1422,6 +1468,7 @@ function hideIndicator() {
     }
 });
 
+    
     // --- LIVE COUNTER LOGIC ---
    const liveId = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
 sessionStorage.setItem('liveId', liveId);
