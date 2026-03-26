@@ -184,7 +184,7 @@ setInterval(updateNowPlaying, 15000);
         const artistText = document.getElementById('shazam-artist');
 
         btn.disabled = true;
-        btn.innerText = "Listening...";
+     btn.innerHTML = `<span class="spinneractive"></span>`;
         statusText.innerText = ""; 
         
         contentBox.style.display = "none"; 
