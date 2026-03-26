@@ -1891,7 +1891,7 @@ hr {
         }
 
         @media (max-width: 768px) {
-
+.playing-hide { display:none; }
               
             :root { --header-height: 50px; }
             .container { padding: 15px; }
