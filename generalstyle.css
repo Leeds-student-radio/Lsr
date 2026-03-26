@@ -2974,6 +2974,7 @@ display: flex;
 
   .lsr-track-info {
     flex: 1;
+    margin-right: 10px;
   }
   .lsr-title {
     font-weight: 700;
@@ -3014,13 +3015,14 @@ display: flex;
   }
   .lsr-btn:hover { background-color: #b81d26; color: white; }
   .lsr-btn:active { transform: scale(0.98); }
-  .lsr-btn:disabled { background-color: none; cursor: not-allowed; }
+  .lsr-btn:disabled { background-color: transparent; border: none; cursor: not-allowed; }
 
   /* Unique Skeleton Loading State */
   .lsr-skeleton-container {
     display: none; 
     align-items: center;
     gap: 12px;
+    margin-right:10px;
   }
 
 
