@@ -2938,8 +2938,10 @@ display: flex;
     border-radius: 10px;
     width: fit-content;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+   gap:10px;
+    align-items: center;
+        background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
   }
 
   .lsr-artwork-area {
@@ -2972,14 +2974,17 @@ display: flex;
   }
   .lsr-title {
     font-weight: 700;
-    font-size: 15px;
+   
     margin: 0 0 2px 0;
     color: white;
+        font-size: 0.75rem !important;
+    line-height: 1 !important;
   }
   .lsr-artist {
-    font-size: 13px;
+   
     color: white;
     margin: 0;
+        font-size: 0.75rem !important;
   }
 
   .lsr-status { 
@@ -3001,6 +3006,8 @@ display: flex;
     cursor: pointer;
     width: auto; 
     transition: background 0.2s, transform 0.1s;
+    font-size: 0.8rem !important;
+    line-height: 1;
   }
   .lsr-btn:hover { background-color: #b81d26; color: white; }
   .lsr-btn:active { transform: scale(0.98); }
