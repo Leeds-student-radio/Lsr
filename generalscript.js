@@ -1009,7 +1009,7 @@ const counterConfig = {
 };
 // 1. ADD YOUR SHAZAM CONFIG HERE
 const shazamConfig = {
- apiKey: "AIzaSyDPSQw2pPTBb9CSYkhQ2TOfwXo2XN6mgiQ",
+ apiKey: "#{FIREBASE_API_KEYSHAZ}",
   authDomain: "shazam-453c8.firebaseapp.com",
   projectId: "shazam-453c8",
   storageBucket: "shazam-453c8.firebasestorage.app",
