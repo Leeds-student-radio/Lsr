@@ -2927,7 +2927,109 @@ display: flex;
         margin-top: 5px;
     }
 }
+  .lsr-shazam-widget {
+    border-radius: 10px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
+  .lsr-artwork-area {
+    min-height: 70px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 4px; 
+  }
+
+  .lsr-shazam-content {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Added slight gap for better layout */
+    text-align: left;
+  }
+
+  .lsr-album-art {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+    display: none; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .lsr-track-info {
+    flex: 1;
+  }
+  .lsr-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin: 0 0 2px 0;
+    color: white;
+  }
+  .lsr-artist {
+    font-size: 13px;
+    color: white;
+    margin: 0;
+  }
+
+  .lsr-status { 
+    font-size: 12px;
+    color: white;
+    text-align: left;
+    margin-bottom: 6px; 
+    font-style: italic;
+    min-height: 14px; 
+  }
+
+  .lsr-btn {
+    background: #ffffff;
+    color: var(--brand-dark);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto; 
+    transition: background 0.2s, transform 0.1s;
+  }
+  .lsr-btn:hover { background-color: #b81d26; color: white; }
+  .lsr-btn:active { transform: scale(0.98); }
+  .lsr-btn:disabled { background-color: #ff999f; cursor: not-allowed; }
+
+  /* Unique Skeleton Loading State */
+  .lsr-skeleton-container {
+    display: none; 
+    align-items: center;
+    gap: 12px;
+  }
+  .lsr-skeleton-art {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background: #e0e0e0;
+  }
+  .lsr-skeleton-info { width: 120px; }
+  .lsr-skeleton-line {
+    height: 12px;
+    background: #e0e0e0;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  .lsr-skeleton-line.lsr-short { width: 60%; }
+
+  .lsr-shimmer {
+    background: linear-gradient(90deg, #eff1f3 25%, #e2e2e2 50%, #eff1f3 75%);
+    background-size: 200% 100%;
+    animation: lsr-shimmer-anim 1.5s infinite linear;
+  }
+
+  @keyframes lsr-shimmer-anim {
+    to { background-position: -200% 0; }
+  }
 .spinneractive {
     display: inline-block;
     width: 12px;
