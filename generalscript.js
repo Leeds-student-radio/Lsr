@@ -171,6 +171,55 @@ setInterval(updateNowPlaying, 15000);
         return arr;
     }
 
+    // --- 1.5 SHAZAM IDENTIFICATION LOGIC ---
+    document.body.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#shazam-btn');
+        if (!btn) return; // If the click wasn't on the shazam button, ignore it.
+
+        const statusText = document.getElementById('shazam-status');
+        const contentBox = document.getElementById('shazam-content');
+        const skeleton = document.getElementById('shazam-skeleton'); 
+        const coverArt = document.getElementById('shazam-cover');
+        const titleText = document.getElementById('shazam-title');
+        const artistText = document.getElementById('shazam-artist');
+
+        btn.disabled = true;
+        btn.innerText = "Listening...";
+        statusText.innerText = ""; 
+        
+        contentBox.style.display = "none"; 
+        skeleton.style.display = "flex"; 
+        
+        const renderApiUrl = "https://lsr-shazam-api.onrender.com/identify";
+        const radioStreamUrl = "https://streamer.radio.co/s986435880/listen"; 
+
+        try { 
+            const response = await fetch(`${renderApiUrl}?stream_url=${encodeURIComponent(radioStreamUrl)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                titleText.innerText = data.title;
+                artistText.innerText = data.artist;
+                
+                if (data.image) {
+                    coverArt.src = data.image;
+                    coverArt.style.display = "block";
+                } else {
+                    coverArt.style.display = "none";
+                }
+
+                contentBox.style.display = "flex";
+            } else {
+                statusText.innerText = "No song detected.";
+            }
+        } catch (error) {
+            statusText.innerText = "Connection error.";
+        } finally {
+            skeleton.style.display = "none"; 
+            btn.disabled = false;
+            btn.innerText = "Identify Current Song";
+        }
+    });
     // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT) ---
     const committeeSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2123499295&output=csv';
 
