@@ -2873,7 +2873,7 @@ display: flex;
   background-size: 800px 104px;
 }
  @media screen and (min-width: 688px) { 
-.now-playing-container {
+#alternative-card .now-playing-container {
    
     border-radius:12px;
   
@@ -2884,23 +2884,23 @@ display: flex;
 }
 }
 
-.lsr-card {
+#alternative-card .lsr-card {
     display: flex;
     flex-wrap: wrap; /* Allows wrapping to a new line */
     gap: 8px;
     align-items: flex-start;
 }
 
-.img-container {
+#alternative-card .img-container {
     flex: 0 0 110px; /* Fixed width for image */
 }
 
-.card-content {
+#alternative-card .card-content {
     flex: 1; /* Takes up remaining top-row space */
     min-width: 150px;
 }
 
-.now-playing-container {
+#alternative-card .now-playing-container {
     width: 100%; /* Forces it to drop to a new line and fill the card */
     
    
@@ -2909,7 +2909,7 @@ display: flex;
 
 /* Desktop View */
 @media (min-width: 600px) {
-    .lsr-card {
+   #alternative-card .lsr-card {
         flex-wrap: nowrap; /* Keeps everything on one line if needed, or handles via columns */
         display: grid;
         grid-template-columns: 110px 1fr; /* Image column and Content column */
@@ -2918,10 +2918,10 @@ display: flex;
             "thumb playing";
     }
 
-    .img-container { grid-area: thumb; }
-    .card-content { grid-area: header; }
+    #alternative-card .img-container { grid-area: thumb; }
+    #alternative-card .card-content { grid-area: header; }
     
-    .now-playing-container { 
+    #alternative-card .now-playing-container { 
         grid-area: playing; 
         width: auto; 
         margin-top: 0;
