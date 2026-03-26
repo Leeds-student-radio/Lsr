@@ -140,20 +140,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (contentBox) contentBox.style.display = "flex";
 
-                // --- SAVE TO FIREBASE ---
-                try {
-                    // Uses shazamDb so it doesn't conflict with your chat db
-                    await addDoc(collection(shazamDb, "detected_songs"), {
-                        title: data.title,
-                        artist: data.artist,
-                        image: data.image || "No image",
-                        detectedAt: serverTimestamp() 
-                    });
-                    console.log("Song successfully logged to Firebase!");
-                } catch (firebaseError) {
-                    console.error("Error logging to Firebase: ", firebaseError);
-                }
+               // --- SAVE TO FIREBASE (INCREMENT VERSION) ---
+try {
+    // Create a unique ID (sanitize it to remove slashes if necessary)
+    const songId = `${data.title}-${data.artist}`.replace(/\//g, "_");
+    const songRef = doc(shazamDb, "detected_songs", songId);
 
+    await setDoc(songRef, {
+        title: data.title,
+        artist: data.artist,
+        image: data.image || "No image",
+        lastDetected: serverTimestamp(),
+        count: increment(1) // This adds 1 if it exists, or sets to 1 if it's new
+    }, { merge: true }); // 'merge: true' ensures we don't overwrite the whole doc
+
+    console.log("Song count updated in Firebase!");
+} catch (firebaseError) {
+    console.error("Error updating Firebase: ", firebaseError);
+}
             } else {
                 if (statusText) statusText.innerText = "No song detected.";
             }
