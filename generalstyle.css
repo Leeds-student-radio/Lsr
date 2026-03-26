@@ -2943,7 +2943,8 @@ display: flex;
     /* align-self: flex-start; */
     background: rgba(0, 0, 0, 0.1);
     padding: 10px;
-   
+        margin-top: 8px;
+   min-width: 200px;
   }
 
   .lsr-artwork-area {
@@ -2998,6 +2999,7 @@ display: flex;
     margin-bottom: 6px; 
     font-style: italic;
     min-height: 14px; 
+    margin-left: 10px;
   }
 
   .lsr-btn {
