@@ -2873,64 +2873,58 @@ display: flex;
   background: linear-gradient(to right, var(--brand-dark) 8%, #8f1818 18%, var(--brand-dark) 33%);
   background-size: 800px 104px;
 }
- @media screen and (min-width: 688px) { 
-#alternative-card .now-playing-container {
-       display: flex;
-    gap: 10px;
-    border-radius:12px;
-  
-    padding:8px 15px;
-    font-size: 0.85rem;
-        background: rgba(0, 0, 0, 0.1);
-   width:auto;
-  margin-top:5px
-}
-}
-
-#alternative-card .lsr-card {
+/* --- MOBILE VIEW (Default) --- */
+#alternative-card {
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping to a new line */
-    gap: 8px;
+    flex-wrap: wrap; 
+    gap: 15px;
     align-items: flex-start;
 }
 
 #alternative-card .img-container {
-    flex: 0 0 110px; /* Fixed width for image */
+    flex: 0 0 110px; /* Image stays fixed size */
 }
 
 #alternative-card .card-content {
-    flex: 1; /* Takes up remaining top-row space */
+    flex: 1; /* Title and text take up the rest of the top row */
     min-width: 150px;
 }
 
 #alternative-card .now-playing-container {
-    width: 100%; /* Forces it to drop to a new line and fill the card */
-    
-   
-  
+    width: 100%; /* FORCES it to drop to the bottom and be full width */
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
 }
 
-/* Desktop View */
-@media (min-width: 600px) {
-   #alternative-card .lsr-card {
-        flex-wrap: nowrap; /* Keeps everything on one line if needed, or handles via columns */
+/* --- DESKTOP VIEW (688px and up) --- */
+@media screen and (min-width: 688px) {
+    #alternative-card {
         display: grid;
-        grid-template-columns: 110px 1fr; /* Image column and Content column */
+        grid-template-columns: 110px 1fr; /* Image col | Content col */
         grid-template-areas: 
             "thumb header"
             "thumb playing";
+        column-gap: 20px;
+        row-gap: 5px;
     }
 
-    #alternative-card .img-container { grid-area: thumb; }
-    #alternative-card .card-content { grid-area: header; }
-    
+    #alternative-card .img-container { 
+        grid-area: thumb; 
+    }
+
+    #alternative-card .card-content { 
+        grid-area: header; 
+    }
+
     #alternative-card .now-playing-container { 
         grid-area: playing; 
-        width: auto; 
-        margin-top: 0;
-        border-top: none;
-          display: flex;
-    gap: 10px;
+        width: max-content; /* Shrinks back to fit content */
+        max-width: 100%;
+        margin-top: 5px;
     }
 }
 
