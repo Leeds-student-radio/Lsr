@@ -2945,11 +2945,11 @@ display: flex;
   }
 
   .lsr-artwork-area {
-    min-height: 70px; 
+   
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-bottom: 4px; 
+   padding:5px;
   }
 
   .lsr-shazam-content {
@@ -2960,8 +2960,8 @@ display: flex;
   }
 
   .lsr-album-art {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 6px;
     object-fit: cover;
     background-color: #f0f0f0;
@@ -3020,14 +3020,14 @@ display: flex;
     gap: 12px;
   }
   .lsr-skeleton-art {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 6px;
     background: #e0e0e0;
   }
   .lsr-skeleton-info { width: 120px; }
   .lsr-skeleton-line {
-    height: 12px;
+    height: 10px;
     background: #e0e0e0;
     margin-bottom: 6px;
     border-radius: 4px;
