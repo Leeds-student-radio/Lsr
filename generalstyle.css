@@ -2935,13 +2935,15 @@ display: flex;
    }
   
   .lsr-shazam-widget {
-    border-radius: 10px;
+       border-radius: 10px;
     width: fit-content;
     display: flex;
-   gap:10px;
+    /* column-gap: 10px; */
     align-items: center;
-        background: rgba(0, 0, 0, 0.1);
+    /* align-self: flex-start; */
+    /* background: rgba(0, 0, 0, 0.1); */
     padding: 10px;
+    padding-left: 0px;
   }
 
   .lsr-artwork-area {
