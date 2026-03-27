@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-import { getFirestore, collection, setDoc, addDoc, increment, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
    
 
-    // --- PASTE SHAZAM IDENTIFICATION LOGIC HERE ---
+// --- PASTE SHAZAM IDENTIFICATION LOGIC HERE ---
     document.body.addEventListener('click', async (e) => {
         const btn = e.target.closest('#shazam-btn');
         if (!btn) return; 
@@ -141,28 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (contentBox) contentBox.style.display = "flex";
 
-               // --- SAVE TO FIREBASE (INCREMENT VERSION) ---
-
-try {
-    // 1. Create a unique ID from title and artist (lowercase to avoid duplicates)
-    const songId = `${data.title}-${data.artist}`.toLowerCase().replace(/\s+/g, '_').replace(/\//g, "_");
-    
-    // 2. Point to the specific document ID
-    const songRef = doc(shazamDb, "detected_songs", songId);
-
-    // 3. Use setDoc with the increment function
-    await setDoc(songRef, {
-        title: data.title,
-        artist: data.artist,
-        image: data.image || "No image",
-        lastDetected: serverTimestamp(),
-        count: increment(1) // This handles the +1 automatically
-    }, { merge: true });
-
-    console.log("Song count updated successfully!");
-} catch (firebaseError) {
-    console.error("Error updating Firebase: ", firebaseError);
-}
             } else {
                 if (statusText) statusText.innerText = "No song detected.";
             }
@@ -173,10 +151,7 @@ try {
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-redo"></i>';
         }
-    });
-  
-
-        
+    });  
 
   async function updateNowPlaying() {
     const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
@@ -1042,7 +1017,7 @@ const shazamApp = allApps.some(app => app.name === "shazam")
     ? getApp("shazam") 
     : initializeApp(shazamConfig, "shazam");
 
-const shazamDb = getFirestore(shazamApp);
+
 
 
 
