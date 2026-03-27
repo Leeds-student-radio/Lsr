@@ -3271,6 +3271,10 @@ display: flex;
         cursor: pointer;
     }
 
+#lsr-trk-wgt-artist-table-body .lsr-trk-wgt-artist {
+          display:none;
+        }
+
     /* Desktop View: Side by Side Lists */
     @media (min-width: 1100px) {
         .lsr-trk-wgt-chart-container {
