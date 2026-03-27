@@ -1,9 +1,7 @@
-
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
-
-
+// --- MODIFIED: Added getDocs and limit to the import below ---
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
             playPromise.then(() => {
                 icon.className = 'fas fa-pause';
 
-                // --- NEW: Update MediaSession for Alt Stream ---
                 if ('mediaSession' in navigator) {
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: "Alternative Stream",
@@ -46,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         ]
                     });
                 }
-                // -----------------------------------------------
-
             }).catch(() => {
                 icon.className = 'fas fa-play';
             });
@@ -58,10 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.pause();
         icon.className = 'fas fa-play';
 
-        // --- NEW: Restore Main Stream Metadata ---
         const realWeek = getCurrentWeekType();
         updateLiveNowUI(realWeek);
-        // -----------------------------------------
     }
 }
 
@@ -100,9 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-   
-
-// --- PASTE SHAZAM IDENTIFICATION LOGIC HERE ---
+    // --- SHAZAM IDENTIFICATION LOGIC ---
     document.body.addEventListener('click', async (e) => {
         const btn = e.target.closest('#shazam-btn');
         if (!btn) return; 
@@ -156,10 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function updateNowPlaying() {
     const apiUrl = 'https://public.radio.co/stations/seb5cdba5b/status';
     
-    // 1. Grab the element
     const titleElement = document.getElementById('np-title');
-
-    // 2. If the element doesn't exist, exit the function early
     if (!titleElement) return; 
 
     try {
@@ -177,8 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 // Run immediately on page load
 updateNowPlaying();
-
-// Poll the API every 15 seconds (15000 milliseconds) to catch track changes
 setInterval(updateNowPlaying, 15000);
     
     // --- 2. MOBILE MENU LOGIC ---
@@ -225,7 +211,6 @@ setInterval(updateNowPlaying, 15000);
         return arr;
     }
 
-   
     // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT) ---
     const committeeSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2123499295&output=csv';
 
@@ -276,38 +261,31 @@ async function fetchApplyData() {
         const response = await fetch(applySheetUrl);
         const data = await response.text();
         const rows = parseCSV(data);
-        rows.shift(); // Remove headers
+        rows.shift(); 
         grid.innerHTML = '';
 
         const categoriesMap = {};
         
-        // 1. Map the data and grab the status
         rows.forEach(row => {
             if (!row || row.length < 3 || !row[1] || row[1].trim() === '') return;
             const category = row[1].trim();
             const showName = row[2] ? row[2].trim() : '';
             const formLink = row[3] ? row[3].trim() : '#';
-            
-            // Assuming status is in the 5th column (index 4). Adjust if needed!
             const status = row[4] ? row[4].trim().toLowerCase() : 'open'; 
 
             if (!categoriesMap[category]) categoriesMap[category] = [];
             categoriesMap[category].push({ showName, formLink, status });
         });
 
-        // 2. Render the categories
         for (const [category, shows] of Object.entries(categoriesMap)) {
             const box = document.createElement('div');
             box.className = 'apply-box';
             
-            // Critical for layover positioning
             box.style.position = 'relative'; 
             box.innerHTML = `<h3>${category}</h3>`;
 
-            // Check if every single show in this category is closed
             const allShowsClosed = shows.every(show => show.status === 'closed');
 
-            // 3. Add the layover if the category is closed
             if (allShowsClosed) {
                 const layover = document.createElement('div');
                 layover.className = 'closed-layover';
@@ -329,7 +307,6 @@ async function fetchApplyData() {
 
             box.appendChild(showsContainer);
 
-            // 4. Footer logic
             let footerText = `*Find out more about ${category} on our Instagram @thisislsr`;
             const catLower = category.toLowerCase();
             
@@ -351,22 +328,21 @@ async function fetchApplyData() {
         console.error("Failed to fetch apply forms", error);
     }
 }
+
     // --- 5.5 AWARDS LOGIC ---
     const awardsSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=1358450835&output=csv';
 
     async function fetchAwardsData() {
         const grid = document.getElementById('award-grid');
-        if (!grid) return; // Guard for non-award pages
+        if (!grid) return; 
 
         try {
             const response = await fetch(awardsSheetUrl);
             const csvText = await response.text();
             const rows = parseCSV(csvText);
             
-            // Remove the header row, and filter out any empty trailing rows
             const data = rows.slice(1).filter(r => r.length >= 3 && r[0].trim() !== '');
 
-            // Group the data by Year
             const awardsByYear = {};
             data.forEach(row => {
                 const year = row[0]?.trim();
@@ -380,9 +356,7 @@ async function fetchApplyData() {
                 awardsByYear[year].push({ place, award, subtitle });
             });
 
-            // Sort years in descending order (e.g., 2024, 2023, 2022)
             const sortedYears = Object.keys(awardsByYear).sort((a, b) => b - a);
-
             let html = '';
 
             sortedYears.forEach(year => {
@@ -393,12 +367,10 @@ async function fetchApplyData() {
                 `;
 
                 awardsByYear[year].forEach(item => {
-                    // Determine the FontAwesome icon based on the 'Place' column
                     let iconClass = 'fa-solid fa-star'; 
                     if (item.place === '2') iconClass = 'fa-solid fa-2';
                     if (item.place === '3') iconClass = 'fa-solid fa-3';
 
-                    // Only generate subtitle div if a subtitle exists in the spreadsheet
                     const subtitleHtml = item.subtitle 
                         ? `<div class="award-subtitle">${item.subtitle}</div>` 
                         : '';
@@ -420,7 +392,6 @@ async function fetchApplyData() {
                 `;
             });
 
-            // Inject into the DOM
             grid.innerHTML = html;
         } catch (error) {
             console.error('Error fetching awards:', error);
@@ -431,8 +402,6 @@ async function fetchApplyData() {
     // --- 6. ENHANCED SCHEDULE & MEDIASESSION LOGIC ---
     const scheduleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=0';
    
-
-    // --- NEW: Helper function to strictly force London Time ---
 function getLondonTimeDetails() {
         const now = new Date();
         const formatter = new Intl.DateTimeFormat('en-GB', {
@@ -452,7 +421,6 @@ function getLondonTimeDetails() {
             if (part.type === 'minute') minute = parseInt(part.value, 10);
         });
         
-        // Handle edge cases where midnight is occasionally formatted as 24
         if (hour === 24) hour = 0;
         
         return { 
@@ -461,8 +429,6 @@ function getLondonTimeDetails() {
         };
     }
 
-    // Add 'Z' to lock this to UTC. (Midnight UTC in Jan exactly matches Midnight London)
-    // We append .getTime() so we are just doing math with raw milliseconds.
     const TERM_START_DATE = new Date('2026-01-26T00:00:00Z').getTime(); 
     let currentViewWeek = 'A';
     let allScheduleRows = [];
@@ -475,7 +441,7 @@ function getLondonTimeDetails() {
     }
 
     function getCurrentWeekType() {
-        const nowMs = Date.now(); // Date.now() is universally the exact same millisecond everywhere
+        const nowMs = Date.now(); 
         const diffInMs = nowMs - TERM_START_DATE;
         const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
         return (diffInWeeks % 2 === 0) ? 'A' : 'B';
@@ -490,7 +456,6 @@ function getLondonTimeDetails() {
         const start = timeToMinutes(startTime);
         const end = timeToMinutes(endTime);
         
-        // Handle shows crossing midnight
         if (start <= end) {
             return currentMinutes >= start && currentMinutes < end;
         } else {
@@ -502,12 +467,7 @@ function getLondonTimeDetails() {
     if ('mediaSession' in navigator) {
         const title = show?.title || "OFF AIR";
         const artist = show?.host || "Leeds Student Radio";
-        
-        // Grab whatever URL was provided
         const rawArtworkUrl = show?.image || show?.img || "/ourlogo.jpeg";
-        
-        // FIX 1: Force the URL to be Absolute (e.g., "https://yourdomain.com/ourlogo.jpeg")
-        // If it's already an absolute Google Drive link, this safely ignores the origin.
         const absoluteArtworkUrl = new URL(rawArtworkUrl, window.location.origin).href;
 
         navigator.mediaSession.metadata = new MediaMetadata({
@@ -517,8 +477,6 @@ function getLondonTimeDetails() {
                 { 
                     src: absoluteArtworkUrl, 
                     sizes: '512x512' 
-                    // FIX 2: Omit the "type: 'image/jpeg'" property. 
-                    // If your spreadsheet links to a PNG, hardcoding JPEG breaks the lock screen image.
                 }
             ]
         });
@@ -533,11 +491,8 @@ function getLondonTimeDetails() {
             allScheduleRows.shift();
             
             const realWeek = getCurrentWeekType();
-            
-            // Logic for the Player / Footer (Live Now)
             updateLiveNowUI(realWeek);
 
-            // Logic for the Schedule Page Grid
             const grid = document.getElementById('schedule-grid');
             if (grid) {
                 currentViewWeek = realWeek;
@@ -590,7 +545,6 @@ function getLondonTimeDetails() {
             }
         }
 
-        // --- 1. LIVE SHOW FALLBACK LOGIC ---
         const lnTitle = document.getElementById('live-now-title');
         const lnImg = document.getElementById('live-now-img');
         const lnDesc = document.getElementById('live-now-desc');
@@ -609,13 +563,9 @@ function getLondonTimeDetails() {
                 document.getElementById('main-player-host').innerText = "with " + liveShow.host;
                 document.getElementById('main-player-desc').innerText = liveShow.description;
                 document.getElementById('main-player-img').src = liveShow.image;
-              // This only updates the text, leaving the dot span untouched
-// Target the specific ID where the text lives
-document.querySelector('#live-text').innerText = 
-  `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+                document.querySelector('#live-text').innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             }
         } else {
-            // NO LIVE SHOW: Load default non-stop data
             if(lnTitle) lnTitle.innerText = "No show currently live";
             if(lnImg) lnImg.src = defaultImg;
             if(lnDesc) lnDesc.innerText = "No show is live right now :(";
@@ -635,7 +585,6 @@ document.querySelector('#live-text').innerText =
             }
         }
 
-        // --- 2. NEXT SHOW FALLBACK LOGIC ---
         const nextT = document.getElementById('up-next-title');
         const nextI = document.getElementById('up-next-img');
         const nextD = document.getElementById('up-next-desc'); 
@@ -645,23 +594,22 @@ document.querySelector('#live-text').innerText =
             if(nextI) nextI.src = nextShow.image;
             if(nextD) nextD.innerText = nextShow.description;
         } else {
-            // NO NEXT SHOW: Load default upcoming data
             if(nextT) nextT.innerText = "No show next";
             if(nextI) nextI.src = defaultImg;
             if(nextD) nextD.innerText = "Check the schedule for our next show!";
         }
     }
+
     function renderSchedule(weekLetter) {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         const grid = document.getElementById('schedule-grid');
         if (!grid) return; 
 
         const realWeek = getCurrentWeekType();
-        grid.innerHTML = ''; // Clear previous
+        grid.innerHTML = ''; 
 
         days.forEach(day => {
             const dayCol = document.createElement('div');
-            // Match the class used in your CSS
             dayCol.className = `schedule-day-column day-${day}`; 
             dayCol.innerHTML = `<h3 class="day-title">${day}</h3>`;
 
@@ -687,22 +635,17 @@ document.querySelector('#live-text').innerText =
                 const showEl = document.createElement('div');
                 showEl.className = 'show-card';
                 
-                // Check if the title is missing or entirely whitespace
                 const hasTitle = show.title && show.title.trim() !== "";
 
                 if (!hasTitle) {
-                    // If there's no title, mark it as empty and skip adding innerHTML/onclick
                     showEl.classList.add('empty-show-slot');
                 } else {
-                    // Normal rendering for shows WITH a title
                     if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
                         showEl.classList.add('is-live');
                     }
-
                     if (show.color && show.color.trim() !== "") {
                         showEl.style.backgroundColor = show.color.trim();
                     }
-
                     showEl.innerHTML = `
                         <img src="${show.img}" alt="${show.title}">
                         <div class="show-card-meta">
@@ -712,26 +655,18 @@ document.querySelector('#live-text').innerText =
                     `;
                     showEl.onclick = () => openShowModal(show);
                 }
-                
                 dayCol.appendChild(showEl);
             });
-            
             grid.appendChild(dayCol);
         });
 
-        // Re-initialize mobile visibility after rendering
         setTimeout(() => initMobileSchedule(), 50); 
     }
 
     function updateWeekUI(week) {
-        // Find out what the actual current week is (e.g., 'A' or 'B')
         const realCurrentWeek = getCurrentWeekType();
-
         document.querySelectorAll('.week-btn').forEach(btn => {
-            // Highlights the week you are currently viewing
             btn.classList.toggle('active', btn.dataset.week === week);
-            
-            // Adds the indicator class to the actual chronological current week
             btn.classList.toggle('is-current-week', btn.dataset.week === realCurrentWeek);
         });
         
@@ -757,17 +692,13 @@ document.querySelector('#live-text').innerText =
         document.getElementById('modal-show-host').innerText = `With ${show.host}`;
         document.getElementById('modal-show-desc').innerText = show.desc;
 
-        // --- NEW MODAL COLOR LOGIC ---
-        // Targets the inner modal box. If your inner box uses a different class/ID, update '.modal-content' below:
         const modalInner = modal.querySelector('.modal-content') || modal; 
 
         if (show.color && show.color.trim() !== "") {
             modalInner.style.backgroundColor = show.color.trim();
         } else {
-            // Clears the inline style so it falls back to your original CSS
             modalInner.style.backgroundColor = ''; 
         }
-        // -----------------------------
 
         modal.style.display = 'block';
         
@@ -784,7 +715,6 @@ document.querySelector('#live-text').innerText =
         const columns = document.querySelectorAll('.schedule-day-column');
         const selector = document.querySelector('.day-selector-mobile');
         
-        // Replaced standard date with Intl API locked to London timezone
         const todayName = new Intl.DateTimeFormat('en-GB', { 
             weekday: 'long', 
             timeZone: 'Europe/London' 
@@ -816,23 +746,17 @@ document.querySelector('#live-text').innerText =
         const navLinks = document.querySelectorAll('.nav-menu .nav-link');
 
         navLinks.forEach(link => {
-            // Remove active class from all first
             link.classList.remove('active');
-
-            // Get the href attribute (e.g., "/DesignPortfolio/listen.html")
             const href = link.getAttribute('href');
-
-            // If the current URL path contains the href of the link, make it active
-            // This handles cases like 'listen.html' matching '/listen'
             if (href && currentPath.includes(href.replace('.html', ''))) {
                 link.classList.add('active');
             }
         });
     }
+
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
-    // It is now safe to use Papa because we control when this function is called
     Papa.parse(sheetUrl, {
         download: true,
         header: true,
@@ -841,7 +765,6 @@ function loadArchiveGrid() {
             const data = results.data;
             const grid = document.getElementById('dynamic-archive-grid');
             
-            // Check if grid exists on the page before trying to modify it
             if (!grid) return; 
 
             let htmlContent = '';
@@ -872,6 +795,161 @@ function loadArchiveGrid() {
         }
     });
 }
+
+    // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
+    let cachedSongs = null;
+    let cachedArtists = null;
+
+    async function fetchChartData(collectionName) {
+        try {
+            // Re-uses the shazamApp initialized globally at the bottom of the file
+            const shazamDb = getFirestore(shazamApp);
+            const q = query(
+                collection(shazamDb, collectionName), 
+                orderBy("count", "desc"), 
+                limit(50) 
+            );
+
+            const querySnapshot = await getDocs(q);
+            const results = [];
+            querySnapshot.forEach((doc) => {
+                results.push(doc.data());
+            });
+            return results;
+
+        } catch (error) {
+            console.error(`Error fetching ${collectionName}: `, error);
+            return [];
+        }
+    }
+
+    function displayLeaderboard(data, viewType, targetId) {
+        const tableContainer = document.getElementById(targetId);
+        if (!tableContainer) return;
+
+        const mainColHeader = viewType === 'songs' ? 'Song' : 'Artist';
+
+        const headerHtml = `
+            <div class="lsr-trk-wgt-row lsr-trk-wgt-header-row">
+                <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-rank">#</div>
+                <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-song">${mainColHeader}</div>
+                <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-plays">Plays</div>
+            </div>`;
+        
+        let rowsHtml = headerHtml;
+
+        if (data.length === 0) {
+            rowsHtml += `<div class="lsr-trk-wgt-row"><div class="lsr-trk-wgt-cell" colspan="3" style="text-align:center; padding:20px;">No ${viewType} found yet. Play some music!</div></div>`;
+        } else {
+            data.forEach((item, index) => {
+                let rankDisplay;
+                if (index === 0) {
+                    rankDisplay = `<i class="fa-solid fa-star lsr-trk-wgt-rank-icon"></i>`;
+                } else if (index === 1) {
+                    rankDisplay = `<i class="fa-solid fa-2 lsr-trk-wgt-rank-icon"></i>`;
+                } else if (index === 2) {
+                    rankDisplay = `<i class="fa-solid fa-3 lsr-trk-wgt-rank-icon"></i>`;
+                } else {
+                    rankDisplay = `<span class="lsr-trk-wgt-rank-num">${index + 1}</span>`;
+                }
+
+                const displayTitle = item.title || item.name;
+                const displaySubtitle = viewType === 'songs' ? item.artist : "Total Plays";
+
+                rowsHtml += `
+                    <div class="lsr-trk-wgt-row lsr-trk-wgt-song-item">
+                        <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-rank">
+                            ${rankDisplay}
+                        </div>
+                        <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-song">
+                            <div class="lsr-trk-wgt-song-flex">
+                                <img src="${item.image || 'https://via.placeholder.com/45'}" class="lsr-trk-wgt-song-image">
+                                <div class="lsr-trk-wgt-song-text">
+                                    <span class="lsr-trk-wgt-title">${displayTitle}</span>
+                                    <span class="lsr-trk-wgt-artist">${displaySubtitle}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lsr-trk-wgt-cell lsr-trk-wgt-col-plays">${item.count}</div>
+                    </div>
+                `;
+            });
+        }
+
+        tableContainer.innerHTML = rowsHtml;
+    }
+
+    async function loadSongs() {
+        const tableBody = document.getElementById('lsr-trk-wgt-song-table-body');
+        if (!tableBody) return;
+
+        if (!cachedSongs) {
+            tableBody.innerHTML = '<div class="lsr-trk-wgt-row"><div class="lsr-trk-wgt-cell" style="text-align:center; padding:20px;">Loading songs...</div></div>';
+            cachedSongs = await fetchChartData("detected_songs");
+        }
+        displayLeaderboard(cachedSongs, 'songs', 'lsr-trk-wgt-song-table-body');
+    }
+
+    async function loadArtists() {
+        const tableBody = document.getElementById('lsr-trk-wgt-artist-table-body');
+        if (!tableBody) return;
+
+        if (!cachedArtists) {
+            tableBody.innerHTML = '<div class="lsr-trk-wgt-row"><div class="lsr-trk-wgt-cell" style="text-align:center; padding:20px;">Loading artists...</div></div>';
+            cachedArtists = await fetchChartData("artists");
+        }
+        displayLeaderboard(cachedArtists, 'artists', 'lsr-trk-wgt-artist-table-body');
+    }
+
+    function updateChartHeaderText() {
+        const titleElement = document.getElementById('lsr-trk-wgt-chart-title');
+        if (!titleElement) return;
+
+        const isDesktop = window.innerWidth >= 1100;
+        
+        if (isDesktop) {
+            titleElement.innerText = 'Most played songs and artists';
+            loadArtists(); 
+        } else {
+            const btnSongs = document.getElementById('lsr-trk-wgt-btn-songs');
+            const isSongsActive = btnSongs ? btnSongs.classList.contains('lsr-trk-wgt-active') : true;
+            titleElement.innerText = isSongsActive ? 'Most played songs' : 'Most played artists';
+        }
+    }
+
+    function initChartSystem() {
+        loadSongs();
+        updateChartHeaderText();
+    }
+
+    // Chart toggle logic mapped to document body for SPA safety
+    document.body.addEventListener('click', (e) => {
+        const btnSongs = e.target.closest('#lsr-trk-wgt-btn-songs');
+        if (btnSongs) {
+            btnSongs.classList.add('lsr-trk-wgt-active');
+            document.getElementById('lsr-trk-wgt-btn-artists')?.classList.remove('lsr-trk-wgt-active');
+            document.getElementById('lsr-trk-wgt-section-songs')?.classList.add('lsr-trk-wgt-active-section');
+            document.getElementById('lsr-trk-wgt-section-artists')?.classList.remove('lsr-trk-wgt-active-section');
+            updateChartHeaderText();
+            loadSongs();
+            return;
+        }
+
+        const btnArtists = e.target.closest('#lsr-trk-wgt-btn-artists');
+        if (btnArtists) {
+            btnArtists.classList.add('lsr-trk-wgt-active');
+            document.getElementById('lsr-trk-wgt-btn-songs')?.classList.remove('lsr-trk-wgt-active');
+            document.getElementById('lsr-trk-wgt-section-artists')?.classList.add('lsr-trk-wgt-active-section');
+            document.getElementById('lsr-trk-wgt-section-songs')?.classList.remove('lsr-trk-wgt-active-section');
+            updateChartHeaderText();
+            loadArtists();
+            return;
+        }
+    });
+
+    window.addEventListener('resize', updateChartHeaderText);
+
+
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -887,58 +965,57 @@ function loadArchiveGrid() {
                 document.title = newDoc.title;
 
                 const metaTags = newDoc.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"], meta[name="description"]');
-    metaTags.forEach(newMeta => {
-        const property = newMeta.getAttribute('property');
-        const name = newMeta.getAttribute('name');
-        const selector = property ? `meta[property="${property}"]` : `meta[name="${name}"]`;
-        const currentMeta = document.querySelector(selector);
-        
-        if (currentMeta) {
-            currentMeta.setAttribute('content', newMeta.getAttribute('content'));
-        }
-    });
+                metaTags.forEach(newMeta => {
+                    const property = newMeta.getAttribute('property');
+                    const name = newMeta.getAttribute('name');
+                    const selector = property ? `meta[property="${property}"]` : `meta[name="${name}"]`;
+                    const currentMeta = document.querySelector(selector);
+                    
+                    if (currentMeta) {
+                        currentMeta.setAttribute('content', newMeta.getAttribute('content'));
+                    }
+                });
                 
                 window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 updateNavLinks();
              
-            if (navMenu && navMenu.classList.contains('active')) toggleMenu();
+                if (navMenu && navMenu.classList.contains('active')) toggleMenu();
 
-    updatePlayButtons(!radioPlayer.paused);
+                updatePlayButtons(!radioPlayer.paused);
 
-    // Initialize specific section data based on URL
-    if (url.includes('apply')) fetchApplyData();
-    if (url.includes('about')) fetchCommitteeData();
-    if (url.includes('awards')) fetchAwardsData(); 
-    
-    if (url.includes('listen')) {
-        // 1. Immediately fetch the Radio.co JSON data for the "Now Playing" section
-        updateNowPlaying(); 
-        // 2. Initialize the Firebase Chat
-        initChatSystem(); 
-    }
+                // Initialize specific section data based on URL
+                if (url.includes('apply')) fetchApplyData();
+                if (url.includes('about')) fetchCommitteeData();
+                if (url.includes('awards')) fetchAwardsData(); 
+                
+                if (url.includes('listen')) {
+                    updateNowPlaying(); 
+                    initChatSystem(); 
+                }
 
-  // Inside your URL checking logic...
-if (url.includes('archives')) { 
-    // Check if Papa is already loaded
-    if (typeof Papa === 'undefined') {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
-        
-        // This is the magic lock. It waits for the download to finish.
-        script.onload = () => {
-            console.log("PapaParse loaded. Building grid...");
-            loadArchiveGrid(); 
-        };
-        
-        document.head.appendChild(script);
-    } else {
-        // Papa was already loaded on a previous visit, safe to run immediately
-        console.log("PapaParse already exists. Building grid...");
-        loadArchiveGrid();
-    }
-}
-    fetchScheduleData();
-}
+                // --- NEW: Hook for Chart ---
+                if (url.includes('chart')) {
+                    initChartSystem();
+                }
+
+                if (url.includes('archives')) { 
+                    if (typeof Papa === 'undefined') {
+                        const script = document.createElement('script');
+                        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
+                        
+                        script.onload = () => {
+                            console.log("PapaParse loaded. Building grid...");
+                            loadArchiveGrid(); 
+                        };
+                        
+                        document.head.appendChild(script);
+                    } else {
+                        console.log("PapaParse already exists. Building grid...");
+                        loadArchiveGrid();
+                    }
+                }
+                fetchScheduleData();
+            }
             
         } catch (e) {
             window.location.assign(url);
@@ -957,7 +1034,6 @@ if (url.includes('archives')) {
     window.addEventListener('popstate', () => loadPage(window.location.href));
 
     // Start everything
-   // Start everything
     updateNavLinks();
     fetchScheduleData();
     fetchCommitteeData();
@@ -968,7 +1044,11 @@ if (url.includes('archives')) {
         initChatSystem();
     }
 
-    // --- NEW: Handle direct visits to the archives page ---
+    // --- NEW: Hook for Chart (Direct load check) ---
+    if (window.location.pathname.includes('chart')) {
+        initChartSystem();
+    }
+
     if (window.location.pathname.includes('archives')) { 
         if (typeof Papa === 'undefined') {
             const script = document.createElement('script');
@@ -982,6 +1062,7 @@ if (url.includes('archives')) {
 
     setInterval(fetchScheduleData, 180000);
 });
+
 // --- CONFIGS ---
 const chatConfig = {
     apiKey: "#{FIREBASE_API_KEY}#",
@@ -1018,13 +1099,9 @@ const shazamApp = allApps.some(app => app.name === "shazam")
     : initializeApp(shazamConfig, "shazam");
 
 
-
-
-
 // Global variables to be shared
-
 let db, auth, messagesCollection;
-let chatUnsubscribe = null; // NEW: Holds the active listener
+let chatUnsubscribe = null; 
 
 // --- CHAT & COUNTER SYSTEM ---
 function initChatSystem() {
@@ -1045,31 +1122,26 @@ function initChatSystem() {
     const anonBtn = document.getElementById('anon-btn');
   
     
-    // New label elements
     const chattingAsName = document.getElementById('chatting-as-name');
     const changeNameBtn = document.getElementById('change-name-btn');
 
-    // Helper function to handle the transition
     function enterChat(isAnonymous = false) {
         let finalName;
         
         if (isAnonymous) {
             finalName = 'Anonymous';
-            displayNameInput.value = ''; // Clear input so Firebase uses Anonymous
+            displayNameInput.value = ''; 
         } else {
             finalName = displayNameInput.value.trim() || 'Anonymous';
         }
 
-        // Update the small label
         if (chattingAsName) chattingAsName.innerText = finalName;
         
-        // Swap visibility
         if (joinArea) joinArea.style.display = 'none';
         if (chatForm) chatForm.style.display = 'flex';
         if (messageInput) messageInput.focus();
     }
 
-    // Add New Message Indicator UI
 const newMsgIndicator = document.createElement('div');
 newMsgIndicator.id = 'new-message-indicator';
 newMsgIndicator.innerHTML = '<span>1 new message</span> <i style="border: solid white; border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(45deg); margin-bottom:2px; margin-left:5px;"></i>';
@@ -1083,7 +1155,6 @@ chatMessages.parentElement.appendChild(newMsgIndicator);
 
 let unreadCount = 0;
 
-// Click to scroll down
 newMsgIndicator.addEventListener('click', () => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
     hideIndicator();
@@ -1095,15 +1166,12 @@ function hideIndicator() {
 }
     
     if (joinBtn && joinArea) {
-        // 1. User clicks OK
         joinBtn.addEventListener('click', () => enterChat(false));
 
-        // 2. User clicks Anonymous
         if (anonBtn) {
             anonBtn.addEventListener('click', () => enterChat(true));
         }
 
-        // 3. User hits Enter in the name field
         if (displayNameInput) {
             displayNameInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -1113,7 +1181,6 @@ function hideIndicator() {
             });
         }
 
-        // 4. User wants to change their name back
         if (changeNameBtn) {
             changeNameBtn.addEventListener('click', () => {
                 chatForm.style.display = 'none';
@@ -1124,15 +1191,12 @@ function hideIndicator() {
     }
     // --- CUSTOM DELETE POPUP ---
     function showDeleteConfirmation(docId) {
-        // Find the wrapper holding the chat so we can lock the overlay inside it
         const chatContainer = chatMessages.parentElement;
         
-        // Ensure the parent container has relative positioning so 'absolute' works correctly
         if (window.getComputedStyle(chatContainer).position === 'static') {
             chatContainer.style.position = 'relative';
         }
 
-        // Create the overlay
         const modalOverlay = document.createElement('div');
         modalOverlay.style.position = 'absolute'; 
         modalOverlay.style.top = '0';
@@ -1147,7 +1211,6 @@ function hideIndicator() {
         modalOverlay.style.backdropFilter = 'blur(2px)';
         modalOverlay.style.borderRadius = '12px';
         
-        // Create the modal box
         const modalBox = document.createElement('div');
         modalBox.style.backgroundColor = 'rgb(205, 50, 50)';
         modalBox.style.padding = '24px';
@@ -1158,7 +1221,6 @@ function hideIndicator() {
     
         modalBox.style.maxWidth = '250px'; 
 
-        // Add text
         const text = document.createElement('p');
         text.innerText = "Are you sure you want to delete your message?";
         text.style.margin = '0 0 20px 0';
@@ -1166,7 +1228,6 @@ function hideIndicator() {
         text.style.fontSize = '16px';
         text.style.fontWeight = '500';
 
-        // Add Delete Button
         const confirmBtn = document.createElement('button');
         confirmBtn.innerText = "Delete";
         confirmBtn.style.marginRight = '12px';
@@ -1178,7 +1239,6 @@ function hideIndicator() {
         confirmBtn.style.cursor = 'pointer';
         confirmBtn.style.fontWeight = 'bold';
 
-        // Add Cancel Button
         const cancelBtn = document.createElement('button');
         cancelBtn.innerText = "Cancel";
         cancelBtn.style.padding = '10px 18px';
@@ -1189,17 +1249,13 @@ function hideIndicator() {
         cancelBtn.style.cursor = 'pointer';
         cancelBtn.style.fontWeight = 'bold';
 
-        // Assemble the popup
         modalBox.appendChild(text);
         modalBox.appendChild(confirmBtn);
         modalBox.appendChild(cancelBtn);
         modalOverlay.appendChild(modalBox);
         
-        // Append to the chat container
         chatContainer.appendChild(modalOverlay);
         
-
-        // Actions
         confirmBtn.addEventListener('click', async () => {
             try {
                 confirmBtn.innerText = "Deleting...";
@@ -1207,7 +1263,6 @@ function hideIndicator() {
             } catch (error) {
                 console.error("Error deleting message:", error);
             } finally {
-                // FIXED: Changed document.body to chatContainer
                 if (chatContainer.contains(modalOverlay)) {
                     chatContainer.removeChild(modalOverlay);
                 }
@@ -1215,7 +1270,6 @@ function hideIndicator() {
         });
 
         cancelBtn.addEventListener('click', () => {
-            // FIXED: Changed document.body to chatContainer
             if (chatContainer.contains(modalOverlay)) {
                 chatContainer.removeChild(modalOverlay);
             }
@@ -1249,7 +1303,6 @@ function hideIndicator() {
         msgDiv.className = 'message-entry';
         msgDiv.id = `msg-${docId}`; 
         
-        // --- AVATAR LOGIC START ---
         const iconDiv = document.createElement('div');
         iconDiv.className = 'message-icon';
         iconDiv.style.background = 'transparent'; 
@@ -1277,7 +1330,6 @@ function hideIndicator() {
         };
 
         iconDiv.appendChild(avatarImg);
-        // --- AVATAR LOGIC END ---
 
         const textDiv = document.createElement('div');
         textDiv.className = 'message-content'; 
@@ -1296,7 +1348,6 @@ function hideIndicator() {
 
         textDiv.innerHTML = contentHtml;
         
-        // --- OWN MESSAGE LOGIC (Tint & Delete Button) ---
         if (auth.currentUser && senderUid === auth.currentUser.uid) {
             msgDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.04)'; 
             msgDiv.style.borderRadius = '8px';
@@ -1312,7 +1363,6 @@ function hideIndicator() {
            
             deleteBtn.title = "Delete Message";
             
-            // ⭐ Call our custom popup instead of immediately deleting
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); 
                 showDeleteConfirmation(docId);
@@ -1332,7 +1382,6 @@ function hideIndicator() {
     }
     
 
-    // --- 3. GIF PICKER LOGIC ---
     if (gifToggleBtn && gifPicker && closeGifBtn) {
         gifToggleBtn.addEventListener('click', () => {
             gifPicker.style.display = gifPicker.style.display === 'none' ? 'flex' : 'none';
@@ -1420,7 +1469,6 @@ function hideIndicator() {
         }
     }
 
-    // --- 4. STANDARD CHAT SEND LOGIC ---
     async function handleSendMessage(e) {
         e.preventDefault();
         const messageText = messageInput.value.trim();
@@ -1440,8 +1488,6 @@ function hideIndicator() {
 
     chatForm.addEventListener('submit', handleSendMessage);
     
-    // Initialize Apps
-   // Initialize Apps (Safely check if they already exist so the SPA doesn't crash)
     const allApps = getApps();
     const chatApp = allApps.some(app => app.name === "chat") 
         ? getApp("chat") 
@@ -1463,7 +1509,6 @@ function hideIndicator() {
 });
 
     
-    // --- LIVE COUNTER LOGIC ---
    const liveId = sessionStorage.getItem('liveId') || Math.random().toString(36).substring(2);
 sessionStorage.setItem('liveId', liveId);
 
@@ -1475,34 +1520,27 @@ window.addEventListener("beforeunload", () => remove(userRef));
 const activeRef = ref(rtdb, 'active');
 const countEl = document.getElementById("live-count");
 
-// 1. Set initial loading state immediately
 if (countEl) {
     countEl.innerHTML = '<span class="spinneractive"></span>'; 
-    // Or simply: countEl.textContent = "...";
 }
 
 onValue(activeRef, snap => {
     const data = snap.val() || {};
-    // Calculate users active in the last 5 minutes
     const activeUsers = Object.values(data).filter(ts => Date.now() - ts < 300000).length;
 
     if (countEl) {
-        // 2. Replace spinner with the actual number
         countEl.textContent = activeUsers;
     }
 });
 
-    // --- AUTH & CHAT SNAPSHOT ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             messagesCollection = collection(db, "messages");
             const q = query(messagesCollection, orderBy("createdAt", "asc"), limitToLast(50));
             
             let isFirstLoad = true; 
-          // ...
           let newestMessageTime = 0; 
           
-          // NEW: If a listener already exists from a previous page visit, kill it first.
           if (chatUnsubscribe) {
               chatUnsubscribe();
           }
@@ -1510,7 +1548,6 @@ onValue(activeRef, snap => {
           chatUnsubscribe = onSnapshot(q, (snapshot) => {
     if (loadingSpinner) loadingSpinner.style.display = 'none';
     
-    // Check if user is at the bottom BEFORE adding new messages
     const isAtBottom = chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + 50;
 
     if (isFirstLoad) {
@@ -1530,13 +1567,10 @@ onValue(activeRef, snap => {
                     displayMessage(change.doc, false);
                     if (msgTime > newestMessageTime) newestMessageTime = msgTime;
 
-                    // SMART SCROLL LOGIC
                     if (isAtBottom) {
-                        // User is at bottom, auto-scroll and hide indicator
                         setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 50);
                         hideIndicator();
                     } else {
-                        // User has scrolled up, show/update indicator
                         unreadCount++;
                         newMsgIndicator.querySelector('span').innerText = `${unreadCount} new message${unreadCount > 1 ? 's' : ''}`;
                         newMsgIndicator.style.display = 'block';
