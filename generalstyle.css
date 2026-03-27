@@ -3085,3 +3085,208 @@ display: flex;
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+   .lsr-trk-wgt-app-wrapper {
+        color: #ffffff;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        min-height: 100vh; /* Ensures it covers the screen if standalone */
+    }
+    
+    @media (max-width: 768px) {
+        .lsr-trk-wgt-app-wrapper {
+            padding: 5px 15px 15px;
+        }
+    }
+
+    .lsr-trk-wgt-chart-container {
+        width: 100%;
+        max-width: 600px;
+        background-color: rgb(205, 50, 50);
+        border-radius: 12px;
+        padding: 20px;
+        border: 2px solid #8f1818;
+        box-sizing: border-box;
+        transition: max-width 0.3s ease; /* Smooth expansion */
+    }
+
+    /* Scoped headers so they don't break global h1/h3 */
+    .lsr-trk-wgt-chart-container h1, 
+    .lsr-trk-wgt-chart-container h3,
+    .lsr-trk-wgt-section-title { 
+        text-align: center; 
+        margin: 5px 0; 
+    }
+    
+    .lsr-trk-wgt-timestamp { 
+        text-align: center; 
+        font-size: 0.8em; 
+        opacity: 0.8; 
+        margin-bottom: 15px; 
+        display: block; 
+    }
+
+    .lsr-trk-wgt-filter-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .lsr-trk-wgt-filter-btn {
+        background-color: #8f1818;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s ease-in-out;
+    }
+
+    .lsr-trk-wgt-filter-btn.lsr-trk-wgt-active {
+        background-color: #ffffff;
+        color: #8f1818;
+    }
+
+    .lsr-trk-wgt-filter-btn:hover:not(.lsr-trk-wgt-active) {
+        background-color: #6a1010;
+    }
+
+    /* THE GRID ENGINE */
+    .lsr-trk-wgt-tables-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .lsr-trk-wgt-list-section {
+        display: none; /* Hidden by default on mobile */
+        width: 100%;
+    }
+
+    .lsr-trk-wgt-list-section.lsr-trk-wgt-active-section {
+        display: block; /* Shows active tab on mobile */
+    }
+
+    .lsr-trk-wgt-section-title {
+        display: none; /* Hidden on mobile */
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .lsr-trk-wgt-song-table {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    .lsr-trk-wgt-row { display: table-row; }
+
+    .lsr-trk-wgt-cell {
+        display: table-cell;
+        vertical-align: middle;
+        padding: 12px 5px;
+        border-bottom: 1px solid #8f1818;
+    }
+
+    .lsr-trk-wgt-header-row {
+        font-weight: bold;
+        font-size: 0.75em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    .lsr-trk-wgt-header-row .lsr-trk-wgt-cell { border-bottom: 2px solid #8f1818; }
+
+    .lsr-trk-wgt-col-rank { width: 35px; text-align: center; } 
+    .lsr-trk-wgt-col-song { width: auto; } 
+    .lsr-trk-wgt-col-plays { width: 45px; text-align: right; padding-right: 10px; }
+
+    .lsr-trk-wgt-rank-num { font-weight: bold; font-size: 1.1em; }
+    
+    .lsr-trk-wgt-rank-icon {
+        aspect-ratio: 1 / 1;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: rgb(160, 43, 43);
+        border: 1px solid rgb(143, 24, 24);
+        border-radius: 50%;
+        padding: 5px;
+        box-sizing: border-box; 
+        margin: 0 auto; 
+    }
+
+    .lsr-trk-wgt-song-item:nth-child(2) .lsr-trk-wgt-rank-icon { color: gold; } 
+    .lsr-trk-wgt-song-item:nth-child(3) .lsr-trk-wgt-rank-icon { color: rgb(214, 214, 214); }
+    .lsr-trk-wgt-song-item:nth-child(4) .lsr-trk-wgt-rank-icon { color: #cd7f32; } 
+
+    .lsr-trk-wgt-song-flex {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .lsr-trk-wgt-song-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        margin-right: 12px;
+        flex-shrink: 0;
+        object-fit: cover;
+        background-color: #8f1818;
+    }
+
+    .lsr-trk-wgt-song-text {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-width: 0;
+    }
+
+    .lsr-trk-wgt-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.9rem;
+    }
+
+    .lsr-trk-wgt-artist {
+        font-size: 0.82em;
+        opacity: 0.8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .lsr-trk-wgt-song-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        cursor: pointer;
+    }
+
+    /* Desktop View: Side by Side Lists */
+    @media (min-width: 1100px) {
+        .lsr-trk-wgt-chart-container {
+            max-width: 1600px; /* Expands to fit both tables */
+        }
+        .lsr-trk-wgt-filter-controls {
+            display: none; /* Hides toggle buttons */
+        }
+        .lsr-trk-wgt-tables-wrapper {
+            flex-direction: row; /* Places tables side by side */
+        }
+        .lsr-trk-wgt-list-section {
+            display: block; /* Forces both lists to show */
+            width: 50%;
+        }
+        .lsr-trk-wgt-section-title {
+            display: block; /* Shows column headers */
+        }
+    }
