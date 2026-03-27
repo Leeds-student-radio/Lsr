@@ -523,17 +523,32 @@ function getLondonTimeDetails() {
         }
     }
 
-    function updateMediaSession(show) {
-        if ('mediaSession' in navigator) {
-            const title = show?.title || "OFF AIR";
-            const artist = show?.host || "Leeds Student Radio";
-            const artworkUrl = show?.image || show?.img || "/ourlogo.jpeg";
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: title, artist: artist,
-                artwork: [{ src: artworkUrl, sizes: '512x512', type: 'image/jpeg' }]
-            });
-        }
+   function updateMediaSession(show) {
+    if ('mediaSession' in navigator) {
+        const title = show?.title || "OFF AIR";
+        const artist = show?.host || "Leeds Student Radio";
+        
+        // Grab whatever URL was provided
+        const rawArtworkUrl = show?.image || show?.img || "/ourlogo.jpeg";
+        
+        // FIX 1: Force the URL to be Absolute (e.g., "https://yourdomain.com/ourlogo.jpeg")
+        // If it's already an absolute Google Drive link, this safely ignores the origin.
+        const absoluteArtworkUrl = new URL(rawArtworkUrl, window.location.origin).href;
+
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: title, 
+            artist: artist,
+            artwork: [
+                { 
+                    src: absoluteArtworkUrl, 
+                    sizes: '512x512' 
+                    // FIX 2: Omit the "type: 'image/jpeg'" property. 
+                    // If your spreadsheet links to a PNG, hardcoding JPEG breaks the lock screen image.
+                }
+            ]
+        });
     }
+}
 
     async function fetchScheduleData() {
         try {
