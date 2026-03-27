@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSR - Popular Songs</title>
+    <title>LSR - Popular Songs & Artists</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -29,13 +29,40 @@
         }
 
         h1, h3 { text-align: center; margin: 5px 0; }
-        .timestamp { text-align: center; font-size: 0.8em; opacity: 0.8; margin-bottom: 20px; display: block; }
+        .timestamp { text-align: center; font-size: 0.8em; opacity: 0.8; margin-bottom: 15px; display: block; }
+
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background-color: #8f1818;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s ease-in-out;
+        }
+
+        .filter-btn.active {
+            background-color: #ffffff;
+            color: #8f1818;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: #6a1010;
+        }
 
         /* THE GRID ENGINE */
         .song-table {
             display: table;
             width: 100%;
-            table-layout: fixed; /* Forces the columns to stay aligned */
+            table-layout: fixed;
             border-collapse: collapse;
         }
 
@@ -48,7 +75,6 @@
             border-bottom: 1px solid #8f1818;
         }
 
-        /* Header Specifics */
         .header-row {
             font-weight: bold;
             font-size: 0.75em;
@@ -57,12 +83,10 @@
         }
         .header-row .cell { border-bottom: 2px solid #8f1818; }
 
-        /* Column Widths */
-        .col-rank { width: 35px; text-align: center; } /* Slightly widened to fit the circular badges */
+        .col-rank { width: 35px; text-align: center; } 
         .col-song { width: auto; } 
-        .col-plays { width: 30px; text-align: right; padding-right: 10px; }
+        .col-plays { width: 45px; text-align: right; padding-right: 10px; }
 
-        /* Ranking Colors & Custom Icons */
         .rank-num { font-weight: bold; font-size: 1.1em; }
         
         .rank-icon {
@@ -78,15 +102,13 @@
             border-radius: 50%;
             padding: 5px;
             box-sizing: border-box; 
-            margin: 0 auto; /* Centers the circle inside the table cell */
+            margin: 0 auto; 
         }
 
-        /* Top 3 Colors (+1 because of header row) */
         .song-item:nth-child(2) .rank-icon { color: gold; } 
         .song-item:nth-child(3) .rank-icon { color: rgb(214, 214, 214); }
-        .song-item:nth-child(4) .rank-icon { color: #cd7f32; } /* Bronze */
+        .song-item:nth-child(4) .rank-icon { color: #cd7f32; } 
 
-        /* Song Content Layout */
         .song-flex {
             display: flex;
             align-items: center;
@@ -115,7 +137,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-                font-size: 0.9rem;
+            font-size: 0.9rem;
         }
 
         .artist {
@@ -136,16 +158,16 @@
 
     <div class="leaderboard-container">
         <h1>LSR Top Chart</h1>
-        <h3>Most played songs</h3>
+        <h3 id="chart-title">Most played songs</h3>
         <span class="timestamp">*NEW (Started at 23:26 on 26/03/2026)</span>
+
+        <div class="filter-controls">
+            <button class="filter-btn active" id="btn-songs">Songs</button>
+            <button class="filter-btn" id="btn-artists">Artists</button>
+        </div>
         
         <div class="song-table" id="song-table-body">
-            <div class="row header-row">
-                <div class="cell col-rank">#</div>
-                <div class="cell col-song">Song</div>
-                <div class="cell col-plays">Plays</div>
             </div>
-        </div>
     </div>
 
     <script type="module">
@@ -163,50 +185,52 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const COLLECTION_NAME = "detected_songs"; 
 
-        async function fetchLeaderboard() {
-            const tableContainer = document.getElementById('song-table-body');
-            
+        // Cache the data so we only fetch from Firebase once per page load
+        let cachedSongs = null;
+        let cachedArtists = null;
+
+        async function fetchCollectionData(collectionName) {
             try {
-                const topSongsQuery = query(
-                    collection(db, COLLECTION_NAME), 
+                const q = query(
+                    collection(db, collectionName), 
                     orderBy("count", "desc"), 
                     limit(50) 
                 );
 
-                const querySnapshot = await getDocs(topSongsQuery);
-                const rankedSongs = [];
+                const querySnapshot = await getDocs(q);
+                const results = [];
                 querySnapshot.forEach((doc) => {
-                    rankedSongs.push(doc.data());
+                    results.push(doc.data());
                 });
-
-                displayLeaderboard(rankedSongs);
+                return results;
 
             } catch (error) {
-                console.error("Error fetching documents: ", error);
+                console.error(`Error fetching ${collectionName}: `, error);
+                return [];
             }
         }
 
-        function displayLeaderboard(rankedSongs) {
+        function displayLeaderboard(data, viewType) {
             const tableContainer = document.getElementById('song-table-body');
+            const titleElement = document.getElementById('chart-title');
             
-            // Keep the header, clear only the old data rows
+            const mainColHeader = viewType === 'songs' ? 'Song' : 'Artist';
+            titleElement.innerText = viewType === 'songs' ? 'Most played songs' : 'Most played artists';
+
             const headerHtml = `
                 <div class="row header-row">
                     <div class="cell col-rank">#</div>
-                    <div class="cell col-song">Song</div>
+                    <div class="cell col-song">${mainColHeader}</div>
                     <div class="cell col-plays">Plays</div>
                 </div>`;
             
             let rowsHtml = headerHtml;
 
-            if (rankedSongs.length === 0) {
-                rowsHtml += '<div class="row"><div class="cell" colspan="3" style="text-align:center; padding:20px;">No songs found.</div></div>';
+            if (data.length === 0) {
+                rowsHtml += `<div class="row"><div class="cell" colspan="3" style="text-align:center; padding:20px;">No ${viewType} found yet. Play some music!</div></div>`;
             } else {
-                rankedSongs.forEach((song, index) => {
-                    
-                    // Logic to swap out standard numbers for custom icons for Top 3
+                data.forEach((item, index) => {
                     let rankDisplay;
                     if (index === 0) {
                         rankDisplay = `<i class="fa-solid fa-star rank-icon"></i>`;
@@ -218,6 +242,11 @@
                         rankDisplay = `<span class="rank-num">${index + 1}</span>`;
                     }
 
+                    // For artists, the name is saved as 'name'. For songs, it's 'title'
+                    const displayTitle = item.title || item.name;
+                    // If it's an artist view, we can just put "Total Plays" or leave it blank
+                    const displaySubtitle = viewType === 'songs' ? item.artist : "Total Plays";
+
                     rowsHtml += `
                         <div class="row song-item">
                             <div class="cell col-rank">
@@ -225,14 +254,14 @@
                             </div>
                             <div class="cell col-song">
                                 <div class="song-flex">
-                                    <img src="${song.image || 'https://via.placeholder.com/45'}" class="song-image">
+                                    <img src="${item.image || 'https://via.placeholder.com/45'}" class="song-image">
                                     <div class="song-text">
-                                        <span class="title">${song.title}</span>
-                                        <span class="artist">${song.artist}</span>
+                                        <span class="title">${displayTitle}</span>
+                                        <span class="artist">${displaySubtitle}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="cell col-plays">${song.count}</div>
+                            <div class="cell col-plays">${item.count}</div>
                         </div>
                     `;
                 });
@@ -241,7 +270,33 @@
             tableContainer.innerHTML = rowsHtml;
         }
 
-        fetchLeaderboard();
+        // --- Event Listeners for Toggles ---
+        document.getElementById('btn-songs').addEventListener('click', async (e) => {
+            document.getElementById('btn-songs').classList.add('active');
+            document.getElementById('btn-artists').classList.remove('active');
+            
+            // If we don't have the songs loaded yet, fetch them
+            if (!cachedSongs) {
+                document.getElementById('song-table-body').innerHTML = '<div class="row"><div class="cell" style="text-align:center; padding:20px;">Loading songs...</div></div>';
+                cachedSongs = await fetchCollectionData("detected_songs");
+            }
+            displayLeaderboard(cachedSongs, 'songs');
+        });
+
+        document.getElementById('btn-artists').addEventListener('click', async (e) => {
+            document.getElementById('btn-artists').classList.add('active');
+            document.getElementById('btn-songs').classList.remove('active');
+            
+            // If we don't have the artists loaded yet, fetch them
+            if (!cachedArtists) {
+                document.getElementById('song-table-body').innerHTML = '<div class="row"><div class="cell" style="text-align:center; padding:20px;">Loading artists...</div></div>';
+                cachedArtists = await fetchCollectionData("artists");
+            }
+            displayLeaderboard(cachedArtists, 'artists');
+        });
+
+        // Initialize by clicking the "Songs" button automatically
+        document.getElementById('btn-songs').click();
     </script>
 </body>
 </html>
