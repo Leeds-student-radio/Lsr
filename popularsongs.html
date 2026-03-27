@@ -4,240 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSR - Popular Songs</title>
-   
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgb(160, 43, 43);
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px 20px;
+        }
+
+        .leaderboard-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: rgb(205, 50, 50);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #8f1818;
+            box-sizing: border-box;
+        }
+
+        h1, h3 { text-align: center; margin: 5px 0; }
+        .timestamp { text-align: center; font-size: 0.8em; opacity: 0.8; margin-bottom: 20px; display: block; }
+
+        /* THE GRID ENGINE */
+        .song-table {
+            display: table;
+            width: 100%;
+            table-layout: fixed; /* Forces the columns to stay aligned */
+            border-collapse: collapse;
+        }
+
+        .row { display: table-row; }
+
+        .cell {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 12px 5px;
+            border-bottom: 1px solid #8f1818;
+        }
+
+        /* Header Specifics */
+        .header-row {
+            font-weight: bold;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .header-row .cell { border-bottom: 2px solid #8f1818; }
+
+        /* Column Widths */
+        .col-rank { width: 55px; text-align: center; } /* Slightly widened to fit the circular badges */
+        .col-song { width: auto; } 
+        .col-plays { width: 70px; text-align: right; padding-right: 10px; }
+
+        /* Ranking Colors & Custom Icons */
+        .rank-num { font-weight: bold; font-size: 1.1em; }
+        
+        .rank-icon {
+            aspect-ratio: 1 / 1;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: rgb(160, 43, 43);
+            border: 1px solid rgb(143, 24, 24);
+            border-radius: 50%;
+            padding: 5px;
+            box-sizing: border-box; 
+            margin: 0 auto; /* Centers the circle inside the table cell */
+        }
+
+        /* Top 3 Colors (+1 because of header row) */
+        .song-item:nth-child(2) .rank-icon { color: gold; } 
+        .song-item:nth-child(3) .rank-icon { color: rgb(214, 214, 214); }
+        .song-item:nth-child(4) .rank-icon { color: #cd7f32; } /* Bronze */
+
+        /* Song Content Layout */
+        .song-flex {
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .song-image {
+            width: 45px;
+            height: 45px;
+            border-radius: 4px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            object-fit: cover;
+            background-color: #8f1818;
+        }
+
+        .song-text {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .title {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .artist {
+            font-size: 0.85em;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
     <div class="leaderboard-container">
-        <h1>Popular Songs</h1>
-        <p>*NEW (Started at 23:26 on 26/03/2026)</p>
+        <h1>LSR Top Chart</h1>
+        <h3>Most played songs</h3>
+        <span class="timestamp">*NEW (Started at 23:26 on 26/03/2026)</span>
         
-        <div class="list-header">
-            <span>#</span>
-            <span class="header-song">Song</span>
-            <span>Plays</span>
+        <div class="song-table" id="song-table-body">
+            <div class="row header-row">
+                <div class="cell col-rank">#</div>
+                <div class="cell col-song">Song</div>
+                <div class="cell col-plays">Plays</div>
+            </div>
         </div>
-
-        <ul id="song-list">
-            </ul>
     </div>
 
-   
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPSQw2pPTBb9CSYkhQ2TOfwXo2XN6mgiQ",
+            authDomain: "shazam-453c8.firebaseapp.com",
+            projectId: "shazam-453c8",
+            storageBucket: "shazam-453c8.firebasestorage.app",
+            messagingSenderId: "765247641391",
+            appId: "1:765247641391:web:87f011c239fbd808e033da"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const COLLECTION_NAME = "detected_songs"; 
+
+        async function fetchLeaderboard() {
+            const tableContainer = document.getElementById('song-table-body');
+            
+            try {
+                const topSongsQuery = query(
+                    collection(db, COLLECTION_NAME), 
+                    orderBy("count", "desc"), 
+                    limit(50) 
+                );
+
+                const querySnapshot = await getDocs(topSongsQuery);
+                const rankedSongs = [];
+                querySnapshot.forEach((doc) => {
+                    rankedSongs.push(doc.data());
+                });
+
+                displayLeaderboard(rankedSongs);
+
+            } catch (error) {
+                console.error("Error fetching documents: ", error);
+            }
+        }
+
+        function displayLeaderboard(rankedSongs) {
+            const tableContainer = document.getElementById('song-table-body');
+            
+            // Keep the header, clear only the old data rows
+            const headerHtml = `
+                <div class="row header-row">
+                    <div class="cell col-rank">#</div>
+                    <div class="cell col-song">Song</div>
+                    <div class="cell col-plays">Plays</div>
+                </div>`;
+            
+            let rowsHtml = headerHtml;
+
+            if (rankedSongs.length === 0) {
+                rowsHtml += '<div class="row"><div class="cell" colspan="3" style="text-align:center; padding:20px;">No songs found.</div></div>';
+            } else {
+                rankedSongs.forEach((song, index) => {
+                    
+                    // Logic to swap out standard numbers for custom icons for Top 3
+                    let rankDisplay;
+                    if (index === 0) {
+                        rankDisplay = `<i class="fa-solid fa-star rank-icon"></i>`;
+                    } else if (index === 1) {
+                        rankDisplay = `<i class="fa-solid fa-2 rank-icon"></i>`;
+                    } else if (index === 2) {
+                        rankDisplay = `<i class="fa-solid fa-3 rank-icon"></i>`;
+                    } else {
+                        rankDisplay = `<span class="rank-num">${index + 1}</span>`;
+                    }
+
+                    rowsHtml += `
+                        <div class="row song-item">
+                            <div class="cell col-rank">
+                                ${rankDisplay}
+                            </div>
+                            <div class="cell col-song">
+                                <div class="song-flex">
+                                    <img src="${song.image || 'https://via.placeholder.com/45'}" class="song-image">
+                                    <div class="song-text">
+                                        <span class="title">${song.title}</span>
+                                        <span class="artist">${song.artist}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cell col-plays">${song.count}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            tableContainer.innerHTML = rowsHtml;
+        }
+
+        fetchLeaderboard();
+    </script>
 </body>
 </html>
-<style>
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: rgb(160, 43, 43);
-    color: #ffffff;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    padding: 40px 20px;
-}
-
-.leaderboard-container {
-    width: 100%;
-    max-width: 600px;
-    background-color: rgb(205, 50, 50);
-    border-radius: 12px;
-    padding: 20px;
-        border: 2px solid #8f1818;
-   
-}
-
-h1 {
-    text-align: center;
-    margin-bottom: 24px;
-    color: white;
-}
-p {
-    text-align: center;
-    margin-bottom: 24px;
-  color: whitesmoke;
-}
-
-.list-header {
-    display: flex;
-    padding: 10px 15px;
-    border-bottom: 2px solid #8f1818;
-    font-weight: bold;
-    color: whitesmoke;
-    font-size: 0.85em;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.list-header span:nth-child(1) { width: 40px; text-align: center; }
-.header-song { flex-grow: 1; margin-left: 15px; }
-.list-header span:nth-child(3) { width: 50px; text-align: right; }
-
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.song-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border-bottom: 1px solid #8f1818;
-    transition: background-color 0.2s ease;
-}
-
-.song-item:hover {
-    background-color: #ec3a3a;
-    border-radius: 8px;
-    border-bottom-color: transparent;
-    cursor:pointer;
-}
-
-.rank {
-    width: 40px;
-    text-align: center;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #888;
-}
-
-/* Make the top 3 numbers pop */
-.song-item:nth-child(1) .rank { color: #ffd700; font-size: 1.4em; } /* Gold */
-.song-item:nth-child(2) .rank { color: #c0c0c0; font-size: 1.3em; } /* Silver */
-.song-item:nth-child(3) .rank { color: #cd7f32; font-size: 1.3em; } /* Bronze */
-
-.song-info {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    margin-left: 15px;
-    overflow: hidden;
-}
-
-.song-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 6px;
-    object-fit: cover;
-    margin-right: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-.text-info {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.title {
-    font-weight: 600;
-    font-size: 1.05em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 4px;
-}
-
-.artist {
-    font-size: 0.85em;
-    color: whitesmoke;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.play-count {
-    width: 50px;
-    text-align: right;
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #ffffff;
-}
-</style>
-<script type="module">
-
-// Notice we added 'query', 'orderBy', and 'limit' to do the sorting on the database side
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-// 2. Your Firebase Configuration (Replace with YOUR actual config object)
-const firebaseConfig = {
- apiKey: "AIzaSyDPSQw2pPTBb9CSYkhQ2TOfwXo2XN6mgiQ",
-  authDomain: "shazam-453c8.firebaseapp.com",
-  projectId: "shazam-453c8",
-  storageBucket: "shazam-453c8.firebasestorage.app",
-  messagingSenderId: "765247641391",
-  appId: "1:765247641391:web:87f011c239fbd808e033da"
-};
-
-// 3. Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Update this to whatever you named this new aggregated collection
-const COLLECTION_NAME = "detected_songs"; 
-
-// 4. Fetch the Pre-Sorted Data
-async function fetchLeaderboard() {
-    const listContainer = document.getElementById('song-list');
-    listContainer.innerHTML = '<li style="text-align:center; padding: 20px;">Loading charts...</li>';
-
-    try {
-        // Create a query that grabs the top 50 songs, ordered by the 'count' field (Highest to Lowest)
-        const topSongsQuery = query(
-            collection(db, COLLECTION_NAME), 
-            orderBy("count", "desc"), 
-            limit(50) 
-        );
-
-        const querySnapshot = await getDocs(topSongsQuery);
-        const rankedSongs = [];
-
-        // Push the pre-sorted data straight into our array
-        querySnapshot.forEach((doc) => {
-            rankedSongs.push(doc.data());
-        });
-
-        // Send to the display function
-        displayLeaderboard(rankedSongs);
-
-    } catch (error) {
-        console.error("Error fetching documents: ", error);
-        listContainer.innerHTML = '<li style="text-align:center; color: #ff4c4c; padding: 20px;">Failed to load leaderboard. Check console for details.</li>';
-    }
-}
-
-// 5. Render to the DOM
-function displayLeaderboard(rankedSongs) {
-    const listContainer = document.getElementById('song-list');
-    listContainer.innerHTML = ''; // Clear loading text
-
-    if (rankedSongs.length === 0) {
-        listContainer.innerHTML = '<li style="text-align:center; padding: 20px;">No songs played yet!</li>';
-        return;
-    }
-
-    rankedSongs.forEach((song, index) => {
-        const li = document.createElement('li');
-        li.className = 'song-item';
-
-        // Notice we changed ${song.plays} to ${song.count} to match your new database structure
-        li.innerHTML = `
-            <div class="rank">${index + 1}</div>
-            <div class="song-info">
-                <img src="${song.image}" alt="${song.title}" class="song-image">
-                <div class="text-info">
-                    <span class="title">${song.title}</span>
-                    <span class="artist">${song.artist}</span>
-                </div>
-            </div>
-            <div class="play-count">${song.count}</div> 
-        `;
-
-        listContainer.appendChild(li);
-    });
-}
-
-// 6. Trigger the fetch when the script loads
-fetchLeaderboard();
-</script>
