@@ -756,26 +756,26 @@ function getLondonTimeDetails() {
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
-let msnry; 
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Show spinner immediately on load
     document.getElementById('loading-spinner').style.display = 'block';
-
-    // Start fetching the data
-    loadArchiveGrid();
+    loadArchiveData();
 });
 
-function loadArchiveGrid() {
+function loadArchiveData() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
+    // Ensure PapaParse is included in your HTML: 
+    // <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     Papa.parse(sheetUrl, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
+            // Filter out empty images
             let data = results.data.filter(item => item.image_url);
             
+            // Sort Newest to Oldest based on 4-digit year in caption
             data.sort((a, b) => {
                 const getYear = (str) => {
                     const match = str ? str.match(/\d{4}/) : null;
@@ -785,20 +785,23 @@ function loadArchiveGrid() {
             });
 
             allData = data; 
-            
-            // Start preloading the first batch
-            loadNextBatch();
+            renderNextBatch();
         }
     });
 }
 
-async function loadNextBatch() {
+async function renderNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
     
     if (batch.length === 0) return; 
 
-    // Preload images
+    // Show spinner if loading more
+    if (currentIndex === 0) {
+        document.getElementById('loading-spinner').style.display = 'block';
+    }
+
+    // Preload images so they don't pop in weirdly
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -810,78 +813,40 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // If this is the first batch, hide the spinner
-    if (currentIndex === 0) {
-        document.getElementById('loading-spinner').style.display = 'none';
-    }
+    // Hide spinner once images are ready
+    document.getElementById('loading-spinner').style.display = 'none';
 
-    // Build HTML
-    let htmlContent = '';
+    // Create and append elements
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
         const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
         
-        htmlContent += `
-          <div class="archive-item">
-            <img src="${item.image_url}" alt="LSR archive image" loading="lazy">
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'archive-item';
+        itemDiv.innerHTML = `
+            <img src="${item.image_url}" alt="${item.title || 'Archive Image'}" loading="lazy">
             <div class="caption">
               ${titleHtml}
               ${captionHtml}
             </div>
-          </div>
         `;
+        
+        grid.appendChild(itemDiv);
+
+        // Slight delay to trigger CSS fade-in transition
+        setTimeout(() => itemDiv.classList.add('is-visible'), 50);
     });
-
-    // Convert to DOM elements
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    const newItems = Array.from(tempDiv.children);
-
-    // 1. Append the new items to the DOM first
-    grid.append(...newItems);
-
-    // 2. Safely handle Masonry
-    if (!msnry) {
-        // If Masonry doesn't exist yet (first batch), initialize it now!
-        // It will automatically layout the items we just appended.
-        msnry = new Masonry(grid, {
-            itemSelector: '.archive-item',
-            columnWidth: '.grid-sizer',
-            gutter: '.gutter-sizer',
-            percentPosition: true,
-            transitionDuration: '0.3s'
-        });
-    } else {
-        // If Masonry already exists (subsequent batches), append and layout
-        msnry.appended(newItems);
-        msnry.layout(); 
-    }
-
-    // Fade in
-    setTimeout(() => {
-        newItems.forEach(item => item.classList.add('is-visible'));
-    }, 50);
 
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
 }
 
 function manageLoadMoreButton() {
-    let btn = document.getElementById('load-more-btn');
-    
+    const btn = document.getElementById('load-more-btn');
     if (currentIndex < allData.length) {
-        if (!btn) {
-            btn = document.createElement('button');
-            btn.id = 'load-more-btn';
-            btn.innerText = 'Load More';
-            btn.className = 'load-more-button'; 
-            btn.onclick = loadNextBatch;
-            
-            document.getElementById('dynamic-archive-grid').after(btn);
-        } else {
-            btn.style.display = 'block'; 
-        }
-    } else if (btn) {
+        btn.style.display = 'block';
+        btn.onclick = renderNextBatch;
+    } else {
         btn.style.display = 'none'; 
     }
 }
