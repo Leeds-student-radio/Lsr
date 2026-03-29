@@ -758,22 +758,23 @@ function getLondonTimeDetails() {
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
-let msnry; // Variable to hold our Masonry instance
+let msnry; 
 
-// 1. Initialize Masonry on the skeletons immediately on page load
+// 1. Initialize skeletons immediately
 document.addEventListener("DOMContentLoaded", () => {
     const grid = document.getElementById('dynamic-archive-grid');
     
-    // Build the skeleton grid
-    msnry = new Masonry(grid, {
-        itemSelector: '.archive-item',
-        columnWidth: '.grid-sizer',
-        gutter: '.gutter-sizer',
-        percentPosition: true,
-        transitionDuration: 0 // Keep at 0 so skeletons snap instantly into place
-    });
+    // Attempt to run Masonry on the skeletons
+    if (typeof Masonry !== 'undefined') {
+        msnry = new Masonry(grid, {
+            itemSelector: '.archive-item',
+            columnWidth: '.grid-sizer',
+            gutter: '.gutter-sizer',
+            percentPosition: true,
+            transitionDuration: 0 // Snap instantly
+        });
+    }
     
-    // Fetch the real data
     loadArchiveGrid();
 });
 
@@ -797,31 +798,20 @@ function loadArchiveGrid() {
 
             allData = data; 
             
-            const grid = document.getElementById('dynamic-archive-grid');
-            
-            // 2. Destroy the skeleton Masonry instance BEFORE wiping the HTML
-            if (msnry) {
-                msnry.destroy(); // Resets the layout state
-                msnry = null;    // Clears the variable so loadNextBatch() creates a new one
-            }
-
-            // 🔥 THE FIX: Clear skeletons, but inject the sizers back in! 🔥
-            grid.innerHTML = `
-              <div class="grid-sizer"></div>
-              <div class="gutter-sizer"></div>
-            `;
-            
+            // 🚨 We do NOT wipe the grid.innerHTML here anymore!
+            // The skeletons must remain visible while the next function preloads the images.
             loadNextBatch();
         }
     });
 }
+
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
     
     if (batch.length === 0) return; 
 
-    // Preload images to prevent layout jitter when Masonry calculates heights
+    // 1. Preload real images IN THE BACKGROUND (Skeletons are still on screen!)
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -833,7 +823,20 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // Build HTML string for the new items
+    // 2. 🔥 THE SWAP 🔥 
+    // NOW that images are fully downloaded in the cache, we destroy the skeletons.
+    if (currentIndex === 0) {
+        if (msnry) {
+            msnry.destroy(); 
+            msnry = null;    
+        }
+        grid.innerHTML = `
+          <div class="grid-sizer"></div>
+          <div class="gutter-sizer"></div>
+        `;
+    }
+
+    // 3. Build HTML for the new items
     let htmlContent = '';
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
@@ -850,22 +853,21 @@ async function loadNextBatch() {
         `;
     });
 
-    // Convert the HTML string into actual DOM elements
+    // Convert HTML string to DOM elements
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
     const newItems = Array.from(tempDiv.children);
 
-    // 1. Append items to the grid FIRST
+    // Append to grid
     grid.append(...newItems);
 
-    // 2. Initialize or Update Masonry
- 
+    // 4. Initialize or update the REAL Masonry layout
     if (!msnry) {
         msnry = new Masonry(grid, {
             itemSelector: '.archive-item',
-            columnWidth: '.grid-sizer', // Uses the CSS width of this element
-            gutter: '.gutter-sizer',    // Uses the CSS width of this element
-            percentPosition: true,      // Tells Masonry to respect percentages
+            columnWidth: '.grid-sizer',
+            gutter: '.gutter-sizer',
+            percentPosition: true,
             transitionDuration: '0.3s'
         });
     } else {
@@ -880,7 +882,6 @@ async function loadNextBatch() {
 function manageLoadMoreButton() {
     let btn = document.getElementById('load-more-btn');
     
-    // If there's more data to load, show/create the button
     if (currentIndex < allData.length) {
         if (!btn) {
             btn = document.createElement('button');
@@ -889,17 +890,14 @@ function manageLoadMoreButton() {
             btn.className = 'load-more-button'; 
             btn.onclick = loadNextBatch;
             
-            // Place it immediately after the grid
             document.getElementById('dynamic-archive-grid').after(btn);
         } else {
-            btn.style.display = 'block'; // Ensure it's visible if it was hidden
+            btn.style.display = 'block'; 
         }
     } else if (btn) {
-        // Hide button if we reached the end of the data
         btn.style.display = 'none'; 
     }
 }
-    
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
