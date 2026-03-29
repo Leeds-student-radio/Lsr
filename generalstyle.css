@@ -2263,7 +2263,7 @@ hr {
 /* --- The Masonry Grid --- */
 .archive-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   max-width: 1500px;
   margin: 0 auto;
@@ -2282,7 +2282,7 @@ hr {
 /* Keep varied heights */
 .archive-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
 }
 
@@ -2317,7 +2317,7 @@ hr {
 .archive-item {
   position: relative;
   break-inside: avoid; /* Prevents an image from being split across columns */
-  margin-bottom: 1.5rem; /* The vertical gap. Matches column-gap for perfect consistency */
+ 
   border-radius: 12px;
   overflow: hidden;
   background-color: #eee; /* Placeholder color while images load */
@@ -2329,7 +2329,7 @@ hr {
 .archive-item img {
   display: block;
   width: 100%;
-  height: auto; /* Preserves the native aspect ratio */
+  height: 100%;
   transition: transform 0.4s ease;
 }
 
@@ -2388,7 +2388,7 @@ hr {
 
   
   .archive-item {
-    margin-bottom: 0.5rem; /* MUST match the new column-gap for perfect consistency */
+   
     border-radius: 8px; /* Slightly smaller corners for smaller images */
   }
   
