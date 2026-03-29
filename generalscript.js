@@ -763,7 +763,7 @@ function loadArchiveGrid() {
 
   let allData = [];
   let currentIndex = 0;
-  const batchSize = 10;
+  const batchSize = 12;
 
   function renderBatch() {
     const slice = allData.slice(currentIndex, currentIndex + batchSize);
@@ -776,7 +776,7 @@ function loadArchiveGrid() {
 
       const img = document.createElement('img');
       img.src = item.image_url;
-      img.loading = currentIndex < 10 ? "eager" : "lazy"; // preload first batch
+      img.loading = currentIndex < 12 ? "eager" : "lazy"; // preload first batch
 
       const caption = document.createElement('div');
       caption.className = 'caption';
