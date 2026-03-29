@@ -753,72 +753,200 @@ function getLondonTimeDetails() {
             }
         });
     }
-function loadArchiveGrid() {
-  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
+/**
+ * Archive Masonry Grid — Deployment-Ready
+ * 
+ * Features:
+ *  - Fetches data from Google Sheet CSV via PapaParse
+ *  - Reverses row order (last row = first image)
+ *  - Loads items left→right, row by row (not column-first)
+ *  - Preloads first 10 images; "Load More" button reveals 10 at a time
+ *  - Skeleton loader while fetching
+ *  - 3 columns (≥769px) / 2 columns (<769px)
+ *  - Smooth fade-in per item after image loads
+ *  - Zero layout shift on load-more
+ */
 
-  const grid = document.getElementById('dynamic-archive-grid');
-  const loadMoreBtn = document.getElementById('load-more-btn');
+(function () {
+  'use strict';
 
-  if (!grid) return;
+  /* ─── CONFIG ─────────────────────────────────────────────── */
+  const SHEET_URL =
+    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
+  const PAGE_SIZE = 10;
+  const GRID_ID   = 'dynamic-archive-grid';
+  const BTN_ID    = 'archive-load-more-btn';
 
-  let allData = [];
-  let currentIndex = 0;
-  const batchSize = 10;
+  /* ─── STATE ──────────────────────────────────────────────── */
+  let allItems   = [];   // full reversed dataset
+  let loadedCount = 0;   // how many are in the DOM
 
-  function renderBatch() {
-    const slice = allData.slice(currentIndex, currentIndex + batchSize);
+  /* ─── HELPERS ────────────────────────────────────────────── */
 
-    slice.forEach(item => {
-      if (!item.image_url) return;
+  /**
+   * Build one archive-item element (hidden until its image loads).
+   * @param {Object} item  – row from the sheet
+   * @param {boolean} preload – if true, start loading the image immediately
+   */
+  function createItem(item, preload) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'archive-item lsr-fade-item';
+    wrapper.style.opacity = '0';
+    wrapper.style.transition = 'opacity 0.5s ease';
 
-      const div = document.createElement('div');
-      div.className = 'archive-item';
+    const img = document.createElement('img');
+    img.alt = item.title || 'LSR archive image';
+    img.decoding = 'async';
 
-      const img = document.createElement('img');
+    // Caption
+    const caption = document.createElement('div');
+    caption.className = 'caption';
+    caption.innerHTML = `
+      <h3>${item.title  || ''}</h3>
+      <p>${item.caption || ''}</p>
+    `;
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(caption);
+
+    // Fade in once loaded
+    const reveal = () => {
+      wrapper.style.opacity = '1';
+    };
+    img.addEventListener('load',  reveal, { once: true });
+    img.addEventListener('error', reveal, { once: true }); // still show on error
+
+    if (preload) {
       img.src = item.image_url;
-      img.loading = currentIndex < 10 ? "eager" : "lazy"; // preload first batch
+    } else {
+      // Store URL for lazy reveal
+      img.dataset.src = item.image_url;
+    }
 
-      const caption = document.createElement('div');
-      caption.className = 'caption';
+    return wrapper;
+  }
 
-      caption.innerHTML = `
-        <h3>${item.title || ''}</h3>
-        <p>${item.caption || ''}</p>
-      `;
+  /**
+   * Inject items[start … start+count) into the grid.
+   * For items that aren't preloaded, set .src now (browser caches if already fetched).
+   */
+  function renderBatch(grid, start, count) {
+    const end  = Math.min(start + count, allItems.length);
+    const frag = document.createDocumentFragment();
 
-      div.appendChild(img);
-      div.appendChild(caption);
-      grid.appendChild(div);
-    });
+    for (let i = start; i < end; i++) {
+      const item    = allItems[i];
+      const preload = (start === 0); // first batch gets preload=true
+      const el      = createItem(item, preload);
 
-    currentIndex += batchSize;
+      // For non-preloaded batches, trigger load immediately on append
+      if (!preload) {
+        const img = el.querySelector('img');
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          delete img.dataset.src;
+        }
+      }
 
-    if (currentIndex >= allData.length) {
-      loadMoreBtn.style.display = 'none';
+      frag.appendChild(el);
+    }
+
+    grid.appendChild(frag);
+    loadedCount = end;
+  }
+
+  /**
+   * Update / hide the Load More button.
+   */
+  function updateButton() {
+    const btn = document.getElementById(BTN_ID);
+    if (!btn) return;
+    if (loadedCount >= allItems.length) {
+      btn.style.display = 'none';
+    } else {
+      const remaining = allItems.length - loadedCount;
+      btn.textContent = `Load ${Math.min(remaining, PAGE_SIZE)} More`;
+      btn.style.display = '';
     }
   }
 
-  Papa.parse(sheetUrl, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
-      // 🔥 REVERSE ORDER (last row first)
-      allData = results.data.reverse();
+  /**
+   * Create the Load More button and inject it after the grid.
+   */
+  function createButton(grid) {
+    // Remove any pre-existing button
+    const existing = document.getElementById(BTN_ID);
+    if (existing) existing.remove();
 
-      // clear skeletons
-      grid.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.id          = BTN_ID;
+    btn.className   = 'archive-load-more';
+    btn.textContent = 'Load More';
 
-      renderBatch();
+    btn.addEventListener('click', () => {
+      const grid = document.getElementById(GRID_ID);
+      if (!grid) return;
+      renderBatch(grid, loadedCount, PAGE_SIZE);
+      updateButton();
+    });
 
-      loadMoreBtn.addEventListener('click', renderBatch);
-    },
-    error: function(error) {
-      console.error("Error fetching data:", error);
-      grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
-    }
-  });
-}
+    grid.insertAdjacentElement('afterend', btn);
+    return btn;
+  }
+
+  /* ─── MAIN ENTRY ─────────────────────────────────────────── */
+
+  function loadArchiveGrid() {
+    const grid = document.getElementById(GRID_ID);
+    if (!grid) return;
+
+    // Skeleton is already in the HTML — leave it until data arrives.
+
+    Papa.parse(SHEET_URL, {
+      download:       true,
+      header:         true,
+      skipEmptyLines: true,
+
+      complete(results) {
+        // 1. Filter rows with an image URL
+        const valid = results.data.filter(row => row.image_url && row.image_url.trim());
+
+        // 2. Reverse so last sheet row → first displayed item
+        allItems = valid.slice().reverse();
+
+        // 3. Clear skeleton
+        grid.innerHTML = '';
+        loadedCount = 0;
+
+        if (allItems.length === 0) {
+          grid.innerHTML = '<p class="archive-empty">No archive items found.</p>';
+          return;
+        }
+
+        // 4. Render first page (preloaded)
+        renderBatch(grid, 0, PAGE_SIZE);
+
+        // 5. Create load-more button
+        const btn = createButton(grid);
+        updateButton();
+      },
+
+      error(err) {
+        console.error('[Archive Grid] Failed to fetch sheet:', err);
+        grid.innerHTML = '<p class="archive-empty">Sorry, could not load the archive. Please try again later.</p>';
+      },
+    });
+  }
+
+  /* ─── INIT ───────────────────────────────────────────────── */
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadArchiveGrid);
+  } else {
+    loadArchiveGrid();
+  }
+
+})();
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
