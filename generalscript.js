@@ -759,8 +759,10 @@ let currentIndex = 0;
 const BATCH_SIZE = 15; 
 let msnry; 
 
-// 1. Init Masonry IMMEDIATELY so it targets the skeletons
 document.addEventListener("DOMContentLoaded", () => {
+    // Show spinner immediately on load
+    document.getElementById('loading-spinner').style.display = 'block';
+
     const grid = document.getElementById('dynamic-archive-grid');
     msnry = new Masonry(grid, {
         itemSelector: '.archive-item',
@@ -770,7 +772,6 @@ document.addEventListener("DOMContentLoaded", () => {
         transitionDuration: '0.3s'
     });
 
-    // Start loading the sheet in the background
     loadArchiveGrid();
 });
 
@@ -794,18 +795,19 @@ function loadArchiveGrid() {
 
             allData = data; 
             
-            // Preload images while the CSS skeletons are still on screen
+            // Start preloading the first batch
             loadNextBatch();
         }
     });
 }
+
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
     
     if (batch.length === 0) return; 
 
-    // 1. Preload real images in the background
+    // Preload images
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -817,36 +819,12 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    
-   // 2. 🔥 THE CHOREOGRAPHED SWAP 🔥 
+    // If this is the first batch, hide the spinner now that images are ready
     if (currentIndex === 0) {
-        const skeletons = grid.querySelectorAll('.lsr-skel-item');
-        
-        // Step A: Trigger the CSS fade-out on the skeletons
-        skeletons.forEach(skel => skel.classList.add('is-hiding'));
-        
-        // Step B: Wait 300ms for the CSS fade-out transition to finish
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // 🔥 THE SAFETY NET: If msnry failed to initialize earlier, do it now
-        if (!msnry) {
-            console.warn("Initializing Masonry on the fly...");
-            msnry = new Masonry(grid, {
-                itemSelector: '.archive-item',
-                columnWidth: '.grid-sizer',
-                gutter: '.gutter-sizer',
-                percentPosition: true,
-                transitionDuration: '0.3s'
-            });
-        }
-
-        // Step C: Safely remove them (checking if they exist first)
-        if (skeletons.length > 0) {
-            msnry.remove(Array.from(skeletons)); 
-        }
+        document.getElementById('loading-spinner').style.display = 'none';
     }
 
-    // 3. Build HTML for the new items
+    // Build HTML
     let htmlContent = '';
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
@@ -868,16 +846,12 @@ async function loadNextBatch() {
     tempDiv.innerHTML = htmlContent;
     const newItems = Array.from(tempDiv.children);
 
-    // Append to grid
+    // Append and layout
     grid.append(...newItems);
-
-    // 4. Update Masonry Layout
     msnry.appended(newItems);
     msnry.layout(); 
 
-    // 5. Trigger the CSS fade-in for the new images
-    // We use a tiny delay so the browser registers the initial opacity: 0 state
-    // before we apply the is-visible class.
+    // Fade in
     setTimeout(() => {
         newItems.forEach(item => item.classList.add('is-visible'));
     }, 50);
@@ -885,8 +859,6 @@ async function loadNextBatch() {
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
 }
-
-// ... Keep your manageLoadMoreButton() function exactly as it is!
 
 function manageLoadMoreButton() {
     let btn = document.getElementById('load-more-btn');
