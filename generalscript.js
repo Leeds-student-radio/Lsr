@@ -759,12 +759,12 @@ function loadArchiveGrid() {
   const grid = document.getElementById('dynamic-archive-grid');
   const loadMoreBtn = document.getElementById('load-more-btn');
   
-  // Modal Elements
-  const modal = document.getElementById('image-modal');
-  const modalImg = document.getElementById('modal-img');
-  const modalTitle = document.getElementById('modal-title');
-  const modalDesc = document.getElementById('modal-desc');
-  const closeBtn = document.querySelector('.close-modal');
+  // Updated Modal Elements
+  const modal = document.getElementById('archive-lightbox-modal');
+  const modalImg = document.getElementById('archive-lightbox-img');
+  const modalTitle = document.getElementById('archive-lightbox-title');
+  const modalDesc = document.getElementById('archive-lightbox-desc');
+  const closeBtn = document.querySelector('.archive-lightbox-close');
 
   if (!grid) return;
 
@@ -776,23 +776,21 @@ function loadArchiveGrid() {
   function openModal(imgSrc, title, desc) {
     modalImg.src = imgSrc;
     modalTitle.textContent = title || '';
-    modalDesc.innerHTML = desc || ''; // Using innerHTML in case you have links/formatting
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden'; // Prevents background scrolling while open
+    modalDesc.innerHTML = desc || ''; 
+    modal.classList.add('archive-lightbox-show');
+    document.body.style.overflow = 'hidden'; 
   }
 
   function closeModal() {
-    modal.classList.remove('show');
-    document.body.style.overflow = ''; // Restores scrolling
-    setTimeout(() => { modalImg.src = ''; }, 300); // Clears image after animation
+    modal.classList.remove('archive-lightbox-show');
+    document.body.style.overflow = ''; 
+    setTimeout(() => { modalImg.src = ''; }, 300); 
   }
 
-  // Close modal on 'X' click
   if (closeBtn) {
     closeBtn.addEventListener('click', closeModal);
   }
 
-  // Close modal when clicking the dark background outside the image
   window.addEventListener('click', (e) => {
     if (e.target === modal) {
       closeModal();
@@ -813,7 +811,6 @@ function loadArchiveGrid() {
       img.src = item.image_url;
       img.loading = currentIndex < 12 ? "eager" : "lazy";
 
-      // Trigger the modal when the grid item is clicked
       div.addEventListener('click', () => {
         openModal(item.image_url, item.title, item.caption);
       });
@@ -825,7 +822,7 @@ function loadArchiveGrid() {
     currentIndex += batchSize;
 
     if (currentIndex >= allData.length) {
-      loadMoreBtn.style.display = 'none';
+      if(loadMoreBtn) loadMoreBtn.style.display = 'none';
     }
   }
 
@@ -835,9 +832,9 @@ function loadArchiveGrid() {
     skipEmptyLines: true,
     complete: function(results) {
       allData = results.data.reverse();
-      grid.innerHTML = ''; // clear skeletons
+      grid.innerHTML = ''; 
       renderBatch();
-      loadMoreBtn.addEventListener('click', renderBatch);
+      if(loadMoreBtn) loadMoreBtn.addEventListener('click', renderBatch);
     },
     error: function(error) {
       console.error("Error fetching data:", error);
