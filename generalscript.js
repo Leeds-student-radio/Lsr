@@ -817,7 +817,8 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // 2. 🔥 THE CHOREOGRAPHED SWAP 🔥 
+    
+   // 2. 🔥 THE CHOREOGRAPHED SWAP 🔥 
     if (currentIndex === 0) {
         const skeletons = grid.querySelectorAll('.lsr-skel-item');
         
@@ -827,8 +828,22 @@ async function loadNextBatch() {
         // Step B: Wait 300ms for the CSS fade-out transition to finish
         await new Promise(resolve => setTimeout(resolve, 300));
         
-        // Step C: Now that they are invisible, safely remove them from Masonry
-        msnry.remove(skeletons); 
+        // 🔥 THE SAFETY NET: If msnry failed to initialize earlier, do it now
+        if (!msnry) {
+            console.warn("Initializing Masonry on the fly...");
+            msnry = new Masonry(grid, {
+                itemSelector: '.archive-item',
+                columnWidth: '.grid-sizer',
+                gutter: '.gutter-sizer',
+                percentPosition: true,
+                transitionDuration: '0.3s'
+            });
+        }
+
+        // Step C: Safely remove them (checking if they exist first)
+        if (skeletons.length > 0) {
+            msnry.remove(Array.from(skeletons)); 
+        }
     }
 
     // 3. Build HTML for the new items
