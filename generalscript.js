@@ -753,7 +753,6 @@ function getLondonTimeDetails() {
             }
         });
     }
-
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
@@ -763,15 +762,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show spinner immediately on load
     document.getElementById('loading-spinner').style.display = 'block';
 
-    const grid = document.getElementById('dynamic-archive-grid');
-    msnry = new Masonry(grid, {
-        itemSelector: '.archive-item',
-        columnWidth: '.grid-sizer',
-        gutter: '.gutter-sizer',
-        percentPosition: true,
-        transitionDuration: '0.3s'
-    });
-
+    // Start fetching the data
     loadArchiveGrid();
 });
 
@@ -819,7 +810,7 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // If this is the first batch, hide the spinner now that images are ready
+    // If this is the first batch, hide the spinner
     if (currentIndex === 0) {
         document.getElementById('loading-spinner').style.display = 'none';
     }
@@ -846,10 +837,25 @@ async function loadNextBatch() {
     tempDiv.innerHTML = htmlContent;
     const newItems = Array.from(tempDiv.children);
 
-    // Append and layout
+    // 1. Append the new items to the DOM first
     grid.append(...newItems);
-    msnry.appended(newItems);
-    msnry.layout(); 
+
+    // 2. Safely handle Masonry
+    if (!msnry) {
+        // If Masonry doesn't exist yet (first batch), initialize it now!
+        // It will automatically layout the items we just appended.
+        msnry = new Masonry(grid, {
+            itemSelector: '.archive-item',
+            columnWidth: '.grid-sizer',
+            gutter: '.gutter-sizer',
+            percentPosition: true,
+            transitionDuration: '0.3s'
+        });
+    } else {
+        // If Masonry already exists (subsequent batches), append and layout
+        msnry.appended(newItems);
+        msnry.layout(); 
+    }
 
     // Fade in
     setTimeout(() => {
