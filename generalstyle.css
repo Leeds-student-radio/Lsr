@@ -2240,137 +2240,132 @@ hr {
 
 
 
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #333;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 60px auto;
-  display: none;
+
+
+
+
+.archive-header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-.archive-header { text-align: center; margin-bottom: 3rem; }
+.archive-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #111;
+}
 
+.archive-header p {
+  color: #666;
+}
+
+/* --- The Masonry Grid --- */
 .archive-grid {
+  /* This creates the masonry effect */
+  column-count: 3;
+  column-gap: 1rem; /* The horizontal gap between images */
   max-width: 1500px;
   margin: 0 auto;
-  padding: 1rem;
+   padding: 1rem;
 }
 
-/* --- Masonry Sizing (Desktop 3 Columns) --- */
-.grid-sizer, 
-.archive-item { width: 32%; }
-.gutter-sizer { width: 2%; }
-
-/* --- The Items --- */
+/* --- Individual Archive Items --- */
 .archive-item {
-  margin-bottom: 2%; 
   position: relative;
+  break-inside: avoid; /* Prevents an image from being split across columns */
+  margin-bottom: 1.5rem; /* The vertical gap. Matches column-gap for perfect consistency */
   border-radius: 12px;
   overflow: hidden;
-  background-color: #eee;
+  background-color: #eee; /* Placeholder color while images load */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+      max-height: 450px;
 }
 
-.archive-item.is-visible { opacity: 1; transform: translateY(0); }
-.archive-item img { display: block; width: 100%; height: auto; transition: transform 0.4s ease; }
+.archive-item img {
+  display: block;
+  width: 100%;
+  height: auto; /* Preserves the native aspect ratio */
+  transition: transform 0.4s ease;
+}
 
-/* --- Captions & Hover --- */
-.archive-item .caption {
-  position: absolute; bottom: 0; left: 0; width: 100%;
+/* --- Hover Overlay & Caption --- */
+.archive-grid .caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   padding: 1.5rem;
   background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
   color: white;
-  opacity: 0; transform: translateY(20px);
+  
+  /* Animation setup */
+  opacity: 0;
+  transform: translateY(20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none;
+  pointer-events: none; /* Prevents caption from interfering with hover/clicks */
 }
-.archive-item:hover img { transform: scale(1.03); }
-.archive-item:hover .caption { opacity: 1; transform: translateY(0); }
 
-/* --- Responsive Layout --- */
+.archive-grid .caption h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.archive-grid .caption p {
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+/* Hover State (Desktop) */
+.archive-item:hover img,
+.archive-item.active img {
+  transform: scale(1.03); /* Slight zoom on image */
+}
+
+.archive-item:hover .caption,
+.archive-item.active .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Responsive Design --- */
+
+/* Tablets */
 @media (max-width: 1024px) {
-  .grid-sizer, .archive-item { width: 48%; } /* 2 Columns on Tablet */
-  .gutter-sizer { width: 4%; }
-  .archive-item { margin-bottom: 4%; }
+  .archive-grid {
+    column-count: 3; /* Keep at 3, or change to 2 if you want the switch to happen on iPads */
+  }
 }
 
-@media (max-width: 600px) {
-  /* Ensure the grid wrapper maintains its padding */
-  .archive-grid { 
-    padding: 16px; 
-    box-sizing: border-box;
-  }
-
-  /* Bulletproof math: 50% of the screen minus half the gap size.
-    This guarantees exactly 2 columns without pushing into the right padding.
-  */
-  .grid-sizer, .archive-item { 
-    width: calc(50% - 8px); 
-    box-sizing: border-box;
-  } 
+/* Mobile Phones - Minimum 2 Columns */
+@media (max-width: 768px) {
   
-  /* Exact 16px gap between columns */
-  .gutter-sizer { 
-    width: 16px; 
+  
+  .archive-grid {
+    column-count: 2; /* Smallest grid is now 2 columns */
+    column-gap: 0.5rem; /* Reduced gap so images don't get squished */
+    padding:8px;
   }
   
-  /* Fixed 16px gap between rows to keep them consistently tight */
-  .archive-item { 
-    margin-bottom: 16px; 
+  .archive-item {
+    margin-bottom: 0.5rem; /* MUST match the new column-gap for perfect consistency */
+    border-radius: 8px; /* Slightly smaller corners for smaller images */
   }
   
-  /* Keep captions readable on the smaller columns */
-  .archive-item .caption { padding: 0.75rem; opacity: 1; transform: translateY(0); }
-  .archive-item .caption h3 { font-size: 0.9rem; margin-bottom: 0.2rem; }
-  .archive-item .caption p { font-size: 0.75rem; }
-}
-
-/* --- Animated Load More Button --- */
-.load-more-button {
-  display: block; 
-  margin: 3rem auto; 
-  padding: 12px 32px;
-  cursor: pointer; 
-  background-color: #333; 
-  color: #fff;
-  border: none; 
-  border-radius: 30px; /* Pill shape for a modern look */
-  font-size: 1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  /* Shrink the caption text and padding so it fits on a half-width mobile image */
+  .archive-grid .caption {
+    padding: 0.75rem; 
+  }
   
-  /* The continuous pulse animation */
-  animation: gentlePulse 2s infinite ease-in-out;
-  transition: all 0.3s ease;
-}
-
-/* Stop pulsing and lift up slightly when hovered */
-.load-more-button:hover {
-  background-color: #111;
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  animation: none; 
-}
-
-/* Click/Press effect */
-.load-more-button:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* Keyframes for the pulse */
-@keyframes gentlePulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-  100% { transform: scale(1); }
+  .archive-grid .caption h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.1rem;
+  }
+  
+  .archive-grid .caption p {
+    font-size: 0.75rem;
+  }
 }
 .empty-show-slot {
     pointer-events: none; /* Ensures it can't be clicked */
@@ -3299,25 +3294,3 @@ display: flex;
             display: block; /* Shows column headers */
         }
     }
-/* 1. Set up the real images to be hidden by default */
-.archive-item:not(.lsr-skel-item) {
-  opacity: 0;
-  transform: translateY(20px); /* Pushes them down slightly */
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-/* 2. The class we will trigger via JS to reveal the real images */
-.archive-item.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 3. Add a transition to the skeletons so they fade out smoothly */
-.lsr-skel-item {
-  transition: opacity 0.3s ease;
-}
-
-/* 4. The class we will trigger to hide the skeletons */
-.lsr-skel-item.is-hiding {
-  opacity: 0;
-}
