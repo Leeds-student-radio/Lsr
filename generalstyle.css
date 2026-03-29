@@ -2240,78 +2240,64 @@ hr {
 
 
 
-
+/* --- Base Styles & Spinner --- */
 .spinner {
   width: 50px;
   height: 50px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #333; /* Dark part that spins */
+  border-top: 4px solid #333;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin: 60px auto; /* Centers it at the top of the container */
-  display: none; /* Hidden by default, toggled in JS */
+  margin: 60px auto;
+  display: none;
 }
-
-
-
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 .archive-header {
   text-align: center;
   margin-bottom: 3rem;
 }
 
-.archive-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #111;
-}
-
-.archive-header p {
-  color: #666;
-}
-
+/* --- The Magic Pinterest Grid --- */
 .archive-grid {
   max-width: 1500px;
   margin: 0 auto;
   padding: 1rem;
-  display: block; 
+  /* This dictates the number of columns and the gap between them */
+  column-count: 3;
+  column-gap: 1.5rem;
 }
 
-.grid-sizer, 
+/* --- The Items --- */
 .archive-item {
-  width: 32%; 
-}
-
-.gutter-sizer {
-  width: 2%; 
-}
-
-.archive-item {
-  margin-bottom: 2%; 
+  /* Prevents items from being split in half across columns */
+  break-inside: avoid; 
+  margin-bottom: 1.5rem; 
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #eee; 
+  background-color: #eee;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  /* Added base transition for smooth fade in */
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .archive-item.is-visible {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .archive-item img {
   display: block;
   width: 100%;
-  height: auto; 
+  height: auto;
   transition: transform 0.4s ease;
 }
 
-.archive-grid .caption {
+/* --- Captions & Hover Effects --- */
+.archive-item .caption {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -2322,55 +2308,33 @@ hr {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  pointer-events: none; 
+  pointer-events: none;
 }
 
-.archive-grid .caption h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.25rem;
+.archive-item:hover img { transform: scale(1.03); }
+.archive-item:hover .caption { opacity: 1; transform: translateY(0); }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 1024px) {
+  .archive-grid { column-count: 2; }
 }
 
-.archive-grid .caption p {
-  font-size: 0.9rem;
-  color: #ddd;
+@media (max-width: 600px) {
+  .archive-grid { column-count: 1; padding: 0.5rem; }
+  .archive-item .caption { padding: 1rem; opacity: 1; transform: translateY(0); } /* Always show captions on mobile */
 }
 
-.archive-item:hover img,
-.archive-item.active img {
-  transform: scale(1.03); 
-}
-
-.archive-item:hover .caption,
-.archive-item.active .caption {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (max-width: 768px) {
-  .archive-grid {
-    padding: 8px;
-  }
-  .grid-sizer, 
-  .archive-item {
-    width: 48%; 
-  }
-  .gutter-sizer {
-    width: 4%; 
-  }
-  .archive-item {
-    margin-bottom: 4%;
-    border-radius: 8px;
-  }
-  .archive-grid .caption {
-    padding: 0.75rem; 
-  }
-  .archive-grid .caption h3 {
-    font-size: 0.9rem;
-    margin-bottom: 0.1rem;
-  }
-  .archive-grid .caption p {
-    font-size: 0.75rem;
-  }
+/* --- Button --- */
+.load-more-button {
+  display: block;
+  margin: 2rem auto;
+  padding: 10px 24px;
+  cursor: pointer;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 .empty-show-slot {
     pointer-events: none; /* Ensures it can't be clicked */
