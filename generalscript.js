@@ -759,8 +759,20 @@ let currentIndex = 0;
 const BATCH_SIZE = 15; 
 let msnry; 
 
-// Start loading the sheet immediately
-document.addEventListener("DOMContentLoaded", loadArchiveGrid);
+// 1. Init Masonry IMMEDIATELY so it targets the skeletons
+document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.getElementById('dynamic-archive-grid');
+    msnry = new Masonry(grid, {
+        itemSelector: '.archive-item',
+        columnWidth: '.grid-sizer',
+        gutter: '.gutter-sizer',
+        percentPosition: true,
+        transitionDuration: '0.3s'
+    });
+
+    // Start loading the sheet in the background
+    loadArchiveGrid();
+});
 
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
@@ -794,7 +806,7 @@ async function loadNextBatch() {
     
     if (batch.length === 0) return; 
 
-    // 1. Preload real images in the background
+    // 1. Preload real images
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -808,11 +820,12 @@ async function loadNextBatch() {
 
     // 2. 🔥 THE SWAP 🔥 
     if (currentIndex === 0) {
-        // Remove the CSS skeletons and inject the sizers so Masonry can take over
-        grid.innerHTML = `
-          <div class="grid-sizer"></div>
-          <div class="gutter-sizer"></div>
-        `;
+        // Find the skeletons and tell Masonry to natively remove them from the DOM
+        const skeletons = grid.querySelectorAll('.lsr-skel-item');
+        msnry.remove(skeletons); 
+        
+        // Note: We DO NOT use grid.innerHTML = '' here, because 
+        // the grid-sizer and gutter-sizer are already safely in the HTML!
     }
 
     // 3. Build HTML for the new items
@@ -840,19 +853,9 @@ async function loadNextBatch() {
     // Append to grid
     grid.append(...newItems);
 
-    // 4. Initialize or update Masonry on the REAL images
-    if (!msnry) {
-        msnry = new Masonry(grid, {
-            itemSelector: '.archive-item',
-            columnWidth: '.grid-sizer',
-            gutter: '.gutter-sizer',
-            percentPosition: true,
-            transitionDuration: '0.3s'
-        });
-    } else {
-        msnry.appended(newItems);
-        msnry.layout(); 
-    }
+    // 4. Since Masonry is already active, just append and update layout
+    msnry.appended(newItems);
+    msnry.layout(); 
 
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
