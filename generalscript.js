@@ -754,9 +754,10 @@ function getLondonTimeDetails() {
         });
     }
 
-let allData = []; // Store all sorted data
-let currentIndex = 0; // Keep track of how many we've loaded
-const BATCH_SIZE = 15; // How many images to load at once
+let allData = []; 
+let currentIndex = 0; 
+const BATCH_SIZE = 15; 
+let msnry; // Variable to hold our Masonry instance
 
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
@@ -768,7 +769,7 @@ function loadArchiveGrid() {
         complete: function(results) {
             let data = results.data.filter(item => item.image_url);
             
-            // 1. Sort ALL data instantly (this is just text, so it's lightning fast)
+            // 1. Sort Data Left-to-Right (Newest first)
             data.sort((a, b) => {
                 const getYear = (str) => {
                     const match = str ? str.match(/\d{4}/) : null;
@@ -777,30 +778,30 @@ function loadArchiveGrid() {
                 return getYear(b.caption) - getYear(a.caption);
             });
 
-            allData = data; // Save to our global variable
+            allData = data; 
             
-            // Clear out the skeleton loaders
-            document.getElementById('dynamic-archive-grid').innerHTML = ''; 
-            
-            // 2. Load the first batch
-            loadNextBatch();
-        },
-        error: function(error) {
-            console.error("Error fetching data:", error);
             const grid = document.getElementById('dynamic-archive-grid');
-            if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
+            grid.innerHTML = ''; 
+            
+            // 2. Initialize Masonry
+            msnry = new Masonry(grid, {
+                itemSelector: '.archive-item',
+                percentPosition: true,
+                gutter: 16, // Matches the horizontal gap
+                transitionDuration: '0.3s' // Smooth animation when layout shifts
+            });
+
+            loadNextBatch();
         }
     });
 }
 
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
-    
-    // Get the next slice of 15 items
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
-    if (batch.length === 0) return; // Nothing left to load
+    if (batch.length === 0) return; 
 
-    // Preload JUST these 15 images
+    // Preload images to prevent jitter
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -810,10 +811,9 @@ async function loadNextBatch() {
         });
     });
 
-    // Wait for this small batch to be ready
     await Promise.all(preloadPromises);
 
-    // Build HTML and append it to the grid
+    // Build HTML string
     let htmlContent = '';
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
@@ -830,11 +830,22 @@ async function loadNextBatch() {
         `;
     });
 
-    // Append to existing grid instead of overwriting
-    grid.insertAdjacentHTML('beforeend', htmlContent);
-    currentIndex += BATCH_SIZE;
+    // We must convert the HTML string into actual DOM elements for Masonry
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = htmlContent;
+    const newItems = Array.from(tempDiv.children);
 
-    // Handle the "Load More" button visibility
+    // Append items to grid and tell Masonry to position them
+    grid.append(...newItems);
+    msnry.appended(newItems);
+    msnry.layout(); // Force a clean recalculation
+
+    currentIndex += BATCH_SIZE;
+    manageLoadMoreButton();
+}
+
+
+    
     manageLoadMoreButton();
 }
 
