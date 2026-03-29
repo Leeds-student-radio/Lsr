@@ -939,9 +939,13 @@ function getLondonTimeDetails() {
   }
 
   /* ─── INIT ───────────────────────────────────────────────── */
-  /* ─── INIT ───────────────────────────────────────────────── */
-  loadArchiveGrid();
-    
+  // Run after DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadArchiveGrid);
+  } else {
+    loadArchiveGrid();
+  }
+
 })();
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
