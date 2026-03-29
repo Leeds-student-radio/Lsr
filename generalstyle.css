@@ -2435,8 +2435,9 @@ hr {
   }
   
   #archive-lightbox-img {
-    max-width: 65%;
-    max-height: 100%;
+           max-width: 60%;
+        max-height: 60vh;
+        object-fit: contain;
   }
   
   .archive-lightbox-caption-wrap {
