@@ -753,7 +753,6 @@ function getLondonTimeDetails() {
             }
         });
     }
-
 let allArchiveData = [];
 let currentDisplayCount = 0;
 const itemsPerLoad = 10;
@@ -766,18 +765,25 @@ function loadArchiveGrid() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // Filter out rows that don't have an image
+            // 1. Filter out rows that don't have an image
             allArchiveData = results.data.filter(item => item.image_url);
+            
+            // 2. Sort the data: Newest to Oldest based on the caption
+            allArchiveData.sort((a, b) => {
+                const dateA = parseDateFromCaption(a.caption);
+                const dateB = parseDateFromCaption(b.caption);
+                return dateB - dateA; // Descending order (newest first)
+            });
             
             const grid = document.getElementById('dynamic-archive-grid');
             if (!grid) return; 
 
-            // Get the URLs of the first 10 images to preload
+            // 3. Get the URLs of the first 10 images to preload
             const firstBatchUrls = allArchiveData
                 .slice(0, itemsPerLoad)
                 .map(item => item.image_url);
 
-            // Preload the first batch, then render
+            // 4. Preload the first batch, then render
             preloadImages(firstBatchUrls).then(() => {
                 grid.innerHTML = ''; // Clear the skeleton loaders
                 renderNextBatch();   // Render the first 10 items
@@ -789,6 +795,27 @@ function loadArchiveGrid() {
             if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
         }
     });
+}
+
+// --- NEW HELPER: Extracts a usable date from the caption string ---
+function parseDateFromCaption(caption) {
+    if (!caption) return 0; // If no caption, push to the very end
+    
+    // First attempt: Try to parse the whole caption as a standard date
+    const parsedDate = Date.parse(caption);
+    if (!isNaN(parsedDate)) {
+        return parsedDate;
+    }
+
+    // Second attempt (Fallback): Look for a 4-digit year (19xx or 20xx) in the text
+    const yearMatch = caption.match(/\b(19|20)\d{2}\b/);
+    if (yearMatch) {
+        // Return the timestamp for January 1st of that year
+        return new Date(yearMatch[0], 0, 1).getTime(); 
+    }
+
+    // If no date can be found at all, treat it as the oldest possible item
+    return 0; 
 }
 
 // Helper function to load images into memory
