@@ -756,23 +756,21 @@ function getLondonTimeDetails() {
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
+let msnry; // Variable to hold the Masonry instance
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('loading-spinner').style.display = 'block';
     loadArchiveData();
 });
 
-function loadArchiveGrid() {
+function loadArchiveData() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
-    // Ensure PapaParse is included in your HTML: 
-    // <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     Papa.parse(sheetUrl, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // Filter out empty images
             let data = results.data.filter(item => item.image_url);
             
             // Sort Newest to Oldest based on 4-digit year in caption
@@ -796,12 +794,11 @@ async function renderNextBatch() {
     
     if (batch.length === 0) return; 
 
-    // Show spinner if loading more
     if (currentIndex === 0) {
         document.getElementById('loading-spinner').style.display = 'block';
     }
 
-    // Preload images so they don't pop in weirdly
+    // STRICT PRELOADING: Wait for every image in this batch to download
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -813,10 +810,10 @@ async function renderNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // Hide spinner once images are ready
     document.getElementById('loading-spinner').style.display = 'none';
 
-    // Create and append elements
+    // Build the elements
+    const newElements = [];
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
         const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
@@ -824,7 +821,7 @@ async function renderNextBatch() {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'archive-item';
         itemDiv.innerHTML = `
-            <img src="${item.image_url}" alt="${item.title || 'Archive Image'}" loading="lazy">
+            <img src="${item.image_url}" alt="${item.title || 'Archive Image'}">
             <div class="caption">
               ${titleHtml}
               ${captionHtml}
@@ -832,10 +829,27 @@ async function renderNextBatch() {
         `;
         
         grid.appendChild(itemDiv);
-
-        // Slight delay to trigger CSS fade-in transition
-        setTimeout(() => itemDiv.classList.add('is-visible'), 50);
+        newElements.push(itemDiv);
     });
+
+    // MASONRY MAGIC: Initialize on first load, append on subsequent loads
+    if (!msnry) {
+        msnry = new Masonry(grid, {
+            itemSelector: '.archive-item',
+            columnWidth: '.grid-sizer',
+            gutter: '.gutter-sizer',
+            percentPosition: true,
+            transitionDuration: '0.2s'
+        });
+    } else {
+        msnry.appended(newElements);
+        msnry.layout();
+    }
+
+    // Trigger CSS fade-in
+    setTimeout(() => {
+        newElements.forEach(item => item.classList.add('is-visible'));
+    }, 50);
 
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
