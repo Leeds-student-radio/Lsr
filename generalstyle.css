@@ -2301,17 +2301,21 @@ hr {
 
 /* Load more button */
 .load-more-btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  background: #111;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+     font-weight: bold;
+    height: 35px;
+    cursor: pointer;
+    background: #ffffff;
+    color: var(--brand-dark);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    padding: 5px 15px;
+    border-radius: 10px;
 }
 
 .load-more-btn:hover {
-  background: #333;
+  color: #D62828;
+          transform: scale(1.07); 
+          box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 /* --- Individual Archive Items --- */
 .archive-item {
@@ -2890,15 +2894,11 @@ display: flex;
   width: 100%;
   background-color: var(--brand-dark);
 }
-.lsr-skel-item:nth-child(3n+1) .lsr-skel-img { height: 330px; } /* Column 1 pattern */
-.lsr-skel-item:nth-child(3n+2) .lsr-skel-img { height: 360px; } /* Column 2 pattern */
-.lsr-skel-item:nth-child(3n+3) .lsr-skel-img { height: 390px; } /* Column 3 pattern */
+.lsr-skel-item .lsr-skel-img { height: 330px; } 
 
-/* Mobile height adjustments so they don't look awkwardly tall on phones */
 @media (max-width: 768px) {
-  .lsr-skel-item:nth-child(3n+1) .lsr-skel-img { height: 200px; }
-  .lsr-skel-item:nth-child(3n+2) .lsr-skel-img { height: 180px; }
-  .lsr-skel-item:nth-child(3n+3) .lsr-skel-img { height: 220px; }
+  .lsr-skel-item .lsr-skel-img { height: 200px; }
+
 }
 
 /* 4. The Shimmer Animation */
