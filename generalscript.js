@@ -753,49 +753,72 @@ function getLondonTimeDetails() {
             }
         });
     }
-
 function loadArchiveGrid() {
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
-    Papa.parse(sheetUrl, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const data = results.data;
-            const grid = document.getElementById('dynamic-archive-grid');
-            
-            if (!grid) return; 
+  const grid = document.getElementById('dynamic-archive-grid');
+  const loadMoreBtn = document.getElementById('load-more-btn');
 
-            let htmlContent = '';
+  if (!grid) return;
 
-            data.forEach(item => {
-                if (item.image_url) {
-                    const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
-                    const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
-                    
-                    htmlContent += `
-                      <div class="archive-item">
-                        <img src="${item.image_url}" alt="LSR archive image">
-                        <div class="caption">
-                          ${titleHtml}
-                          ${captionHtml}
-                        </div>
-                      </div>
-                    `;
-                }
-            });
+  let allData = [];
+  let currentIndex = 0;
+  const batchSize = 10;
 
-            grid.innerHTML = htmlContent;
-        },
-        error: function(error) {
-            console.error("Error fetching data:", error);
-            const grid = document.getElementById('dynamic-archive-grid');
-            if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
-        }
+  function renderBatch() {
+    const slice = allData.slice(currentIndex, currentIndex + batchSize);
+
+    slice.forEach(item => {
+      if (!item.image_url) return;
+
+      const div = document.createElement('div');
+      div.className = 'archive-item';
+
+      const img = document.createElement('img');
+      img.src = item.image_url;
+      img.loading = currentIndex < 10 ? "eager" : "lazy"; // preload first batch
+
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+
+      caption.innerHTML = `
+        <h3>${item.title || ''}</h3>
+        <p>${item.caption || ''}</p>
+      `;
+
+      div.appendChild(img);
+      div.appendChild(caption);
+      grid.appendChild(div);
     });
-}
 
+    currentIndex += batchSize;
+
+    if (currentIndex >= allData.length) {
+      loadMoreBtn.style.display = 'none';
+    }
+  }
+
+  Papa.parse(sheetUrl, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      // 🔥 REVERSE ORDER (last row first)
+      allData = results.data.reverse();
+
+      // clear skeletons
+      grid.innerHTML = '';
+
+      renderBatch();
+
+      loadMoreBtn.addEventListener('click', renderBatch);
+    },
+    error: function(error) {
+      console.error("Error fetching data:", error);
+      grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
+    }
+  });
+}
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
