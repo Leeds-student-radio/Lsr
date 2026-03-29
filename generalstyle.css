@@ -2260,18 +2260,17 @@ hr {
   color: #666;
 }
 
-/* --- The Masonry Grid --- */
 .archive-grid {
   max-width: 1500px;
   margin: 0 auto;
-      display: grid;
   padding: 1rem;
-  /* Remove column-count and display: grid completely! */
+  display: block; /* Ensure it is a block, not a grid/flex container */
 }
 
 /* --- Individual Archive Items --- */
 .archive-item {
-  /* Added a 2px safety buffer (34px instead of 32px) to prevent sub-pixel wrapping */
+  box-sizing: border-box; /* Prevents hidden sizing issues */
+  /* 3 columns on Desktop: gap is 16px (x2 = 32px). 34px buffer for safety. */
   width: calc((100% - 34px) / 3); 
   
   margin-bottom: 16px; 
@@ -2282,6 +2281,7 @@ hr {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
 }
+
 
 .archive-item img {
   display: block;
@@ -2331,25 +2331,18 @@ hr {
 
 /* --- Responsive Design --- */
 
-/* Tablets */
-@media (max-width: 1024px) {
- .archive-grid {
-    grid-template-columns: repeat(3, 1fr); 
-  }
-}
 
 /* Mobile Phones - Minimum 2 Columns */
 @media (max-width: 768px) {
   
   
- .archive-grid {
-    grid-template-columns: repeat(2, 1fr); /* Switches to 2 columns */
-    gap: 0.5rem; 
+.archive-grid {
     padding: 8px;
+    /* Removed grid-template-columns and gap */
   }
   
 .archive-item {
-    /* Added a 2px safety buffer (18px instead of 16px) */
+    /* 2 columns on Mobile: gap is 16px. 18px buffer for safety. */
     width: calc((100% - 18px) / 2); 
     
     margin-bottom: 16px; 
