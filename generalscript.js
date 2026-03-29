@@ -754,6 +754,10 @@ function getLondonTimeDetails() {
         });
     }
 
+let allData = []; // Store all sorted data
+let currentIndex = 0; // Keep track of how many we've loaded
+const BATCH_SIZE = 15; // How many images to load at once
+
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
@@ -762,31 +766,24 @@ function loadArchiveGrid() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            const data = results.data;
-            const grid = document.getElementById('dynamic-archive-grid');
+            let data = results.data.filter(item => item.image_url);
             
-            if (!grid) return; 
-
-            let htmlContent = '';
-
-            data.forEach(item => {
-                if (item.image_url) {
-                    const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
-                    const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
-                    
-                    htmlContent += `
-                      <div class="archive-item">
-                        <img src="${item.image_url}" alt="LSR archive image">
-                        <div class="caption">
-                          ${titleHtml}
-                          ${captionHtml}
-                        </div>
-                      </div>
-                    `;
-                }
+            // 1. Sort ALL data instantly (this is just text, so it's lightning fast)
+            data.sort((a, b) => {
+                const getYear = (str) => {
+                    const match = str ? str.match(/\d{4}/) : null;
+                    return match ? parseInt(match[0], 10) : 0;
+                };
+                return getYear(b.caption) - getYear(a.caption);
             });
 
-            grid.innerHTML = htmlContent;
+            allData = data; // Save to our global variable
+            
+            // Clear out the skeleton loaders
+            document.getElementById('dynamic-archive-grid').innerHTML = ''; 
+            
+            // 2. Load the first batch
+            loadNextBatch();
         },
         error: function(error) {
             console.error("Error fetching data:", error);
@@ -794,6 +791,73 @@ function loadArchiveGrid() {
             if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
         }
     });
+}
+
+async function loadNextBatch() {
+    const grid = document.getElementById('dynamic-archive-grid');
+    
+    // Get the next slice of 15 items
+    const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
+    if (batch.length === 0) return; // Nothing left to load
+
+    // Preload JUST these 15 images
+    const preloadPromises = batch.map(item => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = item.image_url;
+            img.onload = resolve; 
+            img.onerror = resolve; 
+        });
+    });
+
+    // Wait for this small batch to be ready
+    await Promise.all(preloadPromises);
+
+    // Build HTML and append it to the grid
+    let htmlContent = '';
+    batch.forEach(item => {
+        const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+        const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+        
+        htmlContent += `
+          <div class="archive-item">
+            <img src="${item.image_url}" alt="LSR archive image" loading="lazy">
+            <div class="caption">
+              ${titleHtml}
+              ${captionHtml}
+            </div>
+          </div>
+        `;
+    });
+
+    // Append to existing grid instead of overwriting
+    grid.insertAdjacentHTML('beforeend', htmlContent);
+    currentIndex += BATCH_SIZE;
+
+    // Handle the "Load More" button visibility
+    manageLoadMoreButton();
+}
+
+function manageLoadMoreButton() {
+    let btn = document.getElementById('load-more-btn');
+    
+    // If there's more data to load, show/create the button
+    if (currentIndex < allData.length) {
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'load-more-btn';
+            btn.innerText = 'Load More';
+            // Add some basic styling or a class here
+            btn.className = 'load-more-button'; 
+            btn.onclick = loadNextBatch;
+            
+            // Place it after the grid
+            document.getElementById('dynamic-archive-grid').after(btn);
+        }
+    } else if (btn) {
+        // Hide button if we reached the end
+        btn.style.display = 'none'; 
+    }
 }
 
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
