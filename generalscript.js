@@ -799,14 +799,13 @@ function loadArchiveGrid() {
         }
     });
 }
-
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
     
     if (batch.length === 0) return; 
 
-    // 1. Preload real images
+    // 1. Preload real images in the background
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -818,14 +817,18 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // 2. 🔥 THE SWAP 🔥 
+    // 2. 🔥 THE CHOREOGRAPHED SWAP 🔥 
     if (currentIndex === 0) {
-        // Find the skeletons and tell Masonry to natively remove them from the DOM
         const skeletons = grid.querySelectorAll('.lsr-skel-item');
-        msnry.remove(skeletons); 
         
-        // Note: We DO NOT use grid.innerHTML = '' here, because 
-        // the grid-sizer and gutter-sizer are already safely in the HTML!
+        // Step A: Trigger the CSS fade-out on the skeletons
+        skeletons.forEach(skel => skel.classList.add('is-hiding'));
+        
+        // Step B: Wait 300ms for the CSS fade-out transition to finish
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // Step C: Now that they are invisible, safely remove them from Masonry
+        msnry.remove(skeletons); 
     }
 
     // 3. Build HTML for the new items
@@ -853,9 +856,16 @@ async function loadNextBatch() {
     // Append to grid
     grid.append(...newItems);
 
-    // 4. Since Masonry is already active, just append and update layout
+    // 4. Update Masonry Layout
     msnry.appended(newItems);
     msnry.layout(); 
+
+    // 5. Trigger the CSS fade-in for the new images
+    // We use a tiny delay so the browser registers the initial opacity: 0 state
+    // before we apply the is-visible class.
+    setTimeout(() => {
+        newItems.forEach(item => item.classList.add('is-visible'));
+    }, 50);
 
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
