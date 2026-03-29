@@ -753,17 +753,12 @@ function getLondonTimeDetails() {
             }
         });
     }
-let allData = []; 
-let currentIndex = 0; 
-const BATCH_SIZE = 15; 
-let msnry; // Variable to hold the Masonry instance
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('loading-spinner').style.display = 'block';
-    loadArchiveData();
-});
+let allArchiveData = [];
+let currentDisplayCount = 0;
+const itemsPerLoad = 10;
 
-function loadArchiveData() {
+function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
     Papa.parse(sheetUrl, {
@@ -771,99 +766,92 @@ function loadArchiveData() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            let data = results.data.filter(item => item.image_url);
+            // Filter out rows that don't have an image
+            allArchiveData = results.data.filter(item => item.image_url);
             
-            // Sort Newest to Oldest based on 4-digit year in caption
-            data.sort((a, b) => {
-                const getYear = (str) => {
-                    const match = str ? str.match(/\d{4}/) : null;
-                    return match ? parseInt(match[0], 10) : 0;
-                };
-                return getYear(b.caption) - getYear(a.caption);
-            });
+            const grid = document.getElementById('dynamic-archive-grid');
+            if (!grid) return; 
 
-            allData = data; 
-            renderNextBatch();
+            // Get the URLs of the first 10 images to preload
+            const firstBatchUrls = allArchiveData
+                .slice(0, itemsPerLoad)
+                .map(item => item.image_url);
+
+            // Preload the first batch, then render
+            preloadImages(firstBatchUrls).then(() => {
+                grid.innerHTML = ''; // Clear the skeleton loaders
+                renderNextBatch();   // Render the first 10 items
+            });
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
+            const grid = document.getElementById('dynamic-archive-grid');
+            if (grid) grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
         }
     });
 }
 
-async function renderNextBatch() {
-    const grid = document.getElementById('dynamic-archive-grid');
-    const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
-    
-    if (batch.length === 0) return; 
-
-    if (currentIndex === 0) {
-        document.getElementById('loading-spinner').style.display = 'block';
-    }
-
-    // STRICT PRELOADING: Wait for every image in this batch to download
-    const preloadPromises = batch.map(item => {
-        return new Promise((resolve) => {
+// Helper function to load images into memory
+function preloadImages(urls) {
+    return Promise.all(urls.map(url => {
+        return new Promise(resolve => {
             const img = new Image();
-            img.src = item.image_url;
-            img.onload = resolve; 
-            img.onerror = resolve; 
+            img.onload = resolve;
+            img.onerror = resolve; // Resolve anyway so a broken link doesn't stop the whole grid
+            img.src = url;
         });
-    });
+    }));
+}
 
-    await Promise.all(preloadPromises);
+// Function to render chunks of images
+function renderNextBatch() {
+    const grid = document.getElementById('dynamic-archive-grid');
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    let htmlContent = '';
+    
+    // Calculate how many items we should show now
+    const endIndex = Math.min(currentDisplayCount + itemsPerLoad, allArchiveData.length);
 
-    document.getElementById('loading-spinner').style.display = 'none';
-
-    // Build the elements
-    const newElements = [];
-    batch.forEach(item => {
+    for (let i = currentDisplayCount; i < endIndex; i++) {
+        const item = allArchiveData[i];
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
         const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
         
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'archive-item';
-        itemDiv.innerHTML = `
-            <img src="${item.image_url}" alt="${item.title || 'Archive Image'}">
+        // Use native lazy loading for images after the first 10
+        const loadingAttr = i < 10 ? 'eager' : 'lazy';
+
+        htmlContent += `
+          <div class="archive-item">
+            <img src="${item.image_url}" alt="LSR archive image" loading="${loadingAttr}">
             <div class="caption">
               ${titleHtml}
               ${captionHtml}
             </div>
+          </div>
         `;
-        
-        grid.appendChild(itemDiv);
-        newElements.push(itemDiv);
-    });
-
-    // MASONRY MAGIC: Initialize on first load, append on subsequent loads
-    if (!msnry) {
-        msnry = new Masonry(grid, {
-            itemSelector: '.archive-item',
-            columnWidth: '.grid-sizer',
-            gutter: '.gutter-sizer',
-            percentPosition: true,
-            transitionDuration: '0.2s'
-        });
-    } else {
-        msnry.appended(newElements);
-        msnry.layout();
     }
 
-    // Trigger CSS fade-in
-    setTimeout(() => {
-        newElements.forEach(item => item.classList.add('is-visible'));
-    }, 50);
+    // Append new items without overwriting the existing ones
+    grid.insertAdjacentHTML('beforeend', htmlContent);
 
-    currentIndex += BATCH_SIZE;
-    manageLoadMoreButton();
-}
+    // Update our counter
+    currentDisplayCount = endIndex;
 
-function manageLoadMoreButton() {
-    const btn = document.getElementById('load-more-btn');
-    if (currentIndex < allData.length) {
-        btn.style.display = 'block';
-        btn.onclick = renderNextBatch;
+    // Show or hide the button based on remaining items
+    if (currentDisplayCount >= allArchiveData.length) {
+        loadMoreBtn.style.display = 'none';
     } else {
-        btn.style.display = 'none'; 
+        loadMoreBtn.style.display = 'inline-block';
     }
 }
+
+// Listen for the "See More" button click
+document.addEventListener('DOMContentLoaded', () => {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', renderNextBatch);
+    }
+});
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
@@ -1073,13 +1061,13 @@ function manageLoadMoreButton() {
                         
                         script.onload = () => {
                             console.log("PapaParse loaded. Building grid...");
-                           loadArchiveData();
+                            loadArchiveGrid(); 
                         };
                         
                         document.head.appendChild(script);
                     } else {
                         console.log("PapaParse already exists. Building grid...");
-                        loadArchiveData();
+                        loadArchiveGrid();
                     }
                 }
                 fetchScheduleData();
@@ -1121,10 +1109,10 @@ function manageLoadMoreButton() {
         if (typeof Papa === 'undefined') {
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
-            script.onload = () => loadArchiveData()
+            script.onload = () => loadArchiveGrid(); 
             document.head.appendChild(script);
         } else {
-            loadArchiveData()
+            loadArchiveGrid();
         }
     }
 
