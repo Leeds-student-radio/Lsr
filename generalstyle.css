@@ -2262,14 +2262,57 @@ hr {
 
 /* --- The Masonry Grid --- */
 .archive-grid {
-  /* This creates the masonry effect */
-  column-count: 3;
-  column-gap: 1rem; /* The horizontal gap between images */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
   max-width: 1500px;
   margin: 0 auto;
-   padding: 1rem;
+  padding: 1rem;
 }
 
+/* Masonry illusion */
+.archive-item {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #eee;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+
+/* Keep varied heights */
+.archive-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 8px;
+  }
+
+  .archive-item {
+    border-radius: 8px;
+  }
+}
+
+/* Load more button */
+.load-more-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #111;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.load-more-btn:hover {
+  background: #333;
+}
 /* --- Individual Archive Items --- */
 .archive-item {
   position: relative;
@@ -2342,11 +2385,7 @@ hr {
 @media (max-width: 768px) {
   
   
-  .archive-grid {
-    column-count: 2; /* Smallest grid is now 2 columns */
-    column-gap: 0.5rem; /* Reduced gap so images don't get squished */
-    padding:8px;
-  }
+
   
   .archive-item {
     margin-bottom: 0.5rem; /* MUST match the new column-gap for perfect consistency */
