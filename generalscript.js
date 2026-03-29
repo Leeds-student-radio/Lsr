@@ -1121,10 +1121,10 @@ function manageLoadMoreButton() {
         if (typeof Papa === 'undefined') {
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
-            script.onload = () => loadArchiveGrid(); 
+            script.onload = () => loadArchiveData()
             document.head.appendChild(script);
         } else {
-            loadArchiveGrid();
+            loadArchiveData()
         }
     }
 
