@@ -767,10 +767,8 @@ function loadArchiveGrid() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // Filter out empty rows
             let data = results.data.filter(item => item.image_url);
             
-            // Sort Data Left-to-Right (Newest first based on a 4-digit year in caption)
             data.sort((a, b) => {
                 const getYear = (str) => {
                     const match = str ? str.match(/\d{4}/) : null;
@@ -782,14 +780,17 @@ function loadArchiveGrid() {
             allData = data; 
             
             const grid = document.getElementById('dynamic-archive-grid');
-            grid.innerHTML = ''; // Clear out the skeleton items
             
-            // Start loading the first batch (Masonry initializes inside here)
+            // 🔥 THE FIX: Clear skeletons, but inject the sizers back in! 🔥
+            grid.innerHTML = `
+              <div class="grid-sizer"></div>
+              <div class="gutter-sizer"></div>
+            `;
+            
             loadNextBatch();
         }
     });
 }
-
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
