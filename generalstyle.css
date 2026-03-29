@@ -3317,3 +3317,25 @@ display: flex;
             display: block; /* Shows column headers */
         }
     }
+/* 1. Set up the real images to be hidden by default */
+.archive-item:not(.lsr-skel-item) {
+  opacity: 0;
+  transform: translateY(20px); /* Pushes them down slightly */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* 2. The class we will trigger via JS to reveal the real images */
+.archive-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. Add a transition to the skeletons so they fade out smoothly */
+.lsr-skel-item {
+  transition: opacity 0.3s ease;
+}
+
+/* 4. The class we will trigger to hide the skeletons */
+.lsr-skel-item.is-hiding {
+  opacity: 0;
+}
