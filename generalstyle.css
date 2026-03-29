@@ -2277,10 +2277,35 @@ hr {
 .gutter-sizer {
   width: 2%; 
 }
-.grid-sizer, 
-.gutter-sizer,
-.archive-item {
-  float: left; 
+/* 1. Clear floats so the grid container doesn't collapse */
+.archive-grid::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* 2. Float ONLY the skeleton items, and apply exact gutters */
+.archive-item.lsr-skel-item {
+  float: left;
+  margin-right: 2%; /* Matches Desktop gutter */
+}
+
+/* 3. Remove the right margin from every 3rd skeleton on Desktop 
+   (We use 3n+5 because the two sizer divs count as children 1 and 2) */
+.archive-item.lsr-skel-item:nth-child(3n + 5) {
+  margin-right: 0;
+}
+
+/* 4. Mobile Layout adjustments */
+@media (max-width: 768px) {
+  .archive-item.lsr-skel-item {
+    margin-right: 4%; /* Matches Mobile gutter */
+  }
+  
+  /* Target every even child for the right edge on mobile (Child 4, 6, 8...) */
+  .archive-item.lsr-skel-item:nth-child(even) {
+    margin-right: 0;
+  }
 }
 .archive-item {
   margin-bottom: 2%; /* Matches the gutter */
