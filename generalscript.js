@@ -753,200 +753,72 @@ function getLondonTimeDetails() {
             }
         });
     }
-/**
- * Archive Masonry Grid — Deployment-Ready
- * 
- * Features:
- *  - Fetches data from Google Sheet CSV via PapaParse
- *  - Reverses row order (last row = first image)
- *  - Loads items left→right, row by row (not column-first)
- *  - Preloads first 10 images; "Load More" button reveals 10 at a time
- *  - Skeleton loader while fetching
- *  - 3 columns (≥769px) / 2 columns (<769px)
- *  - Smooth fade-in per item after image loads
- *  - Zero layout shift on load-more
- */
+function loadArchiveGrid() {
+  const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
-(function () {
-  'use strict';
+  const grid = document.getElementById('dynamic-archive-grid');
+  const loadMoreBtn = document.getElementById('load-more-btn');
 
-  /* ─── CONFIG ─────────────────────────────────────────────── */
-  const SHEET_URL =
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
-  const PAGE_SIZE = 10;
-  const GRID_ID   = 'dynamic-archive-grid';
-  const BTN_ID    = 'archive-load-more-btn';
+  if (!grid) return;
 
-  /* ─── STATE ──────────────────────────────────────────────── */
-  let allItems   = [];   // full reversed dataset
-  let loadedCount = 0;   // how many are in the DOM
+  let allData = [];
+  let currentIndex = 0;
+  const batchSize = 10;
 
-  /* ─── HELPERS ────────────────────────────────────────────── */
+  function renderBatch() {
+    const slice = allData.slice(currentIndex, currentIndex + batchSize);
 
-  /**
-   * Build one archive-item element (hidden until its image loads).
-   * @param {Object} item  – row from the sheet
-   * @param {boolean} preload – if true, start loading the image immediately
-   */
-  function createItem(item, preload) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'archive-item lsr-fade-item';
-    wrapper.style.opacity = '0';
-    wrapper.style.transition = 'opacity 0.5s ease';
+    slice.forEach(item => {
+      if (!item.image_url) return;
 
-    const img = document.createElement('img');
-    img.alt = item.title || 'LSR archive image';
-    img.decoding = 'async';
+      const div = document.createElement('div');
+      div.className = 'archive-item';
 
-    // Caption
-    const caption = document.createElement('div');
-    caption.className = 'caption';
-    caption.innerHTML = `
-      <h3>${item.title  || ''}</h3>
-      <p>${item.caption || ''}</p>
-    `;
-
-    wrapper.appendChild(img);
-    wrapper.appendChild(caption);
-
-    // Fade in once loaded
-    const reveal = () => {
-      wrapper.style.opacity = '1';
-    };
-    img.addEventListener('load',  reveal, { once: true });
-    img.addEventListener('error', reveal, { once: true }); // still show on error
-
-    if (preload) {
+      const img = document.createElement('img');
       img.src = item.image_url;
-    } else {
-      // Store URL for lazy reveal
-      img.dataset.src = item.image_url;
-    }
+      img.loading = currentIndex < 10 ? "eager" : "lazy"; // preload first batch
 
-    return wrapper;
-  }
+      const caption = document.createElement('div');
+      caption.className = 'caption';
 
-  /**
-   * Inject items[start … start+count) into the grid.
-   * For items that aren't preloaded, set .src now (browser caches if already fetched).
-   */
-  function renderBatch(grid, start, count) {
-    const end  = Math.min(start + count, allItems.length);
-    const frag = document.createDocumentFragment();
+      caption.innerHTML = `
+        <h3>${item.title || ''}</h3>
+        <p>${item.caption || ''}</p>
+      `;
 
-    for (let i = start; i < end; i++) {
-      const item    = allItems[i];
-      const preload = (start === 0); // first batch gets preload=true
-      const el      = createItem(item, preload);
-
-      // For non-preloaded batches, trigger load immediately on append
-      if (!preload) {
-        const img = el.querySelector('img');
-        if (img.dataset.src) {
-          img.src = img.dataset.src;
-          delete img.dataset.src;
-        }
-      }
-
-      frag.appendChild(el);
-    }
-
-    grid.appendChild(frag);
-    loadedCount = end;
-  }
-
-  /**
-   * Update / hide the Load More button.
-   */
-  function updateButton() {
-    const btn = document.getElementById(BTN_ID);
-    if (!btn) return;
-    if (loadedCount >= allItems.length) {
-      btn.style.display = 'none';
-    } else {
-      const remaining = allItems.length - loadedCount;
-      btn.textContent = `Load ${Math.min(remaining, PAGE_SIZE)} More`;
-      btn.style.display = '';
-    }
-  }
-
-  /**
-   * Create the Load More button and inject it after the grid.
-   */
-  function createButton(grid) {
-    // Remove any pre-existing button
-    const existing = document.getElementById(BTN_ID);
-    if (existing) existing.remove();
-
-    const btn = document.createElement('button');
-    btn.id          = BTN_ID;
-    btn.className   = 'archive-load-more';
-    btn.textContent = 'Load More';
-
-    btn.addEventListener('click', () => {
-      const grid = document.getElementById(GRID_ID);
-      if (!grid) return;
-      renderBatch(grid, loadedCount, PAGE_SIZE);
-      updateButton();
+      div.appendChild(img);
+      div.appendChild(caption);
+      grid.appendChild(div);
     });
 
-    grid.insertAdjacentElement('afterend', btn);
-    return btn;
+    currentIndex += batchSize;
+
+    if (currentIndex >= allData.length) {
+      loadMoreBtn.style.display = 'none';
+    }
   }
 
-  /* ─── MAIN ENTRY ─────────────────────────────────────────── */
+  Papa.parse(sheetUrl, {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      // 🔥 REVERSE ORDER (last row first)
+      allData = results.data.reverse();
 
-  function loadArchiveGrid() {
-    const grid = document.getElementById(GRID_ID);
-    if (!grid) return;
+      // clear skeletons
+      grid.innerHTML = '';
 
-    // Skeleton is already in the HTML — leave it until data arrives.
+      renderBatch();
 
-    Papa.parse(SHEET_URL, {
-      download:       true,
-      header:         true,
-      skipEmptyLines: true,
-
-      complete(results) {
-        // 1. Filter rows with an image URL
-        const valid = results.data.filter(row => row.image_url && row.image_url.trim());
-
-        // 2. Reverse so last sheet row → first displayed item
-        allItems = valid.slice().reverse();
-
-        // 3. Clear skeleton
-        grid.innerHTML = '';
-        loadedCount = 0;
-
-        if (allItems.length === 0) {
-          grid.innerHTML = '<p class="archive-empty">No archive items found.</p>';
-          return;
-        }
-
-        // 4. Render first page (preloaded)
-        renderBatch(grid, 0, PAGE_SIZE);
-
-        // 5. Create load-more button
-        const btn = createButton(grid);
-        updateButton();
-      },
-
-      error(err) {
-        console.error('[Archive Grid] Failed to fetch sheet:', err);
-        grid.innerHTML = '<p class="archive-empty">Sorry, could not load the archive. Please try again later.</p>';
-      },
-    });
-  }
-
-  /* ─── INIT ───────────────────────────────────────────────── */
-  // Run after DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadArchiveGrid);
-  } else {
-    loadArchiveGrid();
-  }
-
-})();
+      loadMoreBtn.addEventListener('click', renderBatch);
+    },
+    error: function(error) {
+      console.error("Error fetching data:", error);
+      grid.innerHTML = "<p>Sorry, could not load the archive.</p>";
+    }
+  });
+}
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
