@@ -1073,13 +1073,13 @@ function manageLoadMoreButton() {
                         
                         script.onload = () => {
                             console.log("PapaParse loaded. Building grid...");
-                            loadArchiveGrid(); 
+                           loadArchiveData();
                         };
                         
                         document.head.appendChild(script);
                     } else {
                         console.log("PapaParse already exists. Building grid...");
-                        loadArchiveGrid();
+                        loadArchiveData();
                     }
                 }
                 fetchScheduleData();
