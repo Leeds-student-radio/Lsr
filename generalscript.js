@@ -767,9 +767,10 @@ function loadArchiveGrid() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
+            // Filter out empty rows
             let data = results.data.filter(item => item.image_url);
             
-            // 1. Sort Data Left-to-Right (Newest first)
+            // Sort Data Left-to-Right (Newest first based on a 4-digit year in caption)
             data.sort((a, b) => {
                 const getYear = (str) => {
                     const match = str ? str.match(/\d{4}/) : null;
@@ -781,16 +782,9 @@ function loadArchiveGrid() {
             allData = data; 
             
             const grid = document.getElementById('dynamic-archive-grid');
-            grid.innerHTML = ''; 
+            grid.innerHTML = ''; // Clear out the skeleton items
             
-            // 2. Initialize Masonry
-            msnry = new Masonry(grid, {
-                itemSelector: '.archive-item',
-                percentPosition: true,
-                gutter: 16, // Matches the horizontal gap
-                transitionDuration: '0.3s' // Smooth animation when layout shifts
-            });
-
+            // Start loading the first batch (Masonry initializes inside here)
             loadNextBatch();
         }
     });
@@ -799,9 +793,10 @@ function loadArchiveGrid() {
 async function loadNextBatch() {
     const grid = document.getElementById('dynamic-archive-grid');
     const batch = allData.slice(currentIndex, currentIndex + BATCH_SIZE);
+    
     if (batch.length === 0) return; 
 
-    // Preload images to prevent jitter
+    // Preload images to prevent layout jitter when Masonry calculates heights
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -813,7 +808,7 @@ async function loadNextBatch() {
 
     await Promise.all(preloadPromises);
 
-    // Build HTML string
+    // Build HTML string for the new items
     let htmlContent = '';
     batch.forEach(item => {
         const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
@@ -830,15 +825,28 @@ async function loadNextBatch() {
         `;
     });
 
-    // We must convert the HTML string into actual DOM elements for Masonry
+    // Convert the HTML string into actual DOM elements
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
     const newItems = Array.from(tempDiv.children);
 
-    // Append items to grid and tell Masonry to position them
+    // 1. Append items to the grid FIRST
     grid.append(...newItems);
-    msnry.appended(newItems);
-    msnry.layout(); // Force a clean recalculation
+
+    // 2. Initialize or Update Masonry
+    if (!msnry) {
+        // Initialize Masonry for the very first time now that items exist in the DOM
+        msnry = new Masonry(grid, {
+            itemSelector: '.archive-item',
+            percentPosition: true,
+            gutter: 16, // Matches the horizontal gap
+            transitionDuration: '0.3s'
+        });
+    } else {
+        // Masonry already exists, just tell it to place the newly appended items
+        msnry.appended(newItems);
+        msnry.layout(); // Force recalculation
+    }
 
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
@@ -856,14 +864,17 @@ function manageLoadMoreButton() {
             btn.className = 'load-more-button'; 
             btn.onclick = loadNextBatch;
             
-            // Place it after the grid
+            // Place it immediately after the grid
             document.getElementById('dynamic-archive-grid').after(btn);
+        } else {
+            btn.style.display = 'block'; // Ensure it's visible if it was hidden
         }
     } else if (btn) {
-        // Hide button if we reached the end
+        // Hide button if we reached the end of the data
         btn.style.display = 'none'; 
     }
 }
+    
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
