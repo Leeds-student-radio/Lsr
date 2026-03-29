@@ -834,18 +834,18 @@ async function loadNextBatch() {
     grid.append(...newItems);
 
     // 2. Initialize or Update Masonry
+ 
     if (!msnry) {
-        // Initialize Masonry for the very first time now that items exist in the DOM
         msnry = new Masonry(grid, {
             itemSelector: '.archive-item',
-            percentPosition: true,
-            gutter: 16, // Matches the horizontal gap
+            columnWidth: '.grid-sizer', // Uses the CSS width of this element
+            gutter: '.gutter-sizer',    // Uses the CSS width of this element
+            percentPosition: true,      // Tells Masonry to respect percentages
             transitionDuration: '0.3s'
         });
     } else {
-        // Masonry already exists, just tell it to place the newly appended items
         msnry.appended(newItems);
-        msnry.layout(); // Force recalculation
+        msnry.layout(); 
     }
 
     currentIndex += BATCH_SIZE;
