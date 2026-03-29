@@ -2262,31 +2262,30 @@ hr {
 
 /* --- The Masonry Grid --- */
 .archive-grid {
-  /* This creates the masonry effect */
-  column-count: 3;
-  column-gap: 1rem; /* The horizontal gap between images */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Forces 3 equal columns */
+  gap: 1.5rem; /* Handles both vertical and horizontal spacing beautifully */
   max-width: 1500px;
   margin: 0 auto;
-   padding: 1rem;
+  padding: 1rem;
 }
-
 /* --- Individual Archive Items --- */
 .archive-item {
   position: relative;
-  break-inside: avoid; /* Prevents an image from being split across columns */
-  margin-bottom: 1.5rem; /* The vertical gap. Matches column-gap for perfect consistency */
+  /* Removed break-inside and margin-bottom, Grid handles that now */
   border-radius: 12px;
   overflow: hidden;
-  background-color: #eee; /* Placeholder color while images load */
+  background-color: #eee; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-      max-height: 450px;
+  height: 350px; /* Set a uniform height for perfect rows */
 }
 
 .archive-item img {
   display: block;
   width: 100%;
-  height: auto; /* Preserves the native aspect ratio */
+  height: 100%; /* Tell the image to fill the 350px height */
+  object-fit: cover; /* IMPORTANT: This crops the image beautifully so it never squishes */
   transition: transform 0.4s ease;
 }
 
@@ -2333,8 +2332,8 @@ hr {
 
 /* Tablets */
 @media (max-width: 1024px) {
-  .archive-grid {
-    column-count: 3; /* Keep at 3, or change to 2 if you want the switch to happen on iPads */
+ .archive-grid {
+    grid-template-columns: repeat(3, 1fr); 
   }
 }
 
@@ -2342,15 +2341,15 @@ hr {
 @media (max-width: 768px) {
   
   
-  .archive-grid {
-    column-count: 2; /* Smallest grid is now 2 columns */
-    column-gap: 0.5rem; /* Reduced gap so images don't get squished */
-    padding:8px;
+ .archive-grid {
+    grid-template-columns: repeat(2, 1fr); /* Switches to 2 columns */
+    gap: 0.5rem; 
+    padding: 8px;
   }
   
-  .archive-item {
-    margin-bottom: 0.5rem; /* MUST match the new column-gap for perfect consistency */
-    border-radius: 8px; /* Slightly smaller corners for smaller images */
+ .archive-item {
+    height: 250px; /* Slightly shorter boxes for mobile screens */
+    border-radius: 8px; 
   }
   
   /* Shrink the caption text and padding so it fits on a half-width mobile image */
