@@ -2270,7 +2270,9 @@ hr {
 
 /* --- Individual Archive Items --- */
 .archive-item {
-  width: calc(33.333% - 11px); /* 3 columns on desktop, accounting for a 16px gap */
+  /* Formula: (100% total width - 32px for two 16px gutters) divided by 3 */
+  width: calc((100% - 32px) / 3); 
+  
   margin-bottom: 16px; /* Vertical gap */
   position: relative;
   border-radius: 12px;
@@ -2278,13 +2280,12 @@ hr {
   background-color: #eee; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  /* NO fixed heights! Let the image dictate the height */
 }
 
 .archive-item img {
   display: block;
   width: 100%;
-  height: auto; /* Restored to auto so we get the true masonry unevenness */
+  height: auto; 
   transition: transform 0.4s ease;
 }
 
@@ -2347,8 +2348,10 @@ hr {
   }
   
  .archive-item {
-    width: calc(50% - 8px); /* Switch to 2 columns on smaller screens */
-    margin-bottom: 10px;
+    /* Formula: (100% total width - 16px for one 16px gutter) divided by 2 */
+    width: calc((100% - 16px) / 2); 
+    
+    margin-bottom: 16px; /* Keep vertical gap consistent */
     border-radius: 8px;
   }
   
