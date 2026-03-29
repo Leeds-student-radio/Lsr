@@ -753,9 +753,6 @@ function getLondonTimeDetails() {
             }
         });
     }
-let allArchiveData = [];
-let currentDisplayCount = 0;
-const itemsPerLoad = 10;
 
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
@@ -765,29 +762,31 @@ function loadArchiveGrid() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // 1. Filter out rows that don't have an image
-            allArchiveData = results.data.filter(item => item.image_url);
-            
-            // 2. Sort the data: Newest to Oldest based on the caption
-            allArchiveData.sort((a, b) => {
-                const dateA = parseDateFromCaption(a.caption);
-                const dateB = parseDateFromCaption(b.caption);
-                return dateB - dateA; // Descending order (newest first)
-            });
-            
+            const data = results.data;
             const grid = document.getElementById('dynamic-archive-grid');
+            
             if (!grid) return; 
 
-            // 3. Get the URLs of the first 10 images to preload
-            const firstBatchUrls = allArchiveData
-                .slice(0, itemsPerLoad)
-                .map(item => item.image_url);
+            let htmlContent = '';
 
-            // 4. Preload the first batch, then render
-            preloadImages(firstBatchUrls).then(() => {
-                grid.innerHTML = ''; // Clear the skeleton loaders
-                renderNextBatch();   // Render the first 10 items
+            data.forEach(item => {
+                if (item.image_url) {
+                    const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
+                    const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
+                    
+                    htmlContent += `
+                      <div class="archive-item">
+                        <img src="${item.image_url}" alt="LSR archive image">
+                        <div class="caption">
+                          ${titleHtml}
+                          ${captionHtml}
+                        </div>
+                      </div>
+                    `;
+                }
             });
+
+            grid.innerHTML = htmlContent;
         },
         error: function(error) {
             console.error("Error fetching data:", error);
@@ -797,88 +796,6 @@ function loadArchiveGrid() {
     });
 }
 
-// --- NEW HELPER: Extracts a usable date from the caption string ---
-function parseDateFromCaption(caption) {
-    if (!caption) return 0; // If no caption, push to the very end
-    
-    // First attempt: Try to parse the whole caption as a standard date
-    const parsedDate = Date.parse(caption);
-    if (!isNaN(parsedDate)) {
-        return parsedDate;
-    }
-
-    // Second attempt (Fallback): Look for a 4-digit year (19xx or 20xx) in the text
-    const yearMatch = caption.match(/\b(19|20)\d{2}\b/);
-    if (yearMatch) {
-        // Return the timestamp for January 1st of that year
-        return new Date(yearMatch[0], 0, 1).getTime(); 
-    }
-
-    // If no date can be found at all, treat it as the oldest possible item
-    return 0; 
-}
-
-// Helper function to load images into memory
-function preloadImages(urls) {
-    return Promise.all(urls.map(url => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = resolve;
-            img.onerror = resolve; // Resolve anyway so a broken link doesn't stop the whole grid
-            img.src = url;
-        });
-    }));
-}
-
-// Function to render chunks of images
-function renderNextBatch() {
-    const grid = document.getElementById('dynamic-archive-grid');
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    let htmlContent = '';
-    
-    // Calculate how many items we should show now
-    const endIndex = Math.min(currentDisplayCount + itemsPerLoad, allArchiveData.length);
-
-    for (let i = currentDisplayCount; i < endIndex; i++) {
-        const item = allArchiveData[i];
-        const titleHtml = item.title ? `<h3>${item.title}</h3>` : `<h3></h3>`;
-        const captionHtml = item.caption ? `<p>${item.caption}</p>` : `<p></p>`;
-        
-        // Use native lazy loading for images after the first 10
-        const loadingAttr = i < 10 ? 'eager' : 'lazy';
-
-        htmlContent += `
-          <div class="archive-item">
-            <img src="${item.image_url}" alt="LSR archive image" loading="${loadingAttr}">
-            <div class="caption">
-              ${titleHtml}
-              ${captionHtml}
-            </div>
-          </div>
-        `;
-    }
-
-    // Append new items without overwriting the existing ones
-    grid.insertAdjacentHTML('beforeend', htmlContent);
-
-    // Update our counter
-    currentDisplayCount = endIndex;
-
-    // Show or hide the button based on remaining items
-    if (currentDisplayCount >= allArchiveData.length) {
-        loadMoreBtn.style.display = 'none';
-    } else {
-        loadMoreBtn.style.display = 'inline-block';
-    }
-}
-
-// Listen for the "See More" button click
-document.addEventListener('DOMContentLoaded', () => {
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    if (loadMoreBtn) {
-        loadMoreBtn.addEventListener('click', renderNextBatch);
-    }
-});
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
