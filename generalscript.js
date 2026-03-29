@@ -754,10 +754,28 @@ function getLondonTimeDetails() {
         });
     }
 
+
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
 let msnry; // Variable to hold our Masonry instance
+
+// 1. Initialize Masonry on the skeletons immediately on page load
+document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.getElementById('dynamic-archive-grid');
+    
+    // Build the skeleton grid
+    msnry = new Masonry(grid, {
+        itemSelector: '.archive-item',
+        columnWidth: '.grid-sizer',
+        gutter: '.gutter-sizer',
+        percentPosition: true,
+        transitionDuration: 0 // Keep at 0 so skeletons snap instantly into place
+    });
+    
+    // Fetch the real data
+    loadArchiveGrid();
+});
 
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
@@ -781,6 +799,12 @@ function loadArchiveGrid() {
             
             const grid = document.getElementById('dynamic-archive-grid');
             
+            // 2. Destroy the skeleton Masonry instance BEFORE wiping the HTML
+            if (msnry) {
+                msnry.destroy(); // Resets the layout state
+                msnry = null;    // Clears the variable so loadNextBatch() creates a new one
+            }
+
             // 🔥 THE FIX: Clear skeletons, but inject the sizers back in! 🔥
             grid.innerHTML = `
               <div class="grid-sizer"></div>
