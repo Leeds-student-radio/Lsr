@@ -762,7 +762,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadArchiveData();
 });
 
-function loadArchiveData() {
+function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
 
     // Ensure PapaParse is included in your HTML: 
