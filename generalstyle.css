@@ -2262,30 +2262,29 @@ hr {
 
 /* --- The Masonry Grid --- */
 .archive-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Forces 3 equal columns */
-  gap: 1.5rem; /* Handles both vertical and horizontal spacing beautifully */
   max-width: 1500px;
   margin: 0 auto;
   padding: 1rem;
+  /* Remove column-count and display: grid completely! */
 }
+
 /* --- Individual Archive Items --- */
 .archive-item {
+  width: calc(33.333% - 11px); /* 3 columns on desktop, accounting for a 16px gap */
+  margin-bottom: 16px; /* Vertical gap */
   position: relative;
-  /* Removed break-inside and margin-bottom, Grid handles that now */
   border-radius: 12px;
   overflow: hidden;
   background-color: #eee; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  height: 350px; /* Set a uniform height for perfect rows */
+  /* NO fixed heights! Let the image dictate the height */
 }
 
 .archive-item img {
   display: block;
   width: 100%;
-  height: 100%; /* Tell the image to fill the 350px height */
-  object-fit: cover; /* IMPORTANT: This crops the image beautifully so it never squishes */
+  height: auto; /* Restored to auto so we get the true masonry unevenness */
   transition: transform 0.4s ease;
 }
 
@@ -2348,8 +2347,9 @@ hr {
   }
   
  .archive-item {
-    height: 250px; /* Slightly shorter boxes for mobile screens */
-    border-radius: 8px; 
+    width: calc(50% - 8px); /* Switch to 2 columns on smaller screens */
+    margin-bottom: 10px;
+    border-radius: 8px;
   }
   
   /* Shrink the caption text and padding so it fits on a half-width mobile image */
