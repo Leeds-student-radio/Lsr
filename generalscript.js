@@ -844,11 +844,6 @@ async function loadNextBatch() {
     manageLoadMoreButton();
 }
 
-
-    
-    manageLoadMoreButton();
-}
-
 function manageLoadMoreButton() {
     let btn = document.getElementById('load-more-btn');
     
@@ -858,7 +853,6 @@ function manageLoadMoreButton() {
             btn = document.createElement('button');
             btn.id = 'load-more-btn';
             btn.innerText = 'Load More';
-            // Add some basic styling or a class here
             btn.className = 'load-more-button'; 
             btn.onclick = loadNextBatch;
             
@@ -870,7 +864,6 @@ function manageLoadMoreButton() {
         btn.style.display = 'none'; 
     }
 }
-
     // --- 6.5 CHART / LEADERBOARD LOGIC (NEW) ---
     let cachedSongs = null;
     let cachedArtists = null;
