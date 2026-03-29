@@ -754,29 +754,13 @@ function getLondonTimeDetails() {
         });
     }
 
-
 let allData = []; 
 let currentIndex = 0; 
 const BATCH_SIZE = 15; 
 let msnry; 
 
-// 1. Initialize skeletons immediately
-document.addEventListener("DOMContentLoaded", () => {
-    const grid = document.getElementById('dynamic-archive-grid');
-    
-    // Attempt to run Masonry on the skeletons
-    if (typeof Masonry !== 'undefined') {
-        msnry = new Masonry(grid, {
-            itemSelector: '.archive-item',
-            columnWidth: '.grid-sizer',
-            gutter: '.gutter-sizer',
-            percentPosition: true,
-            transitionDuration: 0 // Snap instantly
-        });
-    }
-    
-    loadArchiveGrid();
-});
+// Start loading the sheet immediately
+document.addEventListener("DOMContentLoaded", loadArchiveGrid);
 
 function loadArchiveGrid() {
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=897108323&output=csv';
@@ -798,8 +782,7 @@ function loadArchiveGrid() {
 
             allData = data; 
             
-            // 🚨 We do NOT wipe the grid.innerHTML here anymore!
-            // The skeletons must remain visible while the next function preloads the images.
+            // Preload images while the CSS skeletons are still on screen
             loadNextBatch();
         }
     });
@@ -811,7 +794,7 @@ async function loadNextBatch() {
     
     if (batch.length === 0) return; 
 
-    // 1. Preload real images IN THE BACKGROUND (Skeletons are still on screen!)
+    // 1. Preload real images in the background
     const preloadPromises = batch.map(item => {
         return new Promise((resolve) => {
             const img = new Image();
@@ -824,12 +807,8 @@ async function loadNextBatch() {
     await Promise.all(preloadPromises);
 
     // 2. 🔥 THE SWAP 🔥 
-    // NOW that images are fully downloaded in the cache, we destroy the skeletons.
     if (currentIndex === 0) {
-        if (msnry) {
-            msnry.destroy(); 
-            msnry = null;    
-        }
+        // Remove the CSS skeletons and inject the sizers so Masonry can take over
         grid.innerHTML = `
           <div class="grid-sizer"></div>
           <div class="gutter-sizer"></div>
@@ -853,7 +832,7 @@ async function loadNextBatch() {
         `;
     });
 
-    // Convert HTML string to DOM elements
+    // Convert to DOM elements
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlContent;
     const newItems = Array.from(tempDiv.children);
@@ -861,7 +840,7 @@ async function loadNextBatch() {
     // Append to grid
     grid.append(...newItems);
 
-    // 4. Initialize or update the REAL Masonry layout
+    // 4. Initialize or update Masonry on the REAL images
     if (!msnry) {
         msnry = new Masonry(grid, {
             itemSelector: '.archive-item',
@@ -878,6 +857,8 @@ async function loadNextBatch() {
     currentIndex += BATCH_SIZE;
     manageLoadMoreButton();
 }
+
+// ... Keep your manageLoadMoreButton() function exactly as it is!
 
 function manageLoadMoreButton() {
     let btn = document.getElementById('load-more-btn');
