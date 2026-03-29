@@ -2277,7 +2277,11 @@ hr {
 .gutter-sizer {
   width: 2%; 
 }
-
+.grid-sizer, 
+.gutter-sizer,
+.archive-item {
+  float: left; 
+}
 .archive-item {
   margin-bottom: 2%; /* Matches the gutter */
   position: relative;
