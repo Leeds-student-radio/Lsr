@@ -1036,8 +1036,11 @@ function loadArchiveGrid() {
                 const popupText = document.getElementById('lsr-popup-text');
                 const popup = document.getElementById('lsr-status-popup');
 
-                if (popupText && popup) {
-    popupText.innerText = `Thanks for tuning in! \n (Un)fortunately, we are away on ${holidayType} and will be back: ${returnDate}.`;
+               if (popupText && popup) {
+    popupText.innerHTML = `
+        <h3>Thanks for tuning in!</h3>
+        <p>(Un)fortunately, we are away on ${holidayType} and will be back ${returnDate}.</p>
+    `;
     popup.style.display = 'flex'; 
 }
             }
