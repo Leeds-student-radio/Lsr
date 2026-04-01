@@ -1041,7 +1041,7 @@ function loadArchiveGrid() {
         <h3>Thanks for tuning in!</h3>
         <p>(Un)fortunately, we are away on ${holidayType} and will be back ${returnDate}.</p>
     `;
-    popup.style.display = 'flex'; 
+   popup.classList.add('show');
 }
             }
         } catch (error) {
@@ -1049,12 +1049,15 @@ function loadArchiveGrid() {
         }
     }
 
-    const popupCloseBtn = document.getElementById('lsr-popup-close');
-    if (popupCloseBtn) {
-        popupCloseBtn.addEventListener('click', () => {
-            document.getElementById('lsr-status-popup').style.display = 'none';
-        });
-    }
+   const popupCloseBtn = document.getElementById('lsr-popup-close');
+if (popupCloseBtn) {
+    popupCloseBtn.addEventListener('click', () => {
+        const popup = document.getElementById('lsr-status-popup');
+        popup.classList.remove('show');
+        // Optional: fully hide after transition
+        setTimeout(() => { popup.style.visibility = 'hidden'; }, 300);
+    });
+}
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
