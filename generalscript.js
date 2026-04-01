@@ -997,36 +997,38 @@ function loadArchiveGrid() {
 
 // --- 6.8 STATUS POPUP LOGIC ---
     async function fetchStatusPopupData() {
+        // 1. Check if we've already checked for the popup this session
+        if (sessionStorage.getItem('lsrPopupChecked')) {
+            return; // Exit immediately, don't fetch or show anything
+        }
+
         const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=384985644";
         
         try {
             const response = await fetch(sheetUrl);
             const csvText = await response.text();
             
-            // 1. Parse the CSV using your general script's built-in parser
+            // 2. Mark as checked so it doesn't run again on other pages or reloads
+            sessionStorage.setItem('lsrPopupChecked', 'true');
+            
             const rows = parseCSV(csvText);
             
-            if (rows.length < 2) return; // Exit if no data is found
+            if (rows.length < 2) return; 
             
-            // 2. Extract headers and clean them up
             const headers = rows[0].map(header => header ? header.trim().toLowerCase() : '');
             
-            // 3. Find the column indexes
             const statusIdx = headers.indexOf('status');
             const holidayTypeIdx = headers.indexOf('holiday_type');
             const returnDateIdx = headers.indexOf('return_date');
 
-            // Exit if columns are missing
             if (statusIdx === -1 || holidayTypeIdx === -1 || returnDateIdx === -1) {
                 console.error("LSR Popup: Missing required columns in sheet.");
                 return;
             }
 
-            // 4. Get the first row of actual data
             const dataRow = rows[1].map(cell => cell ? cell.trim() : '');
             const status = dataRow[statusIdx].toLowerCase();
 
-            // 5. Check status and show popup if away
             if (status === 'away') {
                 const holidayType = dataRow[holidayTypeIdx];
                 const returnDate = dataRow[returnDateIdx];
@@ -1034,18 +1036,16 @@ function loadArchiveGrid() {
                 const popupText = document.getElementById('lsr-popup-text');
                 const popup = document.getElementById('lsr-status-popup');
 
-                // Populate the message and show
                 if (popupText && popup) {
-                    popupText.innerText = `We are on ${holidayType} and will be back ${returnDate}.`;
-                    popup.style.display = 'flex'; 
-                }
+    popupText.innerText = `Thanks for tuning in! \n (Un)fortunately, we are away on ${holidayType} and will be back: ${returnDate}.`;
+    popup.style.display = 'flex'; 
+}
             }
         } catch (error) {
             console.error('Error fetching LSR status:', error);
         }
     }
 
-    // Handle the close button safely
     const popupCloseBtn = document.getElementById('lsr-popup-close');
     if (popupCloseBtn) {
         popupCloseBtn.addEventListener('click', () => {
