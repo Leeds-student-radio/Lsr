@@ -995,7 +995,63 @@ function loadArchiveGrid() {
 
     window.addEventListener('resize', updateChartHeaderText);
 
+// --- 6.8 STATUS POPUP LOGIC ---
+    async function fetchStatusPopupData() {
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=384985644";
+        
+        try {
+            const response = await fetch(sheetUrl);
+            const csvText = await response.text();
+            
+            // 1. Parse the CSV using your general script's built-in parser
+            const rows = parseCSV(csvText);
+            
+            if (rows.length < 2) return; // Exit if no data is found
+            
+            // 2. Extract headers and clean them up
+            const headers = rows[0].map(header => header ? header.trim().toLowerCase() : '');
+            
+            // 3. Find the column indexes
+            const statusIdx = headers.indexOf('status');
+            const holidayTypeIdx = headers.indexOf('holiday_type');
+            const returnDateIdx = headers.indexOf('return_date');
 
+            // Exit if columns are missing
+            if (statusIdx === -1 || holidayTypeIdx === -1 || returnDateIdx === -1) {
+                console.error("LSR Popup: Missing required columns in sheet.");
+                return;
+            }
+
+            // 4. Get the first row of actual data
+            const dataRow = rows[1].map(cell => cell ? cell.trim() : '');
+            const status = dataRow[statusIdx].toLowerCase();
+
+            // 5. Check status and show popup if away
+            if (status === 'away') {
+                const holidayType = dataRow[holidayTypeIdx];
+                const returnDate = dataRow[returnDateIdx];
+                
+                const popupText = document.getElementById('lsr-popup-text');
+                const popup = document.getElementById('lsr-status-popup');
+
+                // Populate the message and show
+                if (popupText && popup) {
+                    popupText.innerText = `We are on ${holidayType} and will be back ${returnDate}.`;
+                    popup.style.display = 'flex'; 
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching LSR status:', error);
+        }
+    }
+
+    // Handle the close button safely
+    const popupCloseBtn = document.getElementById('lsr-popup-close');
+    if (popupCloseBtn) {
+        popupCloseBtn.addEventListener('click', () => {
+            document.getElementById('lsr-status-popup').style.display = 'none';
+        });
+    }
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -1085,6 +1141,7 @@ function loadArchiveGrid() {
     fetchCommitteeData();
     fetchApplyData();
     fetchAwardsData(); 
+    fetchStatusPopupData();
     
     if (window.location.pathname.includes('listen')) {
         initChatSystem();
