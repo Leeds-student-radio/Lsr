@@ -3427,6 +3427,13 @@ display: flex;
     align-items: stretch;
     font-family: sans-serif;
 }
+  @media (max-width: 500px) {
+#lsr-status-popup {
+  
+    right: 20px;
+   margin-left:20px;
+}
+}
 
 .lsr-popup-icon {
     font-size: 24px;
@@ -3437,7 +3444,7 @@ display: flex;
 .lsr-popup-content {
     display: flex;
     align-items: center;
-    line-height: 1.4;
+       line-height: 1.1;
 }
 
 #lsr-popup-close {
