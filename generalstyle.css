@@ -1,8 +1,14 @@
 
 
-.schedule-dropdown tr  {
- border: solid 1px solid #8f1818;
-  border-radius:2px;
+   .schedule-dropdown table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.schedule-dropdown th, 
+.schedule-dropdown td {
+    border: 1px solid #8f1818;
+    padding: 2px;
 }
 
 @keyframes award-shimmer {
