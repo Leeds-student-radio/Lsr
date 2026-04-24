@@ -1,4 +1,10 @@
 
+
+.schedule-dropdown tr  {
+ border: solid 1px solid #8f1818;
+  border-radius:2px;
+}
+
 @keyframes award-shimmer {
   0% { background-position: -468px 0; }
   100% { background-position: 468px 0; }
