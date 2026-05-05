@@ -1530,7 +1530,7 @@ hr {
             box-shadow: var(--shadow-card);
             position: relative;
             z-index: 200;
-            max-width: var(--container-width);
+           
         }
 
         .player-bar::before {
