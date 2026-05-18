@@ -144,12 +144,14 @@
       </div>
     </div>
   </div>
-<button id="shazam-btn" class="lsr-btn">
+  
+<button id="view-schedule-btn" class="lsr-btn">
   <div class="btn-content">
-    <i class="fa-solid fa-music"></i>
-    <span>Identify<br>Song</span>
+    <i class="fa-solid fa-calendar-days"></i>
+    <span>View<br>Schedule</span>
   </div>
 </button>
+
   <div id="shazam-status" class="lsr-status"></div>
 
 </div>
@@ -193,7 +195,7 @@
 
                 
 
-           
+            
 
             <div class="lsr-card chat-card">
                 <div class="chat-header">
@@ -310,8 +312,7 @@
 
             <div class="copyright">
                 &copy; Leeds Student Radio 2026  <br><br> <a href="/legal" class="legalsmall">Privacy & Terms of Use</a>
-               <!--  <a href="#" target="_blank" class="disclaimer-link">Website by Zach</a> -->
-            </div>
+               </div>
         </div>
     </footer>
 
@@ -664,21 +665,31 @@
 
         const lsrPopup = document.getElementById('lsr-popup-overlay');
         const lsrCloseBtn = document.getElementById('lsr-popup-closexx');
+        const viewScheduleBtn = document.getElementById('view-schedule-btn');
 
-        window.onload = () => {
-            setTimeout(() => {
-                lsrPopup.classList.add('lsr-sched-active');
-                
-                if (lsrCurrentShowId) {
-                    const currentEl = document.getElementById(lsrCurrentShowId);
-                    if (currentEl) {
-                        setTimeout(() => {
-                            currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }, 200);
-                    }
+        // Reusable function to open and scroll the popup
+        function openAndScrollSchedule() {
+            lsrPopup.classList.add('lsr-sched-active');
+            
+            if (lsrCurrentShowId) {
+                const currentEl = document.getElementById(lsrCurrentShowId);
+                if (currentEl) {
+                    setTimeout(() => {
+                        currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 200);
                 }
-            }, 500);
-        };
+            }
+        }
+
+        // 1. Open popup when the "View Schedule" button is clicked
+        if (viewScheduleBtn) {
+            viewScheduleBtn.addEventListener('click', openAndScrollSchedule);
+        }
+
+        // 2. Open popup automatically on page load (with a small delay)
+        window.addEventListener('load', () => {
+            setTimeout(openAndScrollSchedule, 500);
+        });
 
         lsrCloseBtn.addEventListener('click', () => { lsrPopup.classList.remove('lsr-sched-active'); });
         lsrPopup.addEventListener('click', (e) => {
