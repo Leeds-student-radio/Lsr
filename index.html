@@ -235,7 +235,382 @@
         </div>
     </footer>
 
+   <style>
+      
+        .lsr-sched-wrapper {
+            font-family: 'Montserrat', sans-serif;
+        }
 
+        .lsr-sched-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+          
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .lsr-sched-overlay.lsr-sched-active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lsr-sched-modal {
+            background: linear-gradient(180deg, #d32027 0%, #b81b21 100%);
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid #a3161b;
+        }
+
+        .lsr-sched-header {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #a3161b;
+        }
+
+        .lsr-sched-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .lsr-sched-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            transition: transform 0.2s ease;
+            padding: 0;
+        }
+
+        .lsr-sched-close:hover {
+            transform: scale(1.1);
+        }
+
+        .lsr-sched-list {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            scroll-behavior: smooth;
+        }
+
+        .lsr-sched-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lsr-sched-list::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        .lsr-sched-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.4);
+            border-radius: 4px;
+        }
+        .lsr-sched-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .lsr-sched-card {
+            background-color: rgba(0, 0, 0, 0.15);
+            border: 1px solid #a3161b;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* Highlight classes for the current show */
+        .lsr-sched-card.lsr-sched-current {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 2px solid #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+            position: relative;
+        }
+
+        @keyframes lsr-pulse-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .lsr-sched-on-air {
+            color: #2ecc71;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            animation: lsr-pulse-text 1.5s infinite;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .lsr-sched-on-air::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #2ecc71;
+            border-radius: 50%;
+        }
+
+        .lsr-sched-card-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .lsr-sched-time {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .lsr-sched-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .lsr-sched-badge {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .lsr-sched-badge-live { background-color: white; color: #d32027; }
+        .lsr-sched-badge-prerec { background-color: rgba(255, 255, 255, 0.2); color: white; }
+        .lsr-sched-badge-stream { background-color: #111; color: white; }
+        .lsr-sched-badge-extra { background-color: #ff9800; color: #111; }
+
+        .lsr-sched-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .lsr-sched-show-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .lsr-sched-show-desc {
+            font-size: 14px;
+            font-weight: 400;
+            margin: 0;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        @media (min-width: 600px) {
+            .lsr-sched-card {
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+            }
+            .lsr-sched-card-head {
+                flex-direction: column;
+                align-items: flex-start;
+                min-width: 130px;
+                border-bottom: none;
+                border-right: 1px solid rgba(255,255,255,0.1);
+                padding-bottom: 0;
+                padding-right: 15px;
+            }
+            .lsr-sched-card-body { flex-grow: 1; }
+        }
+    </style>
+</head>
+<body style="margin: 0;"> <div class="lsr-sched-wrapper">
+        <div class="lsr-sched-overlay" id="lsr-popup-overlay">
+            <div class="lsr-sched-modal">
+                <div class="lsr-sched-header">
+                    <h2 class="lsr-sched-title">24h Special Schedule</h2>
+                    <button class="lsr-sched-close" id="lsr-popup-closexx">&times;</button>
+                </div>
+                <div class="lsr-sched-list" id="lsr-popup-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lsrScheduleData = [
+            { time: "9:00 - 9:15", team: "Millie", desc: "Prefacing the day with a stay tuned type beat", type: "Live", stream: "Main" },
+            { time: "9:15 - 11:00", team: "Breakfast", desc: "", type: "", stream: "Main" },
+            { time: "11:00 - 12:00", team: "Lingua Franca", desc: "A language marathon!", type: "Live", stream: "Main" },
+            { time: "12:00 - 13:00", team: "Bops & Bell-Bottoms: Around the Clock", desc: "A 70s themed exploration of songs relating to different parts of the day", type: "Live", stream: "Main" },
+            { time: "13:00 - 14:00", team: "News", desc: "", type: "", stream: "Main" },
+            { time: "14:00 - 15:00", team: "Sport", desc: "", type: "Live", stream: "Main" },
+            { time: "15:00 - 16:00", team: "Daytime", desc: "", type: "", stream: "Main" },
+            { time: "16:00 - 16:30", team: "Leeds Drag Society LSR Takeover", desc: "Ranking Drag Race Moments - with the queens/kings of Drag Soc", type: "Live", stream: "Main" },
+            { time: "16:30 - 17:00", team: "LSTV.MP3", desc: "slaying it down on camera", type: "Live", stream: "Main" },
+            { time: "17:00 - 19:00", team: "Hometime", desc: "", type: "Live", stream: "Main" },
+            { time: "19:00 - 20:00", team: "Music", desc: "", type: "", stream: "Main" },
+            { time: "20:00 - 21:00", team: "Music / Evening", desc: "", type: "", stream: "Main" },
+            { time: "21:00 - 22:00", team: "It’s Not Clocking to You", desc: "An hour of meme soundbytes, quizzes and the perfect 2016 playlist", type: "Live", stream: "Main" },
+            { time: "22:00 - 23:00", team: "On the Same Page", desc: "Queer authors special", type: "Live", stream: "Main" },
+            { time: "23:00 - 00:00", team: "Press Play", desc: "Trans cinema special! Such as – directed by trans people, about trans people, starring trans actors", type: "Live", stream: "Main" },
+            { time: "00:00 - 01:00", team: "Terminally Offline", desc: "The ultimate Pop culture quiz!!! Hosted by Emily and Fleur - play in the chat and possibly against special guests", type: "Live", stream: "LSR Extra" },
+            { time: "01:00 - 02:00", team: "Degree Hunger Games", desc: "Determine once and for all which is the best degree by plugging 24 into hunger games simulator and having them fight to the death", type: "", stream: "LSR Extra" },
+            { time: "02:00 - 03:00", team: "Open Office with Def and Jess", desc: "Confessions segment where we get any committee/people present to give us their hot-takes, unpopular opinions and hot goss", type: "Live", stream: "LSR Extra" },
+            { time: "03:00 - 04:00", team: "The Witching Hour with Erin Robinson and Anna Cook", desc: "Conversational segment where we talk about modern goths, pop culture, politics & play some dark and eerie tunes perfect for 3am at the witching hour", type: "Live", stream: "LSR Extra" },
+            { time: "04:00 - 05:00", team: "Avant Garden", desc: "DJ set covering the underground funk and dance music!", type: "Pre-rec", stream: "LSR Extra" },
+            { time: "05:00 - 06:00", team: "Battle of the Beats", desc: "", type: "Pre-rec", stream: "LSR Extra" },
+            { time: "06:00 - 07:00", team: "Mystery Idea", desc: "An idea full of mystery", type: "Pre-recorded", stream: "LSR Extra" },
+            { time: "07:00 - 08:00", team: "George the Gryphon Murder Mystery", desc: "George the Gryphon has vanished. Listeners will be encouraged to message in what clues they’ve picked up on and share their ideas on what might have happened!", type: "Live", stream: "Main" },
+            { time: "08:00 - 08:45", team: "Play By Play", desc: "", type: "Live", stream: "Main" },
+            { time: "08:45 - 09:00", team: "Millie", desc: "", type: "", stream: "Main" }
+        ];
+
+        function getLsrLondonTimeMinutes() {
+            const now = new Date();
+            const londonTimeStr = now.toLocaleTimeString("en-GB", { 
+                timeZone: "Europe/London", 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            });
+            const [hours, minutes] = londonTimeStr.split(':').map(Number);
+            return (hours * 60) + minutes;
+        }
+
+        function parseLsrTimeMins(timeStr) {
+            const [hours, minutes] = timeStr.trim().split(':').map(Number);
+            return (hours * 60) + minutes;
+        }
+
+        const lsrContainer = document.getElementById('lsr-popup-list');
+        const lsrCurrentMins = getLsrLondonTimeMinutes();
+        let lsrCurrentShowId = null;
+
+        lsrScheduleData.forEach((item, index) => {
+            let typeBadge = '';
+            if (item.type.toLowerCase() === 'live') {
+                typeBadge = `<span class="lsr-sched-badge lsr-sched-badge-live">Live</span>`;
+            } else if (item.type.toLowerCase().includes('pre-rec')) {
+                typeBadge = `<span class="lsr-sched-badge lsr-sched-badge-prerec">Pre-rec</span>`;
+            }
+
+            let streamBadge = item.stream === 'Main' 
+                ? `<span class="lsr-sched-badge lsr-sched-badge-stream">Main Stream</span>`
+                : `<span class="lsr-sched-badge lsr-sched-badge-extra">LSR Extra</span>`;
+
+            const [startStr, endStr] = item.time.split('-');
+            const startMins = parseLsrTimeMins(startStr);
+            let endMins = parseLsrTimeMins(endStr);
+            
+            let isCurrent = false;
+            
+            if (startMins < endMins) {
+                if (lsrCurrentMins >= startMins && lsrCurrentMins < endMins) {
+                    isCurrent = true;
+                }
+            } else {
+                if (lsrCurrentMins >= startMins || lsrCurrentMins < endMins) {
+                    isCurrent = true;
+                }
+            }
+
+            let itemClasses = "lsr-sched-card";
+            let onAirIndicator = "";
+            let elementId = `lsr-show-${index}`;
+
+            if (isCurrent) {
+                itemClasses += " lsr-sched-current";
+                lsrCurrentShowId = elementId;
+                onAirIndicator = `<div class="lsr-sched-on-air">ON AIR NOW</div>`;
+            }
+
+            const cardHTML = `
+                <div class="${itemClasses}" id="${elementId}">
+                    <div class="lsr-sched-card-head">
+                        <div>
+                            <span class="lsr-sched-time">${item.time}</span>
+                            ${onAirIndicator}
+                        </div>
+                        <div class="lsr-sched-badges">
+                            ${typeBadge}
+                            ${streamBadge}
+                        </div>
+                    </div>
+                    <div class="lsr-sched-card-body">
+                        <h3 class="lsr-sched-show-title">${item.team}</h3>
+                        ${item.desc ? `<p class="lsr-sched-show-desc">${item.desc}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            lsrContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        const lsrPopup = document.getElementById('lsr-popup-overlay');
+        const lsrCloseBtn = document.getElementById('lsr-popup-closexx');
+        const viewScheduleBtn = document.getElementById('view-schedule-btn');
+
+        // Reusable function to open and scroll the popup
+        function openAndScrollSchedule() {
+            lsrPopup.classList.add('lsr-sched-active');
+            
+            if (lsrCurrentShowId) {
+                const currentEl = document.getElementById(lsrCurrentShowId);
+                if (currentEl) {
+                    setTimeout(() => {
+                        currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 200);
+                }
+            }
+        }
+
+        // 1. Open popup when the "View Schedule" button is clicked
+        if (viewScheduleBtn) {
+            viewScheduleBtn.addEventListener('click', openAndScrollSchedule);
+        }
+
+        // 2. Open popup automatically on page load (with a small delay)
+        window.addEventListener('load', () => {
+            setTimeout(openAndScrollSchedule, 500);
+        });
+
+        lsrCloseBtn.addEventListener('click', () => { lsrPopup.classList.remove('lsr-sched-active'); });
+        lsrPopup.addEventListener('click', (e) => {
+            if (e.target === lsrPopup) { lsrPopup.classList.remove('lsr-sched-active'); }
+        });
+    </script>
 </body>
    
 </html>
