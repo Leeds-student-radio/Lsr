@@ -1058,6 +1058,157 @@ if (popupCloseBtn) {
         setTimeout(() => { popup.style.visibility = 'hidden'; }, 300);
     });
 }
+
+    // --- 6.9 LSR POPUP SCHEDULE LOGIC ---
+    function initPopupSchedule() {
+        const lsrContainer = document.getElementById('lsr-popup-list');
+        if (!lsrContainer) return; // Safety check for SPA routing
+
+        // Clear container to prevent duplicate entries on page reloads
+        lsrContainer.innerHTML = '';
+
+        const lsrScheduleData = [
+            { time: "9:00 - 9:15", team: "Millie", desc: "Prefacing the day with a stay tuned type beat", type: "Live", stream: "Main" },
+            { time: "9:15 - 11:00", team: "Breakfast", desc: "", type: "", stream: "Main" },
+            { time: "11:00 - 12:00", team: "Lingua Franca", desc: "A language marathon!", type: "Live", stream: "Main" },
+            { time: "12:00 - 13:00", team: "Bops & Bell-Bottoms: Around the Clock", desc: "A 70s themed exploration of songs relating to different parts of the day", type: "Live", stream: "Main" },
+            { time: "13:00 - 14:00", team: "News", desc: "", type: "", stream: "Main" },
+            { time: "14:00 - 15:00", team: "Sport", desc: "", type: "Live", stream: "Main" },
+            { time: "15:00 - 16:00", team: "Daytime", desc: "", type: "", stream: "Main" },
+            { time: "16:00 - 16:30", team: "Leeds Drag Society LSR Takeover", desc: "Ranking Drag Race Moments - with the queens/kings of Drag Soc", type: "Live", stream: "Main" },
+            { time: "16:30 - 17:00", team: "LSTV.MP3", desc: "slaying it down on camera", type: "Live", stream: "Main" },
+            { time: "17:00 - 19:00", team: "Hometime", desc: "", type: "Live", stream: "Main" },
+            { time: "19:00 - 20:00", team: "Music", desc: "", type: "", stream: "Main" },
+            { time: "20:00 - 21:00", team: "Music / Evening", desc: "", type: "", stream: "Main" },
+            { time: "21:00 - 22:00", team: "It’s Not Clocking to You", desc: "An hour of meme soundbytes, quizzes and the perfect 2016 playlist", type: "Live", stream: "Main" },
+            { time: "22:00 - 23:00", team: "On the Same Page", desc: "Queer authors special", type: "Live", stream: "Main" },
+            { time: "23:00 - 00:00", team: "Press Play", desc: "Trans cinema special! Such as – directed by trans people, about trans people, starring trans actors", type: "Live", stream: "Main" },
+            { time: "00:00 - 01:00", team: "Terminally Offline", desc: "The ultimate Pop culture quiz!!! Hosted by Emily and Fleur - play in the chat and possibly against special guests", type: "Live", stream: "LSR Extra" },
+            { time: "01:00 - 02:00", team: "Degree Hunger Games", desc: "Determine once and for all which is the best degree by plugging 24 into hunger games simulator and having them fight to the death", type: "", stream: "LSR Extra" },
+            { time: "02:00 - 03:00", team: "Open Office with Def and Jess", desc: "Confessions segment where we get any committee/people present to give us their hot-takes, unpopular opinions and hot goss", type: "Live", stream: "LSR Extra" },
+            { time: "03:00 - 04:00", team: "The Witching Hour with Erin Robinson and Anna Cook", desc: "Conversational segment where we talk about modern goths, pop culture, politics & play some dark and eerie tunes perfect for 3am at the witching hour", type: "Live", stream: "LSR Extra" },
+            { time: "04:00 - 05:00", team: "Avant Garden", desc: "DJ set covering the underground funk and dance music!", type: "Pre-rec", stream: "LSR Extra" },
+            { time: "05:00 - 06:00", team: "Battle of the Beats", desc: "", type: "Pre-rec", stream: "LSR Extra" },
+            { time: "06:00 - 07:00", team: "Mystery Idea", desc: "An idea full of mystery", type: "Pre-recorded", stream: "LSR Extra" },
+            { time: "07:00 - 08:00", team: "George the Gryphon Murder Mystery", desc: "George the Gryphon has vanished. Listeners will be encouraged to message in what clues they’ve picked up on and share their ideas on what might have happened!", type: "Live", stream: "Main" },
+            { time: "08:00 - 08:45", team: "Play By Play", desc: "", type: "Live", stream: "Main" },
+            { time: "08:45 - 09:00", team: "Millie", desc: "", type: "", stream: "Main" }
+        ];
+
+        function getLsrLondonTimeMinutes() {
+            const now = new Date();
+            const londonTimeStr = now.toLocaleTimeString("en-GB", { 
+                timeZone: "Europe/London", 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            });
+            const [hours, minutes] = londonTimeStr.split(':').map(Number);
+            return (hours * 60) + minutes;
+        }
+
+        function parseLsrTimeMins(timeStr) {
+            const [hours, minutes] = timeStr.trim().split(':').map(Number);
+            return (hours * 60) + minutes;
+        }
+
+        const lsrCurrentMins = getLsrLondonTimeMinutes();
+        let lsrCurrentShowId = null;
+
+        lsrScheduleData.forEach((item, index) => {
+            let typeBadge = '';
+            if (item.type.toLowerCase() === 'live') {
+                typeBadge = `<span class="lsr-sched-badge lsr-sched-badge-live">Live</span>`;
+            } else if (item.type.toLowerCase().includes('pre-rec')) {
+                typeBadge = `<span class="lsr-sched-badge lsr-sched-badge-prerec">Pre-rec</span>`;
+            }
+
+            let streamBadge = item.stream === 'Main' 
+                ? `<span class="lsr-sched-badge lsr-sched-badge-stream">Main Stream</span>`
+                : `<span class="lsr-sched-badge lsr-sched-badge-extra">LSR Extra</span>`;
+
+            const [startStr, endStr] = item.time.split('-');
+            const startMins = parseLsrTimeMins(startStr);
+            let endMins = parseLsrTimeMins(endStr);
+            
+            let isCurrent = false;
+            
+            if (startMins < endMins) {
+                if (lsrCurrentMins >= startMins && lsrCurrentMins < endMins) {
+                    isCurrent = true;
+                }
+            } else {
+                if (lsrCurrentMins >= startMins || lsrCurrentMins < endMins) {
+                    isCurrent = true;
+                }
+            }
+
+            let itemClasses = "lsr-sched-card";
+            let onAirIndicator = "";
+            let elementId = `lsr-show-${index}`;
+
+            if (isCurrent) {
+                itemClasses += " lsr-sched-current";
+                lsrCurrentShowId = elementId;
+                onAirIndicator = `<div class="lsr-sched-on-air">ON AIR NOW</div>`;
+            }
+
+            const cardHTML = `
+                <div class="${itemClasses}" id="${elementId}">
+                    <div class="lsr-sched-card-head">
+                        <div>
+                            <span class="lsr-sched-time">${item.time}</span>
+                            ${onAirIndicator}
+                        </div>
+                        <div class="lsr-sched-badges">
+                            ${typeBadge}
+                            ${streamBadge}
+                        </div>
+                    </div>
+                    <div class="lsr-sched-card-body">
+                        <h3 class="lsr-sched-show-title">${item.team}</h3>
+                        ${item.desc ? `<p class="lsr-sched-show-desc">${item.desc}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            lsrContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        const lsrPopup = document.getElementById('lsr-popup-overlay');
+        const lsrCloseBtn = document.getElementById('lsr-popup-closexx');
+        const viewScheduleBtn = document.getElementById('view-schedule-btn');
+
+        function openAndScrollSchedule() {
+            if(!lsrPopup) return;
+            lsrPopup.classList.add('lsr-sched-active');
+            
+            if (lsrCurrentShowId) {
+                const currentEl = document.getElementById(lsrCurrentShowId);
+                if (currentEl) {
+                    setTimeout(() => {
+                        currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 200);
+                }
+            }
+        }
+
+        if (viewScheduleBtn) {
+            // Remove existing listener to prevent duplicate fires on SPA route changes
+            viewScheduleBtn.removeEventListener('click', openAndScrollSchedule);
+            viewScheduleBtn.addEventListener('click', openAndScrollSchedule);
+        }
+
+        // Open popup automatically on page load
+        setTimeout(openAndScrollSchedule, 500);
+
+        if (lsrCloseBtn) lsrCloseBtn.addEventListener('click', () => { lsrPopup.classList.remove('lsr-sched-active'); });
+        if (lsrPopup) lsrPopup.addEventListener('click', (e) => {
+            if (e.target === lsrPopup) { lsrPopup.classList.remove('lsr-sched-active'); }
+        });
+    }
+
+    // Call it immediately on initial load
+    initPopupSchedule();
     // --- 7. ROUTING & INIT ---
     async function loadPage(url) {
         try {
@@ -1105,7 +1256,7 @@ if (popupCloseBtn) {
                 if (url.includes('chart')) {
                     initChartSystem();
                 }
-
+initPopupSchedule();
                 if (url.includes('archives')) { 
                     if (typeof Papa === 'undefined') {
                         const script = document.createElement('script');
