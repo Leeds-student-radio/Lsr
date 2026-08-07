@@ -1,0 +1,195 @@
+/* ==========================================================================
+   LSR — Apple Design Polish Layer
+   Loaded AFTER generalstyle.css. Refines motion, materials, type and
+   feedback per Apple's Fluid Interfaces / HIG principles, without changing
+   layout, color, or content. Every rule here is additive or overrides a
+   timing/curve value — nothing is repositioned or recolored.
+   ========================================================================== */
+
+/* --- 0. Refined tokens ---------------------------------------------------
+   Redeclaring :root here overrides var(--transition) site-wide (it's used
+   throughout generalstyle.css), swapping the default ease for a
+   critically-damped, spring-like deceleration curve. Same brand colors,
+   same radii — just a more physical feeling of motion. */
+:root {
+  --transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-press: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+                       box-shadow 0.12s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-spring: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --glass-light: rgba(255, 255, 255, 0.10);
+  --glass-edge: rgba(255, 255, 255, 0.35);
+  --glass-blur: 20px;
+}
+
+@supports (font: -apple-system-body) {
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Montserrat', sans-serif; }
+}
+
+/* --- 1. Base feel ---------------------------------------------------------
+   Kill tap-highlight flash, smooth (but reduced-motion-safe) scrolling,
+   crisper text rendering — small craft details Apple leans on. */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* --- 2. Typography — size-specific tracking & leading ---------------------
+   Large/display text gets tightened negative tracking and tight leading;
+   body copy stays near 0 tracking with comfortable leading. Weight carries
+   the hierarchy rather than size alone. */
+.brand-logo {
+  letter-spacing: -0.03em;
+}
+h1, h2, .card-title,
+.get-involved-intro h1, .get-involved-intro h2,
+.modal-info h2, #modal-show-title, #archive-lightbox-title {
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+}
+.lsr-trk-wgt-chart-container h1 {
+  letter-spacing: -0.02em;
+}
+p, .track-desc, .info-text, li, .modal-host, #modal-show-desc {
+  line-height: 1.55;
+}
+.live-badge, .next-badge, .text-uppercase, .card-badge, .nav-link {
+  letter-spacing: 0.02em;
+}
+
+/* --- 3. Response — feedback on press, not on release -----------------------
+   Every obviously-tappable control gets an instant, tiny press-down. This
+   is layered on top of existing hover states, so desktop is unaffected
+   in feel, but touch/click now reads as directly manipulable. */
+a, button,
+.play-toggle, .card-play-btn, .send-btn, .join-btn, #join-btn,
+.day-btn, .week-btn, .load-more-btn, .lsr-btn, .lsr-trk-wgt-filter-btn,
+.modal-close, .close-modal, .archive-lightbox-close, .gif-toggle-btn,
+.nav-link, .card, .show-card, .committee-grid > *, .award-box {
+  transition: var(--transition-press), var(--transition-fast);
+}
+a:active, button:active,
+.play-toggle:active, .card-play-btn:active, .send-btn:active, #join-btn:active,
+.day-btn:active, .week-btn:active, .load-more-btn:active, .lsr-btn:active,
+.lsr-trk-wgt-filter-btn:active, .modal-close:active, .close-modal:active,
+.archive-lightbox-close:active, .gif-toggle-btn:active {
+  transform: scale(0.96);
+}
+.card:active, .show-card:active {
+  transform: scale(0.985);
+}
+
+/* Focus states — visible, calm, never invisible (accessibility = trust) */
+a:focus-visible, button:focus-visible, input:focus-visible,
+.day-btn:focus-visible, .week-btn:focus-visible, .nav-link:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- 4. Materials & depth — glass chrome with a bright top edge -----------
+   The nav and player bar already sit above content; give them true
+   translucency + saturation so they read as floating material rather than
+   solid panels, exactly like Apple's toolbars. Colors are unchanged. */
+.main-nav {
+  background: linear-gradient(rgba(160, 43, 43, 0.88), rgba(160, 43, 43, 0.88));
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border-top-color: var(--glass-edge);
+}
+.player-bar {
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+}
+.nav-container::before {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* Scroll-edge effect: chrome deepens slightly once content sits beneath it,
+   instead of a hard 1px divider (set by apple-motion.js toggling this class) */
+.nav-container.nav-scrolled .main-nav {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  background: linear-gradient(rgba(160, 43, 43, 0.94), rgba(160, 43, 43, 0.94));
+}
+
+/* Modals/lightboxes: materialize (blur + scale together), not a plain fade */
+.modal-overlay, .archive-lightbox-overlay {
+  transition: opacity 0.3s var(--ease-out-expo), backdrop-filter 0.3s var(--ease-out-expo);
+}
+.modal-content, .archive-lightbox-content, #committee-modal .modal-content {
+  transition: transform 0.4s var(--ease-out-expo), opacity 0.35s var(--ease-out-expo);
+}
+.modal-overlay:not(.active) .modal-content,
+#committee-modal:not(.active) .modal-content {
+  transform: scale(0.94);
+  opacity: 0;
+}
+.archive-lightbox-overlay:not(.archive-lightbox-show) .archive-lightbox-content {
+  transform: scale(0.94);
+  opacity: 0;
+}
+
+/* --- 5. Card & image motion — deceleration instead of linear ease --------- */
+.card img, .thumbnail, .lsr-collage-img {
+  transition: transform 0.6s var(--ease-out-expo), filter 0.4s ease;
+}
+.card:hover img {
+  transform: scale(1.06);
+}
+.card-badge {
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+/* --- 6. Rubber-band-style hover for buttons — soft, not stiff ------------- */
+.play-toggle:hover, .card-play-btn:hover {
+  transition: var(--transition-spring);
+}
+
+/* --- 7. Reduced motion / transparency / contrast --------------------------
+   Gentle, non-vestibular equivalents rather than nothing. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 120ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card:hover img { transform: none; }
+  .modal-content, .archive-lightbox-content, #committee-modal .modal-content {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .main-nav {
+    background: var(--brand-dark);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .player-bar, .nav-container::before, .modal, .archive-lightbox-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .nav-link::after { background: #fff; height: 4px; }
+  .main-nav { border-width: 2px; border-color: #fff; }
+}
+
+/* --- 8. Small craft details ------------------------------------------------ */
+::selection {
+  background: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+img { will-change: auto; }
