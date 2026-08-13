@@ -98,7 +98,7 @@
   }
 
         .committee-grid {
-    margin-top: 20px;
+    margin-top: 20px !important;
 }
          
 }
@@ -1471,10 +1471,7 @@ hr {
 .about-page-wrapper {
     padding-top: 20px;
 }
-       .committee-grid {
-    
-    margin: 40px 20px;
-}
+      
        
        }
 
