@@ -84,6 +84,18 @@
     padding: 10px 20px; 
   }
 
+         .committee-card img { 
+
+             border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+             }
+
+         .committee-info {
+                border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+            border-top: none !important;
+  }
+            
   #historyhider1  { 
    display:none;
   }
@@ -1373,7 +1385,8 @@ hr {
         aspect-ratio: auto; /* Allow the card container to grow */
         display: flex;
         flex-direction: column;
-        gap: 8px; /* Adds a nice little gap between the photo and the red box */
+       justify-content: space-between;
+      
     }
 
     .committee-card img {
@@ -1386,6 +1399,7 @@ hr {
         position: relative; /* Brings the text box into normal document flow */
         min-height: auto;
         padding: 10px 5px; /* Slightly tighter padding for mobile */
+               height: 100%;
     }
 
     /* Disable the jump and rotate hover effect completely on mobile */
@@ -1459,6 +1473,12 @@ hr {
        .get-involved-intro {
     padding-bottom: 20px;
 }
+
+        .committee-grid {
+    
+        margin-bottom: 20px;
+    }
+    
      .send-btn:hover {
            
             color: #D62828;
