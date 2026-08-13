@@ -1240,7 +1240,7 @@ hr {
             gap: 20px;
             max-width: 1500px;
             margin: 0 auto;
-           margin-top:20px;
+           margin-bottom:20px;
         }
 
         .about-col h2 {
@@ -1299,7 +1299,7 @@ hr {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     max-width: 1500px;
-    margin: 40px auto 0;
+    margin: 20px auto 0;
 }
 
 /* 1. THE CONTAINER - A fixed invisible placeholder */
