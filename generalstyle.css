@@ -87,6 +87,20 @@
   #historyhider1  { 
    display:none;
   }
+
+         #commob  { 
+      text-align: center !important;
+ 
+    border: 2px solid #8f1818 !important;
+    border-radius: 10px !important;
+    padding: 15px 15px 0px 15px !important;
+    background: #00000017 !important;
+  }
+
+        .committee-grid {
+    margin-top: 20px;
+}
+         
 }
   @media screen and (min-width: 688px) { 
   #historywraphide { 
