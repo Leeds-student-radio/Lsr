@@ -1004,7 +1004,7 @@ hr {
           font-family: 'Open Sans', sans-serif;
            line-height: 1.3;
     margin-bottom: 20px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
         }
         
         .collage-img {
@@ -1021,12 +1021,12 @@ hr {
         
         .tip h3 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
-            text-decoration: underline;
+            font-size: 1.4rem;
+           
             text-underline-offset: 4px;
             text-decoration-thickness: 1px;
-            font-weight: normal;
-            margin-bottom: 5px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
         
         .tip p {
@@ -1218,17 +1218,17 @@ hr {
 
         .about-col h2 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.05rem;
+            font-size: 1.4rem;
             margin-bottom: 5px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+           
         }
 
         .about-col p {
                   font-family: 'Open Sans', sans-serif;
             line-height: 1.3;
             margin-bottom: 20px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .about-col .group-img {
@@ -1786,7 +1786,7 @@ hr {
         .card-badge:hover { text-decoration: underline; }
 
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
                font-weight: 200;
             color: #ffffff;
             margin-top: 10px;
@@ -2019,7 +2019,7 @@ hr {
             .section-grid.grid-3, .section-grid.grid-2 { margin: 0 -15px; }
             
             .section-grid.grid-3 { padding-bottom: 15px; }
-            .card-title { font-size: 1.1rem; }
+            .card-title { font-size: 1.05rem; }
             .card-badge { top: 15px; right: 15px; font-size: 0.67rem; }
             .main-footer { margin: 0; padding: 0; border: none; box-shadow: none; }
             .main-footer:before { display: none; }
