@@ -23,15 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     
-    // --- 0.5 INIT PLAYER SKELETONS ---
-    const playerUIElements = [
-        'live-now-title', 'live-now-desc', 'live-now-img', 
-        'up-next-title', 'up-next-desc', 'up-next-img'
-    ].map(id => document.getElementById(id)).filter(el => el !== null);
+   // --- 0.5 INIT PLAYER SKELETONS ---
+    // Only init if the player bar hasn't already loaded in this session
+    if (!window.__playerBarLoaded) {
+        const playerUIElements = document.querySelectorAll(
+            '#live-now-title, #live-now-desc, #live-now-img, #up-next-title, #up-next-desc, #up-next-img, .live-badge, .next-badge, .visualizer'
+        );
 
-    playerUIElements.forEach(el => {
-        el.classList.add('player-is-loading', 'player-fade-transition');
-    });
+        playerUIElements.forEach(el => {
+            el.classList.add('player-is-loading', 'player-fade-transition');
+        });
+    }
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
 
@@ -593,90 +595,116 @@ function updateLiveNowUI(realWeek) {
         }
     }
 
-    // Check if the data has actually changed. If the title is the same and it's already loaded, skip the UI fade.
-    const lnTitle = document.getElementById('live-now-title');
     const intendedTitle = liveShow ? liveShow.title : "No show currently live";
-    if (lnTitle && lnTitle.innerText === intendedTitle && !lnTitle.classList.contains('player-is-loading')) {
+    const lnTitle = document.getElementById('live-now-title');
+    const mainTitle = document.getElementById('main-player-title');
+
+    // Check if player bar has already completed its first load
+    const isPlayerBarLoaded = window.__playerBarLoaded && lnTitle && lnTitle.innerText === intendedTitle && !lnTitle.classList.contains('player-is-loading');
+    
+    // Check if the current page's main player (if it exists) is updated
+    const isMainPlayerLoaded = !mainTitle || (mainTitle && mainTitle.innerText === intendedTitle);
+
+    // If navigating pages and the player bar is already loaded, skip everything to prevent re-triggering skeletons
+    if (isPlayerBarLoaded && isMainPlayerLoaded) {
         return; 
     }
 
-    // Grab all elements that need transitioning (includes main listen page elements if they exist)
-    const uiElementsToFade = [
-        'live-now-title', 'live-now-desc', 'live-now-img', 
-        'up-next-title', 'up-next-desc', 'up-next-img',
-        'main-player-title', 'main-player-desc', 'main-player-img', 'main-player-host', 'live-text', 'main-player-time'
-    ].map(id => document.getElementById(id)).filter(el => el !== null);
+    // Collect elements that need updating/fading
+    const elementsToFade = [];
+
+    if (!isPlayerBarLoaded) {
+        const barEls = document.querySelectorAll(
+            '#live-now-title, #live-now-desc, #live-now-img, #up-next-title, #up-next-desc, #up-next-img, .live-badge, .next-badge, .visualizer'
+        );
+        elementsToFade.push(...barEls);
+    }
+
+    if (!isMainPlayerLoaded) {
+        const mainEls = document.querySelectorAll(
+            '#main-player-title, #main-player-desc, #main-player-img, #main-player-host, #live-text, #main-player-time'
+        );
+        elementsToFade.push(...mainEls);
+    }
 
     // 1. Trigger Fade Out
-    uiElementsToFade.forEach(el => el.style.opacity = '0');
+    elementsToFade.forEach(el => el.style.opacity = '0');
 
-    // 2. Wait for transition, swap data, fade in
+    // 2. Update Content and Fade In
     setTimeout(() => {
-        const lnImg = document.getElementById('live-now-img');
-        const lnDesc = document.getElementById('live-now-desc');
-        const mainTitle = document.getElementById('main-player-title');
         const defaultImg = "/ourlogo.jpeg";
 
-        if (liveShow) {
-            if(lnTitle) lnTitle.innerText = liveShow.title;
-            if(lnImg) lnImg.src = liveShow.image;
-            if(lnDesc) lnDesc.innerText = liveShow.description;
-            
-            updateMediaSession(liveShow);
+        if (!isPlayerBarLoaded) {
+            const lnImg = document.getElementById('live-now-img');
+            const lnDesc = document.getElementById('live-now-desc');
 
-            if (mainTitle) {
+            if (liveShow) {
+                if (lnTitle) lnTitle.innerText = liveShow.title;
+                if (lnImg) lnImg.src = liveShow.image;
+                if (lnDesc) lnDesc.innerText = liveShow.description;
+                updateMediaSession(liveShow);
+            } else {
+                if (lnTitle) lnTitle.innerText = "No show currently live";
+                if (lnImg) lnImg.src = defaultImg;
+                if (lnDesc) lnDesc.innerText = "No show is live right now :(";
+                updateMediaSession({
+                    title: "OFF AIR", 
+                    host: "Leeds Student Radio", 
+                    image: defaultImg
+                });
+            }
+
+            const nextT = document.getElementById('up-next-title');
+            const nextI = document.getElementById('up-next-img');
+            const nextD = document.getElementById('up-next-desc'); 
+
+            if (nextShow) {
+                if (nextT) nextT.innerText = nextShow.title;
+                if (nextI) nextI.src = nextShow.image;
+                if (nextD) nextD.innerText = nextShow.description;
+            } else {
+                if (nextT) nextT.innerText = "No show next";
+                if (nextI) nextI.src = defaultImg;
+                if (nextD) nextD.innerText = "Check the schedule for our next show!";
+            }
+
+            // Flag player bar as loaded so SPA page switches won't re-trigger skeletons
+            window.__playerBarLoaded = true;
+        }
+
+        if (!isMainPlayerLoaded && mainTitle) {
+            if (liveShow) {
                 mainTitle.innerText = liveShow.title;
-                document.getElementById('main-player-host').innerText = "with " + liveShow.host;
-                document.getElementById('main-player-desc').innerText = liveShow.description;
-                document.getElementById('main-player-img').src = liveShow.image;
+                const hostEl = document.getElementById('main-player-host');
+                if (hostEl) hostEl.innerText = "with " + liveShow.host;
+                const descEl = document.getElementById('main-player-desc');
+                if (descEl) descEl.innerText = liveShow.description;
+                const imgEl = document.getElementById('main-player-img');
+                if (imgEl) imgEl.src = liveShow.image;
                 const liveTextEl = document.querySelector('#live-text');
-                if(liveTextEl) liveTextEl.innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
-            }
-        } else {
-            if(lnTitle) lnTitle.innerText = "No show currently live";
-            if(lnImg) lnImg.src = defaultImg;
-            if(lnDesc) lnDesc.innerText = "No show is live right now :(";
-
-            updateMediaSession({
-                title: "OFF AIR", 
-                host: "Leeds Student Radio", 
-                image: defaultImg
-            });
-
-            if (mainTitle) {
+                if (liveTextEl) liveTextEl.innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+            } else {
                 mainTitle.innerText = "OFF AIR";
-                document.getElementById('main-player-host').innerText = "ZZZ";
-                document.getElementById('main-player-desc').innerText = "Our hosts are sleeping now! Check the schedule for our next show.";
-                document.getElementById('main-player-img').src = defaultImg;
+                const hostEl = document.getElementById('main-player-host');
+                if (hostEl) hostEl.innerText = "ZZZ";
+                const descEl = document.getElementById('main-player-desc');
+                if (descEl) descEl.innerText = "Our hosts are sleeping now! Check the schedule for our next show.";
+                const imgEl = document.getElementById('main-player-img');
+                if (imgEl) imgEl.src = defaultImg;
                 const timeEl = document.getElementById('main-player-time');
-                if(timeEl) timeEl.innerText = `OFF AIR`;
+                if (timeEl) timeEl.innerText = `OFF AIR`;
             }
         }
 
-        const nextT = document.getElementById('up-next-title');
-        const nextI = document.getElementById('up-next-img');
-        const nextD = document.getElementById('up-next-desc'); 
-
-        if (nextShow) {
-            if(nextT) nextT.innerText = nextShow.title;
-            if(nextI) nextI.src = nextShow.image;
-            if(nextD) nextD.innerText = nextShow.description;
-        } else {
-            if(nextT) nextT.innerText = "No show next";
-            if(nextI) nextI.src = defaultImg;
-            if(nextD) nextD.innerText = "Check the schedule for our next show!";
-        }
-
-        // 3. Remove skeleton styling and trigger fade back in
-        uiElementsToFade.forEach(el => {
+        // 3. Remove skeleton class and fade in revealed elements
+        elementsToFade.forEach(el => {
             el.classList.remove('player-is-loading');
             el.classList.add('player-fade-transition');
             el.style.opacity = '1';
         });
 
-    }, 300); // Wait 300ms (matches CSS transition duration)
+    }, 300);
 }
-
     function renderSchedule(weekLetter) {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         const grid = document.getElementById('schedule-grid');
