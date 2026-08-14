@@ -1597,6 +1597,25 @@ img.player-is-loading {
     padding-bottom: 20px;
 }
 
+    .intro-left {
+    border-radius: 10px;
+    border: 2px solid #8f1818;
+    padding: 15px 15px 15px 15px !important;
+    max-width: 32.3%;
+}
+
+    .lsr-image-placeholder-shimmer {
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 390px;
+}
+
         .committee-grid {
     
         margin-bottom: 20px;
