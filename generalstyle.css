@@ -1090,7 +1090,15 @@ img.player-is-loading {
             flex: 1;
             min-width: 300px;
         }
-        
+
+.get-involved-intro .intro-right {
+    border-radius: 10px;
+    border: 2px solid #8f1818;
+    padding: 15px 15px 0px 15px !important;
+   
+          }
+
+
         .get-involved-intro h1, .get-involved-intro h2 {
             font-family: 'Montserrat', sans-serif;
             margin-bottom: 20px;
@@ -1115,7 +1123,7 @@ img.player-is-loading {
         }
         
         .tip {
-                margin-bottom: 10px;
+                margin-bottom: 16px;
         }
         
         .tip h3 {
@@ -1125,11 +1133,11 @@ img.player-is-loading {
             text-underline-offset: 4px;
             text-decoration-thickness: 1px;
             font-weight: 700;
-            margin-bottom: 6px;
+         
         }
         
         .tip p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             margin-bottom: 0;
         }
 
