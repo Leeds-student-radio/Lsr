@@ -21,6 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         yearSpan.textContent = `${startYear}/${endYear}`;
     }
+    
+    
+    // --- 0.5 INIT PLAYER SKELETONS ---
+    const playerUIElements = [
+        'live-now-title', 'live-now-desc', 'live-now-img', 
+        'up-next-title', 'up-next-desc', 'up-next-img'
+    ].map(id => document.getElementById(id)).filter(el => el !== null);
+
+    playerUIElements.forEach(el => {
+        el.classList.add('player-is-loading', 'player-fade-transition');
+    });
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
 
@@ -229,19 +240,27 @@ setInterval(updateNowPlaying, 15000);
         }
         return arr;
     }
+    
+    
+    
+   // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT & TRANSITION) ---
+const committeeSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2123499295&output=csv';
 
-    // --- 4. COMMITTEE LOGIC (WITH MODAL SUPPORT) ---
-    const committeeSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2123499295&output=csv';
+async function fetchCommitteeData() {
+    const grid = document.getElementById('committee-grid-container');
+    if (!grid) return;
 
-    async function fetchCommitteeData() {
-        const grid = document.getElementById('committee-grid-container');
-        if (!grid) return;
-
-        try {
-            const response = await fetch(committeeSheetUrl);
-            const data = await response.text();
-            const rows = parseCSV(data);
-            rows.shift();
+    try {
+        const response = await fetch(committeeSheetUrl);
+        const data = await response.text();
+        const rows = parseCSV(data);
+        rows.shift(); 
+        
+        // 1. Trigger fade out of skeletons
+        grid.style.opacity = '0';
+        
+        // 2. Wait for transition to complete before swapping DOM
+        setTimeout(() => {
             grid.innerHTML = '';
 
             rows.forEach(row => {
@@ -253,7 +272,7 @@ setInterval(updateNowPlaying, 15000);
                 const card = document.createElement('div');
                 card.className = 'committee-card';
                 card.innerHTML = `
-                    <img src="${imgLink}" alt="${name}">
+                    <img src="${imgLink}" alt="${name}" loading="lazy">
                     <div class="committee-info">
                         <h3 class="committee-name">${name}</h3>
                         <p class="committee-role">${role}</p>
@@ -264,10 +283,17 @@ setInterval(updateNowPlaying, 15000);
                 });
                 grid.appendChild(card);
             });
-        } catch (error) {
-            console.error("Failed to fetch committee data", error);
-        }
+            
+            // 3. Trigger fade back in with real data
+            grid.style.opacity = '1';
+        }, 300); // 300ms matches the CSS transition time
+
+    } catch (error) {
+        console.error("Failed to fetch committee data", error);
+        grid.innerHTML = '<p style="color:white; text-align:center;">Failed to load committee members.</p>';
+        grid.style.opacity = '1';
     }
+}
 
     // --- 5. GET INVOLVED LOGIC (WITH SMART FOOTERS) ---
 const applySheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=2045188384&output=csv';
@@ -526,48 +552,66 @@ function getLondonTimeDetails() {
         }
     }
 
-   function updateLiveNowUI(realWeek) {
-        const london = getLondonTimeDetails();
-        const currentDay = london.day;
-        const currentMinutes = london.minutes;
+function updateLiveNowUI(realWeek) {
+    const london = getLondonTimeDetails();
+    const currentDay = london.day;
+    const currentMinutes = london.minutes;
 
-        const todayShows = allScheduleRows.filter(row => {
-            const day = row[4]?.trim() || '';
-            const week = row[5]?.trim().toUpperCase() || '';
-            return day.toLowerCase() === currentDay.toLowerCase() && (week.includes(realWeek) || week.includes('EVERY'));
-        });
+    const todayShows = allScheduleRows.filter(row => {
+        const day = row[4]?.trim() || '';
+        const week = row[5]?.trim().toUpperCase() || '';
+        return day.toLowerCase() === currentDay.toLowerCase() && (week.includes(realWeek) || week.includes('EVERY'));
+    });
 
-        const parsedShows = todayShows.map(row => ({
-            title: row[1] || "No show live",
-            description: row[2] || "Check our schedule for the next show!",
-            image: row[3] || "/ourlogo.jpeg",
-            start: timeToMinutes(row[6]),
-            end: timeToMinutes(row[7]),
-            rawStart: row[6],
-            rawEnd: row[7],
-            host: row[8] || "Leeds Student Radio"
-        })).filter(s => s.start !== -1).sort((a, b) => a.start - b.start);
+    const parsedShows = todayShows.map(row => ({
+        title: row[1] || "No show live",
+        description: row[2] || "Check our schedule for the next show!",
+        image: row[3] || "/ourlogo.jpeg",
+        start: timeToMinutes(row[6]),
+        end: timeToMinutes(row[7]),
+        rawStart: row[6],
+        rawEnd: row[7],
+        host: row[8] || "Leeds Student Radio"
+    })).filter(s => s.start !== -1).sort((a, b) => a.start - b.start);
 
-        let liveShow = null;
-        let nextShow = null;
+    let liveShow = null;
+    let nextShow = null;
 
-        for (let i = 0; i < parsedShows.length; i++) {
-            const show = parsedShows[i];
-            const isLive = (show.start <= show.end) 
-                ? (currentMinutes >= show.start && currentMinutes < show.end)
-                : (currentMinutes >= show.start || currentMinutes < show.end);
+    for (let i = 0; i < parsedShows.length; i++) {
+        const show = parsedShows[i];
+        const isLive = (show.start <= show.end) 
+            ? (currentMinutes >= show.start && currentMinutes < show.end)
+            : (currentMinutes >= show.start || currentMinutes < show.end);
 
-            if (isLive) {
-                liveShow = show;
-                nextShow = parsedShows[i + 1] || null;
-                break;
-            } else if (show.start > currentMinutes && !liveShow) {
-                nextShow = show;
-                break;
-            }
+        if (isLive) {
+            liveShow = show;
+            nextShow = parsedShows[i + 1] || null;
+            break;
+        } else if (show.start > currentMinutes && !liveShow) {
+            nextShow = show;
+            break;
         }
+    }
 
-        const lnTitle = document.getElementById('live-now-title');
+    // Check if the data has actually changed. If the title is the same and it's already loaded, skip the UI fade.
+    const lnTitle = document.getElementById('live-now-title');
+    const intendedTitle = liveShow ? liveShow.title : "No show currently live";
+    if (lnTitle && lnTitle.innerText === intendedTitle && !lnTitle.classList.contains('player-is-loading')) {
+        return; 
+    }
+
+    // Grab all elements that need transitioning (includes main listen page elements if they exist)
+    const uiElementsToFade = [
+        'live-now-title', 'live-now-desc', 'live-now-img', 
+        'up-next-title', 'up-next-desc', 'up-next-img',
+        'main-player-title', 'main-player-desc', 'main-player-img', 'main-player-host', 'live-text', 'main-player-time'
+    ].map(id => document.getElementById(id)).filter(el => el !== null);
+
+    // 1. Trigger Fade Out
+    uiElementsToFade.forEach(el => el.style.opacity = '0');
+
+    // 2. Wait for transition, swap data, fade in
+    setTimeout(() => {
         const lnImg = document.getElementById('live-now-img');
         const lnDesc = document.getElementById('live-now-desc');
         const mainTitle = document.getElementById('main-player-title');
@@ -585,7 +629,8 @@ function getLondonTimeDetails() {
                 document.getElementById('main-player-host').innerText = "with " + liveShow.host;
                 document.getElementById('main-player-desc').innerText = liveShow.description;
                 document.getElementById('main-player-img').src = liveShow.image;
-                document.querySelector('#live-text').innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+                const liveTextEl = document.querySelector('#live-text');
+                if(liveTextEl) liveTextEl.innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             }
         } else {
             if(lnTitle) lnTitle.innerText = "No show currently live";
@@ -601,9 +646,10 @@ function getLondonTimeDetails() {
             if (mainTitle) {
                 mainTitle.innerText = "OFF AIR";
                 document.getElementById('main-player-host').innerText = "ZZZ";
-                document.getElementById('main-player-desc').innerText = "Our hosts are sleeping now (or out enjoying the Leeds nightlife 😉) Check the schedule for our next show!";
+                document.getElementById('main-player-desc').innerText = "Our hosts are sleeping now! Check the schedule for our next show.";
                 document.getElementById('main-player-img').src = defaultImg;
-                document.getElementById('main-player-time').innerText = `OFF AIR`;
+                const timeEl = document.getElementById('main-player-time');
+                if(timeEl) timeEl.innerText = `OFF AIR`;
             }
         }
 
@@ -620,7 +666,16 @@ function getLondonTimeDetails() {
             if(nextI) nextI.src = defaultImg;
             if(nextD) nextD.innerText = "Check the schedule for our next show!";
         }
-    }
+
+        // 3. Remove skeleton styling and trigger fade back in
+        uiElementsToFade.forEach(el => {
+            el.classList.remove('player-is-loading');
+            el.classList.add('player-fade-transition');
+            el.style.opacity = '1';
+        });
+
+    }, 300); // Wait 300ms (matches CSS transition duration)
+}
 
     function renderSchedule(weekLetter) {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
