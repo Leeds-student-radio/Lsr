@@ -180,6 +180,21 @@
     overflow: hidden;
 }
 
+
+/* Enhance text skeleton block appearance */
+h4.player-is-loading, p.player-is-loading {
+    min-width: 140px;
+    display: inline-block;
+}
+h4.player-is-loading {
+    height: 1.1rem;
+    margin-bottom: 4px;
+}
+p.player-is-loading {
+    height: 0.9rem;
+}
+
+
 /* Desktop handling */
 @media (min-width: 992px) {
     .skeleton-col.desktop-only {
@@ -500,6 +515,9 @@ hr {
 }
 
 }
+
+
+
 .listen-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr; /* Main area slightly wider than chat */
@@ -646,24 +664,53 @@ hr {
 
 .player-is-loading {
     color: transparent !important;
-    background: linear-gradient(90deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.05) 40%);
-    background-size: 200% 100%;
-    animation: player-bar-shimmer 1.5s infinite linear;
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.05) 40%) !important;
+    background-size: 200% 100% !important;
+    animation: player-bar-shimmer 1.5s infinite linear !important;
     border-radius: 4px;
     pointer-events: none;
+    user-select: none;
 }
 
-/* Hide the physical image content while keeping the container shape */
+/* Skeleton shapes for Titles and Descriptions */
+h4.player-is-loading {
+    min-width: 140px;
+    height: 1.1rem;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+p.player-is-loading {
+    min-width: 180px;
+    height: 0.9rem;
+    display: inline-block;
+}
+
+/* Blank Skeleton Pills for ON AIR & UP NEXT */
+.live-badge.player-is-loading,
+.next-badge.player-is-loading {
+    min-width: 58px;
+    height: 16px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+/* Hide visualizer while live badge is in skeleton state */
+.visualizer.player-is-loading {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Hide thumbnail image while skeleton is shimmering */
 img.player-is-loading {
     object-position: -9999px -9999px; 
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(0, 0, 0, 0.15) !important;
 }
 
 @keyframes player-bar-shimmer {
     0% { background-position: 100% 0; }
     100% { background-position: -100% 0; }
 }
-
 /* --- RESPONSIVE ADJUSTMENTS --- */
 
 @media (max-width: 1024px) {
