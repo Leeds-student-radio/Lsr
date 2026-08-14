@@ -599,11 +599,16 @@ function updateLiveNowUI(realWeek) {
     const lnTitle = document.getElementById('live-now-title');
     const mainTitle = document.getElementById('main-player-title');
 
+    // FIX: Standardize strings to avoid CSS text-transform mismatches
+    const safeIntended = intendedTitle.trim().toLowerCase();
+    const currentBarText = lnTitle ? lnTitle.textContent.trim().toLowerCase() : "";
+    const currentMainText = mainTitle ? mainTitle.textContent.trim().toLowerCase() : "";
+
     // Check if player bar has already completed its first load
-    const isPlayerBarLoaded = window.__playerBarLoaded && lnTitle && lnTitle.innerText === intendedTitle && !lnTitle.classList.contains('player-is-loading');
+    const isPlayerBarLoaded = window.__playerBarLoaded && lnTitle && currentBarText === safeIntended && !lnTitle.classList.contains('player-is-loading');
     
     // Check if the current page's main player (if it exists) is updated
-    const isMainPlayerLoaded = !mainTitle || (mainTitle && mainTitle.innerText === intendedTitle);
+    const isMainPlayerLoaded = !mainTitle || (mainTitle && currentMainText === safeIntended);
 
     // If navigating pages and the player bar is already loaded, skip everything to prevent re-triggering skeletons
     if (isPlayerBarLoaded && isMainPlayerLoaded) {
@@ -639,14 +644,14 @@ function updateLiveNowUI(realWeek) {
             const lnDesc = document.getElementById('live-now-desc');
 
             if (liveShow) {
-                if (lnTitle) lnTitle.innerText = liveShow.title;
+                if (lnTitle) lnTitle.textContent = liveShow.title;
                 if (lnImg) lnImg.src = liveShow.image;
-                if (lnDesc) lnDesc.innerText = liveShow.description;
+                if (lnDesc) lnDesc.textContent = liveShow.description;
                 updateMediaSession(liveShow);
             } else {
-                if (lnTitle) lnTitle.innerText = "No show currently live";
+                if (lnTitle) lnTitle.textContent = "No show currently live";
                 if (lnImg) lnImg.src = defaultImg;
-                if (lnDesc) lnDesc.innerText = "No show is live right now :(";
+                if (lnDesc) lnDesc.textContent = "No show is live right now :(";
                 updateMediaSession({
                     title: "OFF AIR", 
                     host: "Leeds Student Radio", 
@@ -659,13 +664,13 @@ function updateLiveNowUI(realWeek) {
             const nextD = document.getElementById('up-next-desc'); 
 
             if (nextShow) {
-                if (nextT) nextT.innerText = nextShow.title;
+                if (nextT) nextT.textContent = nextShow.title;
                 if (nextI) nextI.src = nextShow.image;
-                if (nextD) nextD.innerText = nextShow.description;
+                if (nextD) nextD.textContent = nextShow.description;
             } else {
-                if (nextT) nextT.innerText = "No show next";
+                if (nextT) nextT.textContent = "No show next";
                 if (nextI) nextI.src = defaultImg;
-                if (nextD) nextD.innerText = "Check the schedule for our next show!";
+                if (nextD) nextD.textContent = "Check the schedule for our next show!";
             }
 
             // Flag player bar as loaded so SPA page switches won't re-trigger skeletons
@@ -674,25 +679,25 @@ function updateLiveNowUI(realWeek) {
 
         if (!isMainPlayerLoaded && mainTitle) {
             if (liveShow) {
-                mainTitle.innerText = liveShow.title;
+                mainTitle.textContent = liveShow.title;
                 const hostEl = document.getElementById('main-player-host');
-                if (hostEl) hostEl.innerText = "with " + liveShow.host;
+                if (hostEl) hostEl.textContent = "with " + liveShow.host;
                 const descEl = document.getElementById('main-player-desc');
-                if (descEl) descEl.innerText = liveShow.description;
+                if (descEl) descEl.textContent = liveShow.description;
                 const imgEl = document.getElementById('main-player-img');
                 if (imgEl) imgEl.src = liveShow.image;
                 const liveTextEl = document.querySelector('#live-text');
-                if (liveTextEl) liveTextEl.innerText = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+                if (liveTextEl) liveTextEl.textContent = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
             } else {
-                mainTitle.innerText = "OFF AIR";
+                mainTitle.textContent = "OFF AIR";
                 const hostEl = document.getElementById('main-player-host');
-                if (hostEl) hostEl.innerText = "ZZZ";
+                if (hostEl) hostEl.textContent = "ZZZ";
                 const descEl = document.getElementById('main-player-desc');
-                if (descEl) descEl.innerText = "Our hosts are sleeping now! Check the schedule for our next show.";
+                if (descEl) descEl.textContent = "Our hosts are sleeping now! Check the schedule for our next show.";
                 const imgEl = document.getElementById('main-player-img');
                 if (imgEl) imgEl.src = defaultImg;
                 const timeEl = document.getElementById('main-player-time');
-                if (timeEl) timeEl.innerText = `OFF AIR`;
+                if (timeEl) timeEl.textContent = `OFF AIR`;
             }
         }
 
