@@ -1,4 +1,4 @@
- .schedule-dropdown table {
+   .schedule-dropdown table {
     border-collapse: collapse;
     width: 100%;
 }
@@ -639,6 +639,31 @@ hr {
             100% { transform: rotate(360deg); }
         }
 
+/* --- PLAYER BAR SKELETON & TRANSITIONS --- */
+.player-fade-transition {
+    transition: opacity 0.3s ease;
+}
+
+.player-is-loading {
+    color: transparent !important;
+    background: linear-gradient(90deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.05) 40%);
+    background-size: 200% 100%;
+    animation: player-bar-shimmer 1.5s infinite linear;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+/* Hide the physical image content while keeping the container shape */
+img.player-is-loading {
+    object-position: -9999px -9999px; 
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+@keyframes player-bar-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
 /* --- RESPONSIVE ADJUSTMENTS --- */
 
 @media (max-width: 1024px) {
@@ -729,6 +754,8 @@ hr {
             justify-content: center;
             transition: 0.2s;
         }
+
+
 
         .card-play-btn:hover {
             background: rgba(0, 0, 0, 0.35);
@@ -1351,6 +1378,75 @@ hr {
     line-height: 1.1;
     margin-top: 4px;
 }
+
+/* --- COMMITTEE SKELETON STYLES --- */
+.committee-skeleton-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    background-color: #cb3131;
+    border: 2px solid #8f1818;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.committee-skeleton-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    background-color: rgba(0, 0, 0, 0.15); /* Slightly darker placeholder */
+}
+
+.committee-skeleton-info {
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    background-color: #cb3131;
+    border-top: none;
+}
+
+.committee-skeleton-line {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    height: 18px;
+    width: 80%;
+}
+
+.committee-skeleton-line.short {
+    width: 50%;
+    height: 12px;
+}
+
+/* Shimmer overlay utilizing your existing 'shimmer' keyframe */
+.committee-skeleton-card::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.15) 20%,
+        rgba(255, 255, 255, 0.25) 60%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .committee-skeleton-card {
+        aspect-ratio: auto;
+        justify-content: space-between;
+    }
+}
+
+
 /* --- MOBILE VIEW: Static Stacked Cards (No Hover Reveal) --- */
 @media (max-width: 768px) {
     .committee-card {
