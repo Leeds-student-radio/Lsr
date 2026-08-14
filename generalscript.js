@@ -5,8 +5,26 @@ import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, or
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 0. AUTO-UPDATE ACADEMIC YEAR ---
+    const yearSpan = document.getElementById('committee-year');
+    if (yearSpan) {
+        const now = new Date();
+        const currentMonth = now.getMonth(); // 7 is August
+        const currentYear = now.getFullYear();
+
+        // If it's August (7) or later, the academic year starts this year. Otherwise, it started last year.
+        const startYear = currentMonth >= 7 ? currentYear : currentYear - 1;
+        
+        // Grab the last two digits of the next year (e.g., 2027 becomes "27")
+        const endYear = (startYear + 1).toString().slice(-2);
+
+        yearSpan.textContent = `${startYear}/${endYear}`;
+    }
 
     // --- 1. PLAYER & UI LOGIC (SYNCED) ---
+
+    
     const radioPlayer = document.getElementById('radio-player');
     const bars = document.querySelectorAll('.bar'); 
 
@@ -92,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePlay();
         }
     });
+
 
     // --- SHAZAM IDENTIFICATION LOGIC ---
     document.body.addEventListener('click', async (e) => {
@@ -397,6 +416,9 @@ async function fetchApplyData() {
             console.error('Error fetching awards:', error);
         }
     }
+
+
+
 
 
     // --- 6. ENHANCED SCHEDULE & MEDIASESSION LOGIC ---
