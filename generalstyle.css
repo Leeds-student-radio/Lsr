@@ -1083,7 +1083,7 @@ img.player-is-loading {
             margin: 0 auto;
             display: flex;
             flex-wrap: wrap;
-            gap: 40px;
+            gap: 20px;
         }
         
         .intro-left, .intro-right {
