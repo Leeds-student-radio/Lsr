@@ -1442,6 +1442,8 @@ img.player-is-loading {
 
 
 /* --- LSR CARD SKELETON (MAIN & ALT) --- */
+
+
 .lsr-card-skeleton {
     position: relative;
     overflow: hidden;
@@ -1516,7 +1518,12 @@ img.player-is-loading {
     width: 75%;
 }
 
-
+/* Smooth fade transitions for Skeletons and Real Cards */
+.lsr-card-skeleton, 
+.main-card:not(.lsr-card-skeleton), 
+#alternative-card {
+    transition: opacity 0.3s ease-in-out;
+}
 
       /* --- COMMITTEE GRID STYLES --- */
 
