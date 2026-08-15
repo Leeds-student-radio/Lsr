@@ -1441,6 +1441,83 @@ img.player-is-loading {
 }
 
 
+/* --- LSR CARD SKELETON (MAIN & ALT) --- */
+.lsr-card-skeleton {
+    position: relative;
+    overflow: hidden;
+    pointer-events: none; /* Prevents clicks while loading */
+}
+
+/* The Shimmer Overlay */
+.lsr-card-skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.1) 20%,
+        rgba(255, 255, 255, 0.2) 60%,
+        rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+    z-index: 5;
+}
+
+/* Image Skeleton - automatically inherits the sizing of .img-container */
+.lsr-card-skel-img {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+/* Content Container for Skeleton */
+.lsr-card-skel-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    flex: 1;
+}
+
+/* Base line style */
+.lsr-card-skel-line {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+}
+
+/* Specific Line Sizes */
+.lsr-card-skel-title {
+    height: 1.6rem;
+    width: 60%;
+    margin-bottom: 4px;
+}
+
+.lsr-card-skel-host {
+    height: 0.9rem;
+    width: 40%;
+    margin-bottom: 8px;
+}
+
+.lsr-card-skel-badge {
+    height: 1.3rem;
+    width: 85px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+.lsr-card-skel-desc {
+    height: 0.85rem;
+    width: 95%;
+}
+
+.lsr-card-skel-desc.short {
+    width: 75%;
+}
+
+
+
       /* --- COMMITTEE GRID STYLES --- */
 
 
