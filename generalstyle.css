@@ -1525,6 +1525,21 @@ img.player-is-loading {
     transition: opacity 0.3s ease-in-out;
 }
 
+.inline-play-btn {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    flex-shrink: 0;
+    width: 55px;  
+    height: 55px; 
+}
+
+.inline-play-btn:hover {
+    transform: scale(1.1) !important;
+    background: rgba(0, 0, 0, 0.35);
+}
+
       /* --- COMMITTEE GRID STYLES --- */
 
 
