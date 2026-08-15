@@ -641,8 +641,17 @@ function updateLiveNowUI(realWeek) {
         }
     }
 
-    // 1. Trigger Fade Out
+   // 1. Trigger Fade Out for inner elements
     elementsToFade.forEach(el => el.style.opacity = '0');
+
+    // --- NEW: Smooth fade out for skeletons ---
+    const mainSkel = document.getElementById('main-card-skeleton');
+    const altSkel = document.getElementById('alternative-card-skeleton');
+    
+    if (!isMainPlayerLoaded) {
+        if (mainSkel) mainSkel.style.opacity = '0';
+        if (altSkel) altSkel.style.opacity = '0';
+    }
 
     // 2. Update Content and Fade In
     setTimeout(() => {
@@ -708,23 +717,25 @@ function updateLiveNowUI(realWeek) {
                 if (timeEl) timeEl.textContent = `OFF AIR`;
             }
 
-            // --- NEW: SKELETON TOGGLE OFF ---
-            const mainSkel = document.getElementById('main-card-skeleton');
-            const altSkel = document.getElementById('alternative-card-skeleton');
+            // --- NEW: Smooth fade in for real cards ---
             const realMain = document.querySelector('.main-card:not(.lsr-card-skeleton)');
             const realAlt = document.getElementById('alternative-card');
 
             if (mainSkel && realMain) {
                 mainSkel.style.display = 'none';
-                realMain.style.display = ''; // Resetting to empty string allows your CSS to take over
+                realMain.style.display = ''; 
+                void realMain.offsetWidth; // MAGIC TRICK: Forces browser to register display change before fading
+                realMain.style.opacity = '1';
             }
             if (altSkel && realAlt) {
                 altSkel.style.display = 'none';
                 realAlt.style.display = ''; 
+                void realAlt.offsetWidth; // MAGIC TRICK: Forces browser to register display change before fading
+                realAlt.style.opacity = '1';
             }
         }
 
-        // 3. Remove skeleton class and fade in revealed elements
+        // 3. Remove skeleton class and fade in revealed inner elements
         elementsToFade.forEach(el => {
             el.classList.remove('player-is-loading');
             el.classList.add('player-fade-transition');
