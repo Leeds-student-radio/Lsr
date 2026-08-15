@@ -817,15 +817,17 @@ img.player-is-loading {
         }
 
         .card-content h2 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-bottom: 5px;
             font-weight: 800;
+           text-align:left;
         }
 
         .card-content .host {
             font-size: 0.9rem;
             margin-bottom: 10px;
             opacity: 0.9;
+           text-align:left;
         }
 
         .time-badge {
@@ -837,13 +839,14 @@ img.player-is-loading {
             font-size: 0.8rem;
             display: inline-block;
             margin-bottom: 10px;
-          width: fit-content;
+          width: 100%;
         }
 
         .card-content p {
             font-size: 0.85rem;
             line-height: 1.4;
             font-family: 'Open Sans', sans-serif;
+           text-align:left;
         }
 
         /* Chat Styling */
@@ -3451,10 +3454,13 @@ display: flex;
   }
 
   .lsr-shazam-content {
-    display: flex;
+      display: flex;
     align-items: center;
-    gap: 12px; /* Added slight gap for better layout */
+    gap: 12px;
     text-align: left;
+    background: #0000001a;
+    padding: 5px;
+    border-radius: 5px;
   }
 
   .lsr-album-art {
@@ -3585,6 +3591,11 @@ display: flex;
         .lsr-trk-wgt-app-wrapper {
             padding: 5px 15px 15px;
         }
+
+       .lsr-shazam-widget {
+  
+    justify-content: center;
+}
     }
 
     .lsr-trk-wgt-chart-container {
