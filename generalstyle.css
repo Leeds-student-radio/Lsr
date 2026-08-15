@@ -784,22 +784,23 @@ img.player-is-loading {
         }
 
         .card-play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.6);
-                    border: none !important;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
+               position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    /* color: white; */
+    color: var(--brand-dark);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
         }
 
 
@@ -807,6 +808,7 @@ img.player-is-loading {
         .card-play-btn:hover {
             background: rgba(0, 0, 0, 0.35);
             transform: translate(-50%, -50%) scale(1.1);
+         color: white;
         }
 
         .card-content {
@@ -1260,10 +1262,7 @@ img.player-is-loading {
 }
 
             
-.card-play-btn  {
-         border: none !important;
-      
-        }
+
               .close-modal {
           top: 8px !important;
         right: 8px !important;
@@ -1531,8 +1530,8 @@ img.player-is-loading {
     left: auto;
     transform: none;
     flex-shrink: 0;
-    width: 55px;  
-    height: 55px; 
+    width: 45px;  
+    height: 45px; 
 }
 
 .inline-play-btn:hover {
@@ -3558,9 +3557,7 @@ display: flex;
     font-size: 0.75rem;
 }
 
-.fa-music {
-  font-size: 1.15rem;      /* Adjust icon size as needed */
-}
+
 
   @keyframes lsr-shimmer-anim {
     to { background-position: -200% 0; }
