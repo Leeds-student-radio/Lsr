@@ -125,6 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    
+
     // --- SHAZAM IDENTIFICATION LOGIC ---
     document.body.addEventListener('click', async (e) => {
         const btn = e.target.closest('#shazam-btn');
@@ -222,6 +224,44 @@ setInterval(updateNowPlaying, 15000);
     if (overlay) overlay.addEventListener('click', () => {
         if (navMenu.classList.contains('active')) toggleMenu();
     });
+
+
+    // --- SHARE BUTTON LOGIC ---
+const shareBtn = document.getElementById('share-btn');
+if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+        const title = document.getElementById('main-player-title')?.innerText || 'LSR';
+        const liveText = document.getElementById('live-text')?.innerText || '';
+        
+        // Extract the end time from the text "LIVE NOW (10:00 - 11:00)"
+        let endTime = 'later';
+        const timeMatch = liveText.match(/- (.*?)\)/);
+        if (timeMatch && timeMatch[1]) {
+            endTime = timeMatch[1].trim();
+        }
+
+        const link = 'https://thisislsr.com/listen';
+        const shareText = `hey! ${title} is live now until ${endTime}, listen here: ${link}`;
+
+        // Uses Native Web Share API if available (Mobile), else copies to clipboard
+        if (navigator.share) {
+            navigator.share({
+                title: 'Listen to LSR',
+                text: shareText,
+            }).catch((error) => console.log('Error sharing:', error));
+        } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+                const status = document.getElementById('shazam-status');
+                if (status) {
+                    status.innerText = "Link copied!";
+                    setTimeout(() => status.innerText = "", 3000);
+                }
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    });
+}
 
     // --- 3. CSV PARSER ---
     function parseCSV(str) {
