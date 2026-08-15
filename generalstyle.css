@@ -720,33 +720,111 @@ img.player-is-loading {
 }
 
 @media (max-width: 600px) {
-    /* ONLY the main player turns into a column */
+    /* 1. Turn the main card into a Grid container */
     .main-card {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        display: grid !important;
+        grid-template-columns: calc(50% - 10px) calc(50% - 10px) !important;
+        gap: 15px 20px !important;
+        align-items: start !important;
+        text-align: left !important;
     }
 
+    /* 2. Make image 50% width and square, spanning multiple rows */
     .main-card .img-container.main-player {
-        width: 100%;
-        max-width: 250px;
-        height: 250px;
-        margin-left:auto;
-        margin-right:auto;
+        grid-column: 1 / 2 !important;
+        grid-row: 2 / 4 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        margin: 0 !important;
     }
 
-    /* The alternate stream stays as a row (horizontal) */
+    /* 3. "Unbox" the content wrapper so its children join the grid */
+    .main-card .card-content {
+        display: contents !important;
+    }
+
+    /* 4. Keep the Title & Play button header full-width at the top */
+    .main-card .card-content > div:first-child {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+        width: 100% !important;
+        margin-bottom: 5px !important;
+    }
+
+    /* 5. Move Time badge to the right of the image */
+    .main-card #main-player-time {
+        grid-column: 2 / 3 !important;
+        grid-row: 2 !important;
+        width: max-content !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* 6. Move Shazam & Share widgets to the right of the image */
+    .main-card .lsr-shazam-widget {
+        grid-column: 2 / 3 !important;
+        grid-row: 3 !important;
+        flex-direction: column !important; /* Stack buttons to fit in the 50% width */
+        align-items: stretch !important;
+        gap: 10px !important;
+        margin-top: 0 !important;
+    }
+
+    /* Fix the share button margin since they are now stacked */
+    .main-card #share-btn {
+        margin-left: 0 !important;
+    }
+
+    /* 7. Keep the description full-width at the bottom */
+    .main-card #main-player-desc {
+        grid-column: 1 / -1 !important;
+        grid-row: 4 !important;
+        margin-top: 10px !important;
+    }
+
+    /* 8. Apply identical grid logic to the Skeleton so it doesn't jump when loading */
+    #main-card-skeleton .lsr-card-skel-title {
+        grid-column: 1 / -1 !important;
+        grid-row: 1 !important;
+    }
+    #main-card-skeleton .lsr-card-skel-host {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        margin-bottom: 15px !important;
+    }
+    #main-card-skeleton .lsr-card-skel-img {
+        grid-column: 1 / 2 !important;
+        grid-row: 3 / 5 !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        margin: 0 !important;
+    }
+    #main-card-skeleton .lsr-card-skel-badge {
+        grid-column: 2 / 3 !important;
+        grid-row: 3 !important;
+        align-self: start !important;
+    }
+    #main-card-skeleton .lsr-card-skel-desc {
+        grid-column: 1 / -1 !important;
+        grid-row: 5 !important;
+        margin-top: 15px !important;
+    }
+    #main-card-skeleton .lsr-card-skel-desc.short {
+        grid-column: 1 / -1 !important;
+        grid-row: 6 !important;
+    }
+
+    /* Keep your existing .alt-card row CSS below here... */
     .alt-card {
         flex-direction: row;
-       
     }
-
     .alt-card .img-container {
-        width: 80px; /* Smaller thumbnail to save space on mobile row */
+        width: 80px; 
         height: 80px;
     }
 }
-
         /* Red Card Styling */
         .lsr-card {
             background-color: #D62828; /* LSR Red */
