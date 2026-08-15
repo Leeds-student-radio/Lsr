@@ -130,51 +130,67 @@
 </div>
 
                 
-          <div class="lsr-card main-card" style="display: none; opacity: 0;">
-                    <div class="img-container main-player">
-                        <img id="main-player-img" src="/ourlogo.jpeg" alt="Show Artwork">
-                        <button class="card-play-btn play-toggle-main">
-                            <i class="fas fa-play"></i>
-                        </button>
-                    </div>
-                    <div class="card-content alt-card">
-                        <h2 id="main-player-title">Loading Show...</h2>
-                        <p class="host" id="main-player-host">With LSR Team</p>
-                      <span class="time-badge" id="main-player-time">
-  <span class="green-dot2"></span>
-  <span id="live-text">LIVE NOW</span> 
-</span>
-                        <p id="main-player-desc">Loading description...</p>
-                        <div class="lsr-shazam-widget">
-  <div class="lsr-artwork-area">
-    <div class="lsr-skeleton-container" id="shazam-skeleton">
-      <div class="lsr-skeleton-art lsr-shimmer"></div>
-      <div class="lsr-skeleton-info">
-        <div class="lsr-skeleton-line lsr-shimmer"></div>
-        <div class="lsr-skeleton-line lsr-short lsr-shimmer"></div>
-      </div>
+     <div class="lsr-card main-card" style="display: none; opacity: 0;">
+    <div class="img-container main-player">
+        <img id="main-player-img" src="/ourlogo.jpeg" alt="Show Artwork">
     </div>
-
-    <div class="lsr-shazam-content" id="shazam-content" style="display: none;">
-      <img id="shazam-cover" class="lsr-album-art" src="" alt="Album Cover" />
-      <div class="lsr-track-info">
-        <p id="shazam-title" class="lsr-title"></p>
-        <p id="shazam-artist" class="lsr-artist"></p>
-      </div>
-    </div>
-  </div>
-<button id="shazam-btn" class="lsr-btn">
-  <div class="btn-content">
-    <i class="fa-solid fa-music"></i>
-    <span>Identify<br>Song</span>
-  </div>
-</button>
-  <div id="shazam-status" class="lsr-status"></div>
-
-</div>
+    
+    <div class="card-content alt-card">
+        <!-- New Flex Container for Play Button + Show Info -->
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+            <button class="card-play-btn play-toggle-main inline-play-btn">
+                <i class="fas fa-play"></i>
+            </button>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
+                <h2 id="main-player-title" style="margin-bottom: 0;">Loading Show...</h2>
+                <p class="host" id="main-player-host" style="margin-bottom: 5px;">With LSR Team</p>
+                <span class="time-badge" id="main-player-time" style="margin-bottom: 0;">
+                    <span class="green-dot2"></span>
+                    <span id="live-text">LIVE NOW</span> 
+                </span>
+            </div>
+        </div>
+        
+        <p id="main-player-desc">Loading description...</p>
+        
+        <div class="lsr-shazam-widget">
+            <div class="lsr-artwork-area">
+                <div class="lsr-skeleton-container" id="shazam-skeleton">
+                    <div class="lsr-skeleton-art lsr-shimmer"></div>
+                    <div class="lsr-skeleton-info">
+                        <div class="lsr-skeleton-line lsr-shimmer"></div>
+                        <div class="lsr-skeleton-line lsr-short lsr-shimmer"></div>
                     </div>
                 </div>
 
+                <div class="lsr-shazam-content" id="shazam-content" style="display: none;">
+                    <img id="shazam-cover" class="lsr-album-art" src="" alt="Album Cover" />
+                    <div class="lsr-track-info">
+                        <p id="shazam-title" class="lsr-title"></p>
+                        <p id="shazam-artist" class="lsr-artist"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="shazam-btn" class="lsr-btn">
+                <div class="btn-content">
+                    <i class="fa-solid fa-music"></i>
+                    <span>Identify<br>Song</span>
+                </div>
+            </button>
+            
+            <!-- New Share Button -->
+            <button id="share-btn" class="lsr-btn" style="margin-left: 8px;">
+                <div class="btn-content">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Share<br>Show</span>
+                </div>
+            </button>
+            
+            <div id="shazam-status" class="lsr-status"></div>
+        </div>
+    </div>
+</div>
                 
 <!-- ALT CARD SKELETON -->
 <div class="lsr-card lsr-card-skeleton" id="alternative-card-skeleton">
