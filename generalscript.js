@@ -599,23 +599,17 @@ function updateLiveNowUI(realWeek) {
     const lnTitle = document.getElementById('live-now-title');
     const mainTitle = document.getElementById('main-player-title');
 
-    // FIX: Standardize strings to avoid CSS text-transform mismatches
     const safeIntended = intendedTitle.trim().toLowerCase();
     const currentBarText = lnTitle ? lnTitle.textContent.trim().toLowerCase() : "";
     const currentMainText = mainTitle ? mainTitle.textContent.trim().toLowerCase() : "";
 
-    // Check if player bar has already completed its first load
     const isPlayerBarLoaded = window.__playerBarLoaded && lnTitle && currentBarText === safeIntended && !lnTitle.classList.contains('player-is-loading');
-    
-    // Check if the current page's main player (if it exists) is updated
     const isMainPlayerLoaded = !mainTitle || (mainTitle && currentMainText === safeIntended);
 
-    // If navigating pages and the player bar is already loaded, skip everything to prevent re-triggering skeletons
     if (isPlayerBarLoaded && isMainPlayerLoaded) {
         return; 
     }
 
-    // Collect elements that need updating/fading
     const elementsToFade = [];
 
     if (!isPlayerBarLoaded) {
@@ -630,6 +624,21 @@ function updateLiveNowUI(realWeek) {
             '#main-player-title, #main-player-desc, #main-player-img, #main-player-host, #live-text, #main-player-time'
         );
         elementsToFade.push(...mainEls);
+
+        // --- NEW: SKELETON TOGGLE ON ---
+        const mainSkel = document.getElementById('main-card-skeleton');
+        const altSkel = document.getElementById('alternative-card-skeleton');
+        const realMain = document.querySelector('.main-card:not(.lsr-card-skeleton)');
+        const realAlt = document.getElementById('alternative-card');
+
+        if (mainSkel && realMain) {
+            mainSkel.style.display = 'flex';
+            realMain.style.display = 'none';
+        }
+        if (altSkel && realAlt) {
+            altSkel.style.display = 'flex';
+            realAlt.style.display = 'none';
+        }
     }
 
     // 1. Trigger Fade Out
@@ -673,7 +682,6 @@ function updateLiveNowUI(realWeek) {
                 if (nextD) nextD.textContent = "Check the schedule for our next show!";
             }
 
-            // Flag player bar as loaded so SPA page switches won't re-trigger skeletons
             window.__playerBarLoaded = true;
         }
 
@@ -698,6 +706,21 @@ function updateLiveNowUI(realWeek) {
                 if (imgEl) imgEl.src = defaultImg;
                 const timeEl = document.getElementById('main-player-time');
                 if (timeEl) timeEl.textContent = `OFF AIR`;
+            }
+
+            // --- NEW: SKELETON TOGGLE OFF ---
+            const mainSkel = document.getElementById('main-card-skeleton');
+            const altSkel = document.getElementById('alternative-card-skeleton');
+            const realMain = document.querySelector('.main-card:not(.lsr-card-skeleton)');
+            const realAlt = document.getElementById('alternative-card');
+
+            if (mainSkel && realMain) {
+                mainSkel.style.display = 'none';
+                realMain.style.display = ''; // Resetting to empty string allows your CSS to take over
+            }
+            if (altSkel && realAlt) {
+                altSkel.style.display = 'none';
+                realAlt.style.display = ''; 
             }
         }
 
