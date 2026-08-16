@@ -1641,12 +1641,11 @@ function hideIndicator() {
 
         textDiv.innerHTML = contentHtml;
         
-        if (auth.currentUser && senderUid === auth.currentUser.uid) {
-            msgDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.04)'; 
-            msgDiv.style.borderRadius = '8px';
-            msgDiv.style.padding = '8px';
-            
-            const deleteBtn = document.createElement('span');
+      if (auth.currentUser && senderUid === auth.currentUser.uid) {
+    msgDiv.classList.add('own-message'); // Let the new CSS handle the styling
+    
+    const deleteBtn = document.createElement('span');
+ 
            deleteBtn.innerHTML = '&times;';
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.style.fontSize = '19px';
