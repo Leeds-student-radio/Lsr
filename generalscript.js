@@ -1414,7 +1414,9 @@ function initChatSystem() {
     const joinBtn = document.getElementById('join-btn');
     const anonBtn = document.getElementById('anon-btn');
   
-    
+    if (anonBtn) {
+    anonBtn.addEventListener('click', () => enterChat(true));
+}
     const chattingAsName = document.getElementById('chatting-as-name');
     const changeNameBtn = document.getElementById('change-name-btn');
 
@@ -1569,109 +1571,101 @@ function hideIndicator() {
         });
     }
 
-    function displayMessage(messageDoc, prepend = false) {
-        const messageData = messageDoc.data({ serverTimestamps: 'estimate' });
-        const docId = messageDoc.id; 
-        
-        const name = messageData.name || 'Anonymous';
-        const text = messageData.text || '';
-        const gifUrl = messageData.gifUrl; 
-        const createdAt = messageData.createdAt;
-        const senderUid = messageData.uid; 
-        let timestampString = '';
-        
-        if (createdAt && typeof createdAt.toDate === 'function') {
-            const date = createdAt.toDate();
-            const chatDateOptions = { 
-                timeZone: 'Europe/London', 
-                weekday: 'short', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                hour12: false 
-            };
-            timestampString = new Intl.DateTimeFormat('en-GB', chatDateOptions).format(date).replace(',', '');
-        }
+  function displayMessage(messageDoc, prepend = false) {
+    const messageData = messageDoc.data({ serverTimestamps: 'estimate' });
+    const docId = messageDoc.id;
 
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message-entry';
-        msgDiv.id = `msg-${docId}`; 
-        
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'message-icon';
-        iconDiv.style.background = 'transparent'; 
-        
-        const avatarImg = document.createElement('img');
-        avatarImg.alt = `${name}'s Avatar`;
-        avatarImg.style.width = '100%';
-        avatarImg.style.height = '100%';
-        avatarImg.style.borderRadius = '50%'; 
-        avatarImg.style.objectFit = 'cover';
-        avatarImg.loading = 'lazy';
+    const name = messageData.name || 'Anonymous';
+    const text = messageData.text || '';
+    const gifUrl = messageData.gifUrl;
+    const createdAt = messageData.createdAt;
+    const senderUid = messageData.uid;
+    const isOwn = auth.currentUser && senderUid === auth.currentUser.uid;
 
-        const fallbackImage = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=FF9296&scale=85&mouth=lilSmile&eyes=closed2`; 
-
-        if (name === 'Anonymous') {
-            avatarImg.src = fallbackImage; 
-        } else {
-            avatarImg.src = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FDCA5C,89D67D&scale=90&mouth=cute,wideSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;   
-        }
-
-        avatarImg.onerror = function() {
-            if (this.src !== fallbackImage) {
-                this.src = fallbackImage;
-            }
-        };
-
-        iconDiv.appendChild(avatarImg);
-
-        const textDiv = document.createElement('div');
-        textDiv.className = 'message-content'; 
-        
-        let contentHtml = `
-            <div class="message-header">
-                <strong class="message-author">${name}</strong>
-                <span class="message-timestamp">${timestampString}</span>
-            </div>
-            <div class="message-body">${text}</div>
-        `;
-        
-        if (gifUrl) {
-            contentHtml += `<img src="${gifUrl}" alt="GIF" class="chat-message-gif" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight" style="max-width: 200px; min-height: 120px; border-radius: 8px; margin-top: 5px; display: block;" />`;
-        }
-
-        textDiv.innerHTML = contentHtml;
-        
-      if (auth.currentUser && senderUid === auth.currentUser.uid) {
-    msgDiv.classList.add('own-message'); // Let the new CSS handle the styling
-    
-    const deleteBtn = document.createElement('span');
- 
-           deleteBtn.innerHTML = '&times;';
-            deleteBtn.style.cursor = 'pointer';
-            deleteBtn.style.fontSize = '19px';
-            deleteBtn.style.color = '#FF595E';
-            
-            deleteBtn.style.alignSelf = 'center'; 
-           
-            deleteBtn.title = "Delete Message";
-            
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                showDeleteConfirmation(docId);
-            });
-
-            msgDiv.appendChild(deleteBtn);
-        }
-        
-        msgDiv.appendChild(iconDiv);
-        msgDiv.appendChild(textDiv);
-
-        if (prepend) {
-            chatMessages.insertBefore(msgDiv, chatMessages.firstChild);
-        } else {
-            chatMessages.appendChild(msgDiv);
-        }
+    let timestampString = '';
+    if (createdAt && typeof createdAt.toDate === 'function') {
+        const date = createdAt.toDate();
+        timestampString = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false
+        }).format(date);
     }
+
+    // Grouping: check the neighbouring message to decide if we hide avatar/name
+    const neighbour = prepend ? chatMessages.firstElementChild : chatMessages.lastElementChild;
+    const groupKey = senderUid || name;
+    const isGrouped = neighbour && neighbour.dataset && neighbour.dataset.groupKey === groupKey;
+
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message-entry ${isOwn ? 'is-own' : ''} ${isGrouped ? 'is-grouped' : ''}`;
+    msgDiv.id = `msg-${docId}`;
+    msgDiv.dataset.groupKey = groupKey;
+
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'message-icon';
+    const avatarImg = document.createElement('img');
+    avatarImg.alt = `${name}'s Avatar`;
+    avatarImg.style.width = '100%';
+    avatarImg.style.height = '100%';
+    avatarImg.style.objectFit = 'cover';
+    avatarImg.loading = 'lazy';
+    const fallbackImage = `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=FF9296&scale=85&mouth=lilSmile&eyes=closed2`;
+    avatarImg.src = name === 'Anonymous'
+        ? fallbackImage
+        : `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${encodeURIComponent(name)}&randomizeIds=true&backgroundColor=71cf62,fcbc34,FF595E,A1E197,FDD881,FDCA5C,89D67D&scale=90&mouth=cute,wideSmile,shout,smileLol,tongueOut&eyes=closed,cute,glasses,wink2,crying`;
+    avatarImg.onerror = function () { if (this.src !== fallbackImage) this.src = fallbackImage; };
+    iconDiv.appendChild(avatarImg);
+
+    const colDiv = document.createElement('div');
+    colDiv.className = 'message-col';
+
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'message-meta';
+    metaDiv.innerHTML = `<strong class="message-author">${name}</strong><span class="message-timestamp">${timestampString}</span>`;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    if (text) bubble.innerHTML = escapeHtml(text);
+    if (gifUrl) {
+        const gifImg = document.createElement('img');
+        gifImg.src = gifUrl;
+        gifImg.alt = 'GIF';
+        gifImg.className = 'chat-message-gif';
+        gifImg.onload = () => { chatMessages.scrollTop = chatMessages.scrollHeight; };
+        bubble.appendChild(gifImg);
+    }
+
+    colDiv.appendChild(metaDiv);
+    colDiv.appendChild(bubble);
+
+    if (isOwn) {
+        const deleteBtn = document.createElement('span');
+        deleteBtn.className = 'message-delete';
+        deleteBtn.innerHTML = '&times;';
+        deleteBtn.title = 'Delete message';
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showDeleteConfirmation(docId);
+        });
+        msgDiv.appendChild(deleteBtn);
+    }
+
+    msgDiv.appendChild(iconDiv);
+    msgDiv.appendChild(colDiv);
+
+    if (prepend) {
+        chatMessages.insertBefore(msgDiv, chatMessages.firstChild);
+    } else {
+        chatMessages.appendChild(msgDiv);
+    }
+}
+
+// simple text-safety helper (put this near displayMessage)
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
     
 
     if (gifToggleBtn && gifPicker && closeGifBtn) {
