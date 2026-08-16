@@ -1,4 +1,4 @@
-   .schedule-dropdown table {
+.schedule-dropdown table {
     border-collapse: collapse;
     width: 100%;
 }
@@ -72,9 +72,7 @@
     font-weight: 800;
     text-transform: uppercase;
     font-size: 1.3rem;
-    margin-bottom: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    padding-bottom: 8px;
+    
 }
 
 /* --- Up Next Styling --- */
@@ -176,9 +174,9 @@
          .legalsection h2 { margin: 15px 0px;}
            .legalsection h3 { margin: 15px 5px;}
              .legalsection p { margin: 5px 10px;}
-            .legalsection ul { margin: 5px 10px;}
-              .legalsection li { margin: 5px 30px;   list-style-type: disc;}
-              .legalsection a { text-decoration: underline;}
+             .legalsection ul { margin: 5px 10px;}
+               .legalsection li { margin: 5px 30px;   list-style-type: disc;}
+               .legalsection a { text-decoration: underline;}
             
         .legalsection hr { margin: 30px 20px; border: 0; border-top: 1px solid #eee; }
         
@@ -636,6 +634,7 @@ hr {
     display: flex;
     flex-direction: column;
     gap: 20px;
+       justify-content: space-between;
 }
 
 /* On large screens, the main player takes more vertical space than the alternate */
@@ -660,6 +659,7 @@ hr {
     display: flex;
     gap: 20px;
        align-items: stretch;
+   height:100%;
 }
 
 /* Chat Card - Matches the height of the stream-col */
@@ -899,7 +899,7 @@ img.player-is-loading {
     /* The alternate stream stays as a row (horizontal) */
     .alt-card {
         flex-direction: row;
-       
+        
     }
 
     .alt-card .img-container {
@@ -931,10 +931,10 @@ img.player-is-loading {
         }
         
         .main-player  {
-           
+            
             width: 250px;
             height: 250px;
-           
+            
         }
 
         .img-container img {
@@ -1295,7 +1295,7 @@ img.player-is-loading {
         .tip h3 {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.4rem;
-           
+            
             text-underline-offset: 4px;
             text-decoration-thickness: 1px;
             font-weight: 700;
@@ -1433,7 +1433,7 @@ img.player-is-loading {
         background: none;
                         }
                .about-page-wrapper {
-           
+            
            padding: 15px 20px !important;
            
           
@@ -1444,7 +1444,7 @@ img.player-is-loading {
    
 }
  .get-involved-intro {
-           
+            
             padding: 0px 5px;
             
         }
@@ -1492,7 +1492,7 @@ img.player-is-loading {
             font-size: 1.4rem;
             margin-bottom: 5px;
             font-weight: 700;
-           
+            
         }
 
         .about-col p {
@@ -1840,8 +1840,8 @@ img.player-is-loading {
         aspect-ratio: auto; /* Allow the card container to grow */
         display: flex;
         flex-direction: column;
-       justify-content: space-between;
-      
+        justify-content: space-between;
+       
     }
 
     .committee-card img {
@@ -1854,7 +1854,7 @@ img.player-is-loading {
         position: relative; /* Brings the text box into normal document flow */
         min-height: auto;
         padding: 10px 5px; /* Slightly tighter padding for mobile */
-               height: 100%;
+                height: 100%;
     }
 
     /* Disable the jump and rotate hover effect completely on mobile */
@@ -1954,7 +1954,7 @@ img.player-is-loading {
     }
     
      .send-btn:hover {
-           
+            
             color: #D62828;
           transform: scale(1.07); 
           box-shadow: 0 4px 10px rgba(0,0,0,0.2);
@@ -1989,7 +1989,7 @@ img.player-is-loading {
    display: none !important;
 }
 
-           
+            
         }
         
         
@@ -2067,7 +2067,7 @@ img.player-is-loading {
             box-shadow: var(--shadow-card);
             position: relative;
             z-index: 200;
-           
+            
         }
 
         .player-bar::before {
@@ -2298,7 +2298,7 @@ img.player-is-loading {
 
         .card-title {
             font-size: 1.05rem;
-               font-weight: 200;
+                font-weight: 200;
             color: #ffffff;
             margin-top: 10px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -2477,7 +2477,7 @@ img.player-is-loading {
     padding-left: 2px !important;
   }
             
-      
+       
             .main-nav { margin: 0; border: none; border-radius: 0; border-bottom: solid 2px #8f1818; background: var(--bg-body); }
             .nav-container { padding-top: 0; }
             .brand-logo { font-size: 1.4rem; }
@@ -2617,7 +2617,7 @@ img.player-is-loading {
     /* Styling */
     color: var(--brand-dark);
     font-size: 16px;              /* Adjust size as needed */
-    margin-right: 3px;           
+    margin-right: 3px;            
     
     /* Remove the old arrow properties */
     display: inline-block;
@@ -2796,7 +2796,7 @@ img.player-is-loading {
 
 @media (max-width: 600px) {
     .award-grid {
-      
+       
         grid-template-columns: none !important; 
     }
 }
@@ -3883,7 +3883,7 @@ display: flex;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.7);
     }
-    .lsr-trk-wgt-header-row .lsr-trk-wgt-cell { border-bottom: 2px solid #8f1818; }
+
 
     .lsr-trk-wgt-col-rank { width: 35px; text-align: center; } 
     .lsr-trk-wgt-col-song { width: auto; } 
