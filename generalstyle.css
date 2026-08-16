@@ -2551,6 +2551,21 @@ img.player-is-loading {
        
 }
 }
+
+@media (max-width: 600px) {
+    /* Prevent iOS zoom by ensuring text is exactly 16px on mobile */
+    .gif-search, 
+    .msg-input, 
+    .name-input {
+        font-size: 16px !important;
+    }
+
+   input.gif-search {
+    font-size: 16px !important;
+}
+}
+
+
 /* Mobile Specific Optimizations */
 @media (max-width: 600px) {
     .chat-input-area {
@@ -3306,6 +3321,10 @@ input:focus {
         width: auto !important;
 
   }
+
+   .gif-search {
+ font-size:16px !important;
+}
  
    }
 
