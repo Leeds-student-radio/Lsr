@@ -1095,7 +1095,7 @@ img.player-is-loading {
 
 .anon-btn:hover {
     background: rgba(255,255,255,0.1);
-    color: white;
+    color: white !important;
 }
 
 /* Step 2: Message Area Layout */
@@ -1880,6 +1880,12 @@ img.player-is-loading {
                         font-size: 0.9rem;
         line-height: 1;
             }
+
+           .anon-btn {
+   display: none !important;
+}
+
+           
         }
         
         
