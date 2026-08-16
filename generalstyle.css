@@ -42,6 +42,110 @@
   padding: 10px 0; 
 }
 
+
+
+/* --- DESKTOP EXTRAS (ROW 2) --- */
+
+/* Ensure listen-grid stays exactly 2 columns so items 3 and 4 form a bottom row */
+@media (min-width: 1025px) {
+    .listen-grid {
+        grid-template-columns: 1.2fr 1fr; 
+    }
+    .desktop-extras {
+        display: flex !important;
+    }
+}
+
+.desktop-extras {
+    display: none; /* Hides the bottom row on tablets/phones to save space */
+}
+
+.extras-card {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100%; /* Stretches to match the height of its neighbor */
+}
+
+.extras-title {
+    font-family: 'Asap Condensed', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 8px;
+}
+
+/* --- Up Next Styling --- */
+.next-show-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.next-show-item img {
+    width: 45px;
+    height: 45px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.next-show-meta h4 {
+    font-size: 0.95rem;
+    margin: 0 0 3px 0;
+    font-weight: 800;
+}
+
+.next-show-meta p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.75);
+    margin: 0;
+}
+
+/* --- Mini Chart Styling (Side-by-Side) --- */
+.mini-chart-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.mini-chart-col h4 {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* Hide table headers and any chart items beyond the Top 5 */
+.mini-chart-list .lsr-trk-wgt-header-row { display: none; }
+.mini-chart-list .lsr-trk-wgt-song-item:nth-child(n+7) { display: none !important; }
+
+/* Compress the chart rows for the mini widget */
+.mini-chart-list .lsr-trk-wgt-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.mini-chart-list .lsr-trk-wgt-cell {
+    padding: 2px 4px;
+    border: none;
+}
+
+.mini-chart-list .lsr-trk-wgt-col-rank { width: 25px; font-size: 0.85rem; }
+.mini-chart-list .lsr-trk-wgt-col-plays { margin-left: auto; font-size: 0.8rem; font-weight: bold;}
+.mini-chart-list .lsr-trk-wgt-song-image { width: 30px; height: 30px; border-radius: 4px; }
+.mini-chart-list .lsr-trk-wgt-title { font-size: 0.75rem; font-weight: 700; white-space: normal; line-height:1.1;}
+.mini-chart-list .lsr-trk-wgt-artist { font-size: 0.65rem; line-height:1; margin-top:2px; }
+.mini-chart-list .lsr-trk-wgt-rank-icon { width: 22px; height: 22px; font-size: 0.85rem; padding: 2px; }
+
+
+
 .award-skeleton-icon {
   width: 20px;
   height: 20px;
