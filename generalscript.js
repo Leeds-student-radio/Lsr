@@ -618,7 +618,7 @@ function updateLiveNowUI(realWeek) {
 
   let liveShow = null;
 let nextShow = null;
-let upcomingShows = []; // Holds the next 2 shows
+let upcomingShows = []; // Holds the next 3 shows
 
 for (let i = 0; i < parsedShows.length; i++) {
     const show = parsedShows[i];
@@ -631,11 +631,13 @@ for (let i = 0; i < parsedShows.length; i++) {
         nextShow = parsedShows[i + 1] || null;
         if (parsedShows[i + 1]) upcomingShows.push(parsedShows[i + 1]);
         if (parsedShows[i + 2]) upcomingShows.push(parsedShows[i + 2]);
+        if (parsedShows[i + 3]) upcomingShows.push(parsedShows[i + 3]); // ADDED
         break;
     } else if (show.start > currentMinutes && !liveShow) {
         nextShow = show;
         upcomingShows.push(show);
         if (parsedShows[i + 1]) upcomingShows.push(parsedShows[i + 1]);
+        if (parsedShows[i + 2]) upcomingShows.push(parsedShows[i + 2]); // ADDED
         break;
     }
 }
@@ -736,12 +738,12 @@ for (let i = 0; i < parsedShows.length; i++) {
                 if (nextD) nextD.textContent = "Check the schedule for our next show!";
             }
 
-            // --- POPULATE DESKTOP "NEXT TWO SHOWS" WIDGET ---
+            // --- POPULATE DESKTOP "NEXT THREE SHOWS" WIDGET ---
 const nextContainer = document.getElementById('next-two-shows-container');
 if (nextContainer) {
     nextContainer.innerHTML = '';
     if (upcomingShows.length > 0) {
-        upcomingShows.slice(0, 2).forEach(s => {
+        upcomingShows.slice(0, 3).forEach(s => { // CHANGED to 3
             nextContainer.innerHTML += `
                 <div class="next-show-item">
                     <img src="${s.image}" alt="Show Art">
@@ -1110,8 +1112,9 @@ function loadArchiveGrid() {
                     rankDisplay = `<span class="lsr-trk-wgt-rank-num">${index + 1}</span>`;
                 }
 
-                const displayTitle = item.title || item.name;
-                const displaySubtitle = viewType === 'songs' ? item.artist : "Total Plays";
+                // FIXED: Support missing titles for artists in Top 5 Card
+                const displayTitle = viewType === 'artists' ? (item.artist || item.name || 'Unknown Artist') : (item.title || item.name || 'Unknown Song');
+                const displaySubtitle = viewType === 'songs' ? (item.artist || 'Unknown Artist') : "Total Plays";
 
                 rowsHtml += `
                     <div class="lsr-trk-wgt-row lsr-trk-wgt-song-item">
