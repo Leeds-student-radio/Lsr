@@ -701,7 +701,7 @@ for (let i = 0; i < parsedShows.length; i++) {
     }
 
     // 2. Update Content and Fade In
-    setTimeout(() => {
+  setTimeout(() => {
         const defaultImg = "/ourlogo.jpeg";
 
         if (!isPlayerBarLoaded) {
@@ -738,7 +738,12 @@ for (let i = 0; i < parsedShows.length; i++) {
                 if (nextD) nextD.textContent = "Check the schedule for our next show!";
             }
 
-            // --- POPULATE DESKTOP "NEXT THREE SHOWS" WIDGET ---
+           
+
+            
+
+            window.__playerBarLoaded = true;
+        }
 const nextContainer = document.getElementById('next-two-shows-container');
 if (nextContainer) {
     nextContainer.innerHTML = '';
@@ -758,11 +763,8 @@ if (nextContainer) {
         nextContainer.innerHTML = '<p style="font-size:0.85rem; opacity:0.8; padding:10px 0;">No more shows scheduled today.</p>';
     }
 }
-            
 
-            window.__playerBarLoaded = true;
-        }
-
+      
         if (!isMainPlayerLoaded && mainTitle) {
             if (liveShow) {
                 mainTitle.textContent = liveShow.title;
@@ -1306,6 +1308,9 @@ if (popupCloseBtn) {
                 updatePlayButtons(!radioPlayer.paused);
 
                 // Initialize specific section data based on URL
+               // INSIDE: loadPage(url)
+
+                // Initialize specific section data based on URL
                 if (url.includes('apply')) fetchApplyData();
                 if (url.includes('about')) fetchCommitteeData();
                 if (url.includes('awards')) fetchAwardsData(); 
@@ -1313,6 +1318,7 @@ if (popupCloseBtn) {
                 if (url.includes('listen')) {
                     updateNowPlaying(); 
                     initChatSystem(); 
+                    initChartSystem(); // <--- ADD THIS LINE
                 }
 
                 // --- NEW: Hook for Chart ---
