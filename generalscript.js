@@ -616,24 +616,29 @@ function updateLiveNowUI(realWeek) {
         host: row[8] || "Leeds Student Radio"
     })).filter(s => s.start !== -1).sort((a, b) => a.start - b.start);
 
-    let liveShow = null;
-    let nextShow = null;
+  let liveShow = null;
+let nextShow = null;
+let upcomingShows = []; // Holds the next 2 shows
 
-    for (let i = 0; i < parsedShows.length; i++) {
-        const show = parsedShows[i];
-        const isLive = (show.start <= show.end) 
-            ? (currentMinutes >= show.start && currentMinutes < show.end)
-            : (currentMinutes >= show.start || currentMinutes < show.end);
+for (let i = 0; i < parsedShows.length; i++) {
+    const show = parsedShows[i];
+    const isLive = (show.start <= show.end) 
+        ? (currentMinutes >= show.start && currentMinutes < show.end)
+        : (currentMinutes >= show.start || currentMinutes < show.end);
 
-        if (isLive) {
-            liveShow = show;
-            nextShow = parsedShows[i + 1] || null;
-            break;
-        } else if (show.start > currentMinutes && !liveShow) {
-            nextShow = show;
-            break;
-        }
+    if (isLive) {
+        liveShow = show;
+        nextShow = parsedShows[i + 1] || null;
+        if (parsedShows[i + 1]) upcomingShows.push(parsedShows[i + 1]);
+        if (parsedShows[i + 2]) upcomingShows.push(parsedShows[i + 2]);
+        break;
+    } else if (show.start > currentMinutes && !liveShow) {
+        nextShow = show;
+        upcomingShows.push(show);
+        if (parsedShows[i + 1]) upcomingShows.push(parsedShows[i + 1]);
+        break;
     }
+}
 
     const intendedTitle = liveShow ? liveShow.title : "No show currently live";
     const lnTitle = document.getElementById('live-now-title');
@@ -730,6 +735,28 @@ function updateLiveNowUI(realWeek) {
                 if (nextI) nextI.src = defaultImg;
                 if (nextD) nextD.textContent = "Check the schedule for our next show!";
             }
+
+            // --- POPULATE DESKTOP "NEXT TWO SHOWS" WIDGET ---
+const nextContainer = document.getElementById('next-two-shows-container');
+if (nextContainer) {
+    nextContainer.innerHTML = '';
+    if (upcomingShows.length > 0) {
+        upcomingShows.slice(0, 2).forEach(s => {
+            nextContainer.innerHTML += `
+                <div class="next-show-item">
+                    <img src="${s.image}" alt="Show Art">
+                    <div class="next-show-meta">
+                        <h4>${s.title}</h4>
+                        <p>${s.rawStart} - ${s.rawEnd} | With ${s.host}</p>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        nextContainer.innerHTML = '<p style="font-size:0.85rem; opacity:0.8; padding:10px 0;">No more shows scheduled today.</p>';
+    }
+}
+            
 
             window.__playerBarLoaded = true;
         }
@@ -1333,9 +1360,10 @@ if (popupCloseBtn) {
     fetchAwardsData(); 
     fetchStatusPopupData();
     
-    if (window.location.pathname.includes('listen')) {
-        initChatSystem();
-    }
+  if (window.location.pathname.includes('listen')) {
+    initChatSystem();
+    initChartSystem(); // This triggers the top 5 to load!
+}
 
     // --- NEW: Hook for Chart (Direct load check) ---
     if (window.location.pathname.includes('chart')) {
