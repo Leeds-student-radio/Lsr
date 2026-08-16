@@ -245,51 +245,53 @@
 
            
 
-         <div class="lsr-card chat-card">
-    <div class="chat-header">
-        <h3>Live Chat</h3>
-        <span class="active-count"><span id="live-count"></span> Online</span>
-    </div>
+            <div class="lsr-card chat-card">
+                <div class="chat-header">
+                    <span class="active-count">Active: <span id="live-count"></span></span>
+                    <h3>Live Chat</h3>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div id="loading-spinner">
+                        <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </div>
+                     <div class="chat-input-area" style="    display: flex;     padding: 5px 15px; padding-bottom:10px;     border-top: 2px solid rgba(0, 0, 0, 0.1);
+  ">
     
-    <div class="chat-messages" id="chat-messages">
-        <div id="loading-spinner">
-            <svg class="spinner-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
-                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-        </div>
-    </div>
-    
-    <div class="chat-input-area">
-        <!-- Join State -->
-        <div id="join-area" class="join-wrapper">
-            <span class="join-prompt">Choose a display name to start chatting</span>
-            <div class="join-input-group">
-                <input type="text" id="display-name" placeholder="Enter name..." class="name-input" maxlength="20">
-                <button type="button" id="join-btn" class="send-btn">SAVE</button>
-            </div>
-        </div>
-
-        <!-- Chat State -->
-        <form id="chat-form" class="message-wrapper" style="display: none;">
-            <div class="user-label-area">
-                Chatting as: <strong id="chatting-as-name">Anonymous</strong>
-                <span id="change-name-btn" title="Change Name">Change</span>
-            </div>
-
-            <div class="input-row">
-                <input type="text" id="message-input" placeholder="Message the studio..." class="msg-input" required autocomplete="off">
-                <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
-                    <i class="fa-solid fa-face-smile"></i>
-                </button>
-                <button type="submit" class="send-btn primary-send">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </form>
+ <div id="join-area" class="join-wrapper">
+    <span class="join-prompt">Choose a display name to start chatting!</span>
+    <div class="join-actions" style="max-height:35px;">
+        <input type="text" id="display-name" placeholder="Enter name..." class="name-input" style="max-width: 200px; background: #fffffff2; border: solid 1px #00000061; border-radius: 10px;">
+        <button type="button" id="join-btn" class="send-btn"><span class="btn-text">SAVE</span></button>
+        <button type="button" id="anon-btn" class="send-btn anon-btn">Go Anonymous</button>
     </div>
 </div>
-            
+    <form id="chat-form" class="message-wrapper" style="display: none;">
+        
+        <div class="user-label-area">
+            Chatting as: <strong id="chatting-as-name">Anonymous</strong>
+            <span id="change-name-btn" title="Change Name">Change</span>
+        </div>
+
+        <div class="input-row">
+            <div class="input-wrapper" style="flex: 1; display: flex;">
+                <input type="text" id="message-input" placeholder="Add a message..." class="msg-input" required style="width: 100%;">
+                <button type="button" id="gif-toggle-btn" class="gif-btn" title="Send a GIF">
+                     <i class="fa-solid fa-heart-circle-plus"></i>
+                </button>
+            </div>
+
+            <button type="submit" class="send-btn">
+                <span class="btn-text">SEND</span>
+            </button>
+        </div>
+    </form>
+    
+</div>
+            </div>
              <div id="gif-picker" class="gif-picker-container" style="display: none;">
     <div class="gif-picker-header">
         <input type="text" id="gif-search-input" placeholder="Search GIFs..." class="gif-search">
