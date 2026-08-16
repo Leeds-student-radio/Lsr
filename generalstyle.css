@@ -106,11 +106,7 @@
 }
 
 /* --- Mini Chart Styling (Side-by-Side) --- */
-.mini-chart-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
+
 
 .mini-chart-col h4 {
     font-size: 0.85rem;
