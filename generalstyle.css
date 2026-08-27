@@ -302,12 +302,7 @@ p.player-is-loading {
     align-items: flex-start; /* Anchors the thumbnail and title to the top */
 }
 
-/* Make the meta container take up the full height to push the label down */
-.show-card-2h .show-card-meta {
-    display: flex;
-    flex-direction: column;
-    height: 100%; 
-}
+
 
 /* Style the new duration text */
 .show-card-2h .duration-label {
@@ -323,9 +318,12 @@ p.player-is-loading {
 .show-card.show-card-2h {
     height: 150px; 
     flex-wrap: wrap; /* Allows the duration label to wrap to a new line */
-    align-content: center; /* Centers the wrapped rows vertically within the 150px */
+  
     gap: 15px 12px; /* 15px vertical space between rows, 12px horizontal space */
 }
+.show-card-2h .show-card-meta {
+max-width: 85px;
+    }
 
 .duration-label {
     width: 100%; /* Forces the label to span the entire bottom width */
