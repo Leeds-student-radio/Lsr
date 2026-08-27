@@ -897,14 +897,13 @@ if (nextContainer) {
                 
                 const hasTitle = show.title && show.title.trim() !== "";
 
-               if (!hasTitle) {
+              if (!hasTitle) {
     showEl.classList.add('empty-show-slot');
 } else {
     // 1. Calculate duration in minutes
     let startMins = timeToMinutes(show.start);
     let endMins = timeToMinutes(show.end);
     
-    // Handle shows that cross midnight (e.g., 23:00 to 01:00)
     if (endMins < startMins) endMins += (24 * 60); 
     let duration = endMins - startMins;
 
@@ -919,21 +918,21 @@ if (nextContainer) {
         showEl.style.backgroundColor = show.color.trim();
     }
 
-    // 3. Conditionally render the duration label
+    // 3. Conditionally render the duration label as a block element
     let durationText = '';
     if (duration >= 120) {
         let hours = Math.round(duration / 60);
-        durationText = `<span class="duration-label">${hours} hour show</span>`;
+        durationText = `<div class="duration-label">${hours} hour show</div>`;
     }
 
-    // 4. Inject HTML
+    // 4. Inject HTML (durationText is now outside show-card-meta)
     showEl.innerHTML = `
         <img src="${show.img}" alt="${show.title}">
         <div class="show-card-meta">
             <h4>${show.title}</h4>
             <p>${show.start} - ${show.end}</p>
-            ${durationText}
         </div>
+        ${durationText}
     `;
     
     showEl.onclick = () => openShowModal(show);
