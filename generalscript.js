@@ -897,24 +897,47 @@ if (nextContainer) {
                 
                 const hasTitle = show.title && show.title.trim() !== "";
 
-                if (!hasTitle) {
-                    showEl.classList.add('empty-show-slot');
-                } else {
-                    if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
-                        showEl.classList.add('is-live');
-                    }
-                    if (show.color && show.color.trim() !== "") {
-                        showEl.style.backgroundColor = show.color.trim();
-                    }
-                    showEl.innerHTML = `
-                        <img src="${show.img}" alt="${show.title}">
-                        <div class="show-card-meta">
-                            <h4>${show.title}</h4>
-                            <p>${show.start} - ${show.end}</p>
-                        </div>
-                    `;
-                    showEl.onclick = () => openShowModal(show);
-                }
+               if (!hasTitle) {
+    showEl.classList.add('empty-show-slot');
+} else {
+    // 1. Calculate duration in minutes
+    let startMins = timeToMinutes(show.start);
+    let endMins = timeToMinutes(show.end);
+    
+    // Handle shows that cross midnight (e.g., 23:00 to 01:00)
+    if (endMins < startMins) endMins += (24 * 60); 
+    let duration = endMins - startMins;
+
+    // 2. Add dynamic classes
+    if (isShowLive(show.day, show.start, show.end) && weekLetter === realWeek) {
+        showEl.classList.add('is-live');
+    }
+    if (duration >= 120) {
+        showEl.classList.add('show-card-2h');
+    }
+    if (show.color && show.color.trim() !== "") {
+        showEl.style.backgroundColor = show.color.trim();
+    }
+
+    // 3. Conditionally render the duration label
+    let durationText = '';
+    if (duration >= 120) {
+        let hours = Math.round(duration / 60);
+        durationText = `<span class="duration-label">${hours} hour show</span>`;
+    }
+
+    // 4. Inject HTML
+    showEl.innerHTML = `
+        <img src="${show.img}" alt="${show.title}">
+        <div class="show-card-meta">
+            <h4>${show.title}</h4>
+            <p>${show.start} - ${show.end}</p>
+            ${durationText}
+        </div>
+    `;
+    
+    showEl.onclick = () => openShowModal(show);
+}
                 dayCol.appendChild(showEl);
             });
             grid.appendChild(dayCol);
