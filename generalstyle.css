@@ -293,6 +293,34 @@ p.player-is-loading {
 }
 
 
+
+
+
+/* --- 2-Hour Show Card Modifiers --- */
+.show-card.show-card-2h {
+    height: 150px; /* 70px (1h) + 10px (margin) + 70px (1h) = exactly 2 grid slots */
+    align-items: flex-start; /* Anchors the thumbnail and title to the top */
+}
+
+/* Make the meta container take up the full height to push the label down */
+.show-card-2h .show-card-meta {
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+/* Style the new duration text */
+.show-card-2h .duration-label {
+    margin-top: auto; /* Pushes the text to the bottom of the card */
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+
 /* Desktop handling */
 @media (min-width: 992px) {
     .skeleton-col.desktop-only {
