@@ -537,15 +537,26 @@ function getLondonTimeDetails() {
         return (diffInWeeks % 2 === 0) ? 'A' : 'B';
     }
 function matchesWeek(sheetWeek, targetWeek) {
-    const w = sheetWeek.trim().toUpperCase();
+    // If the cell is completely blank or undefined, assume it runs EVERY week
+    if (!sheetWeek || sheetWeek.toString().trim() === '') {
+        return true; 
+    }
     
-    // Check for common words that mean the show is on both weeks
+    const w = sheetWeek.toString().trim().toUpperCase();
+    const target = (targetWeek || '').toString().toUpperCase();
+    
+    // Check for any keywords that imply the show runs both weeks
     if (w.includes('BOTH') || w.includes('EVERY') || w.includes('ALL') || w.includes('WEEKLY')) {
         return true;
     }
     
-    // Check if the specific letter (A or B) is in the string (e.g., "A", "Week B", "A & B")
-    return w.includes(targetWeek);
+    // If they typed "A & B" or "A, B", this will ensure it matches regardless of the current week
+    if (w.includes('A') && w.includes('B')) {
+        return true;
+    }
+    
+    // Otherwise, check if the specific week letter (A or B) is in the string
+    return w.includes(target);
 }
     
     function isShowLive(showDay, startTime, endTime) {
