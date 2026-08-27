@@ -536,7 +536,18 @@ function getLondonTimeDetails() {
         const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
         return (diffInWeeks % 2 === 0) ? 'A' : 'B';
     }
-
+function matchesWeek(sheetWeek, targetWeek) {
+    const w = sheetWeek.trim().toUpperCase();
+    
+    // Check for common words that mean the show is on both weeks
+    if (w.includes('BOTH') || w.includes('EVERY') || w.includes('ALL') || w.includes('WEEKLY')) {
+        return true;
+    }
+    
+    // Check if the specific letter (A or B) is in the string (e.g., "A", "Week B", "A & B")
+    return w.includes(targetWeek);
+}
+    
     function isShowLive(showDay, startTime, endTime) {
         const london = getLondonTimeDetails();
         
@@ -599,10 +610,10 @@ function updateLiveNowUI(realWeek) {
     const currentDay = london.day;
     const currentMinutes = london.minutes;
 
-    const todayShows = allScheduleRows.filter(row => {
+   const todayShows = allScheduleRows.filter(row => {
         const day = row[4]?.trim() || '';
-        const week = row[5]?.trim().toUpperCase() || '';
-        return day.toLowerCase() === currentDay.toLowerCase() && (week.includes(realWeek) || week.includes('EVERY'));
+        const week = row[5]?.trim() || '';
+        return day.toLowerCase() === currentDay.toLowerCase() && matchesWeek(week, realWeek);
     });
 
     const parsedShows = todayShows.map(row => ({
@@ -828,11 +839,10 @@ if (nextContainer) {
             dayCol.className = `schedule-day-column day-${day}`; 
             dayCol.innerHTML = `<h3 class="day-title">${day}</h3>`;
 
-            const filteredShows = allScheduleRows.filter(row => {
+           const filteredShows = allScheduleRows.filter(row => {
                 const rowDay = row[4]?.trim() || '';
-                const rowWeek = row[5]?.trim().toUpperCase() || '';
-                return rowDay.toLowerCase() === day.toLowerCase() && 
-                       (rowWeek.includes(weekLetter) || rowWeek.includes('EVERY'));
+                const rowWeek = row[5]?.trim() || '';
+                return rowDay.toLowerCase() === day.toLowerCase() && matchesWeek(rowWeek, weekLetter);
             });
 
             filteredShows.sort((a, b) => timeToMinutes(a[6]) - timeToMinutes(b[6]));
