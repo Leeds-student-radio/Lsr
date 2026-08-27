@@ -319,7 +319,23 @@ p.player-is-loading {
     letter-spacing: 0.5px;
 }
 
+/* --- 2-Hour Show Card Modifiers --- */
+.show-card.show-card-2h {
+    height: 150px; 
+    flex-wrap: wrap; /* Allows the duration label to wrap to a new line */
+    align-content: center; /* Centers the wrapped rows vertically within the 150px */
+    gap: 15px 12px; /* 15px vertical space between rows, 12px horizontal space */
+}
 
+.duration-label {
+    width: 100%; /* Forces the label to span the entire bottom width */
+    text-align: center; /* Centers the text cleanly in its new full-width row */
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
 /* Desktop handling */
 @media (min-width: 992px) {
