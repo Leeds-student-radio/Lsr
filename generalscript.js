@@ -524,11 +524,35 @@ function getLondonTimeDetails() {
     let allScheduleRows = [];
 
     function timeToMinutes(timeStr) {
-        if (!timeStr) return -1;
-        const parts = timeStr.split(':').map(n => parseInt(n, 10));
-        if (parts.length < 2 || isNaN(parts[0]) || isNaN(parts[1])) return -1;
-        return parts[0] * 60 + parts[1];
+    if (!timeStr) return -1;
+
+    // Clean up string: remove spaces, convert to lowercase (e.g. " 9:00 PM " -> "9:00pm")
+    const cleanStr = timeStr.toString().trim().toLowerCase();
+
+    // Match patterns like: "9pm", "9:30pm", "19:00", "7.30 pm", "12:00am", "9"
+    const match = cleanStr.match(/^(\d{1,2})(?:[:.](\d{2}))?\s*(am|pm)?$/);
+
+    if (!match) return -1;
+
+    let hours = parseInt(match[1], 10);
+    const minutes = match[2] ? parseInt(match[2], 10) : 0;
+    const meridian = match[3]; // 'am', 'pm', or undefined
+
+    if (isNaN(hours) || isNaN(minutes) || minutes < 0 || minutes > 59) return -1;
+
+    // Handle 12-hour format with AM / PM
+    if (meridian === 'pm') {
+        if (hours < 12) hours += 12;
+    } else if (meridian === 'am') {
+        if (hours === 12) hours = 0;
     }
+
+    // Standard 24h sanity check (e.g., 24:00 -> 0:00)
+    if (hours === 24) hours = 0;
+    if (hours < 0 || hours > 23) return -1;
+
+    return hours * 60 + minutes;
+}
 
     function getCurrentWeekType() {
         const nowMs = Date.now(); 
