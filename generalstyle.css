@@ -1751,22 +1751,56 @@ img.player-is-loading {
 
 /* 4. Match the mobile column layout exactly */
 @media (max-width: 600px) {
+    /* 1. Stack the skeleton vertically and let it flow to its natural mobile height */
     .main-card.lsr-card-skeleton {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column !important;
+        align-items: center !important;
         text-align: center;
+        height: auto; 
+        min-height: 425px; /* Roughly 250px image + 20px gap + text lines + padding */
     }
 
+    /* 2. Constrain the skeleton image exactly like the real image */
     .main-card.lsr-card-skeleton .lsr-card-skel-img {
+        width: 100% !important;
+        max-width: 250px !important;
+        height: 250px !important;
+        margin: 0 auto;
+    }
+
+    /* 3. Center the placeholder text blocks to match the real center-aligned text */
+    .main-card.lsr-card-skeleton .lsr-card-skel-content {
+        align-items: center; /* Centers the skeleton bars horizontally */
+        justify-content: flex-start;
         width: 100%;
-        max-width: 250px;
-        height: 250px;
-        margin-left: auto;
-        margin-right: auto;
+        padding-top: 0;
+        gap: 6px; 
+    }
+
+    /* 4. Match the exact widths/margins of the real mobile text elements */
+    .main-card.lsr-card-skeleton .lsr-card-skel-title {
+        width: 80%;
+        margin-bottom: 2px;
     }
     
-    .main-card.lsr-card-skeleton .lsr-card-skel-content {
-        align-items: center; /* Center the skeleton text bars on mobile */
+    .main-card.lsr-card-skeleton .lsr-card-skel-host {
+        width: 50%;
+        margin-bottom: 8px;
+    }
+    
+    /* The real .time-badge is width: 100% on the main card */
+    .main-card.lsr-card-skeleton .lsr-card-skel-badge {
+        width: 100%;
+        height: 24px; 
+        margin-bottom: 10px;
+    }
+
+    .main-card.lsr-card-skeleton .lsr-card-skel-desc {
+        width: 95%;
+    }
+    
+    .main-card.lsr-card-skeleton .lsr-card-skel-desc.short {
+        width: 75%;
     }
 }
 
