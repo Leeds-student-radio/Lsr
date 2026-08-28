@@ -839,7 +839,7 @@ if (nextContainer) {
 
       
         if (!isMainPlayerLoaded && mainTitle) {
-            if (liveShow) {
+           if (liveShow) {
                 mainTitle.textContent = liveShow.title;
                 const hostEl = document.getElementById('main-player-host');
                 if (hostEl) hostEl.textContent = "with " + liveShow.host;
@@ -847,9 +847,21 @@ if (nextContainer) {
                 if (descEl) descEl.textContent = liveShow.description;
                 const imgEl = document.getElementById('main-player-img');
                 if (imgEl) imgEl.src = liveShow.image;
+                
                 const liveTextEl = document.querySelector('#live-text');
-                if (liveTextEl) liveTextEl.textContent = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+                const timeEl = document.getElementById('main-player-time');
+
+                // --- MODIFIED: Holiday badge override ---
+                if (window.lsrHolidayInfo && window.lsrHolidayInfo.isAway) {
+                    if (liveTextEl) liveTextEl.textContent = "OFF AIR";
+                    if (timeEl) timeEl.textContent = "OFF AIR";
+                } else {
+                    if (liveTextEl) liveTextEl.textContent = `LIVE NOW (${liveShow.rawStart} - ${liveShow.rawEnd})`;
+                    if (timeEl) timeEl.textContent = `${liveShow.rawStart} - ${liveShow.rawEnd}`; 
+                }
             } else {
+               
+               
                 mainTitle.textContent = "OFF AIR";
                 const hostEl = document.getElementById('main-player-host');
                 if (hostEl) hostEl.textContent = "ZZZ";
