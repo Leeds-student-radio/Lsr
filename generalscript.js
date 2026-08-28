@@ -780,16 +780,30 @@ for (let i = 0; i < parsedShows.length; i++) {
         if (!isPlayerBarLoaded) {
             const lnImg = document.getElementById('live-now-img');
             const lnDesc = document.getElementById('live-now-desc');
+            const liveBadge = document.querySelector('.live-badge');
 
             if (liveShow) {
                 if (lnTitle) lnTitle.textContent = liveShow.title;
                 if (lnImg) lnImg.src = liveShow.image;
                 if (lnDesc) lnDesc.textContent = liveShow.description;
                 updateMediaSession(liveShow);
+
+                if (liveBadge) {
+                    if (window.lsrHolidayInfo && window.lsrHolidayInfo.isAway) {
+                        liveBadge.textContent = "OFF AIR";
+                    } else {
+                        liveBadge.textContent = "ON AIR"; 
+                    }
+                }
+
+                
             } else {
                 if (lnTitle) lnTitle.textContent = "No show currently live";
                 if (lnImg) lnImg.src = defaultImg;
                 if (lnDesc) lnDesc.textContent = "No show is live right now :(";
+
+                if (liveBadge) liveBadge.textContent = "OFF AIR";
+                
                 updateMediaSession({
                     title: "OFF AIR", 
                     host: "Leeds Student Radio", 
