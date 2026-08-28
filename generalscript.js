@@ -687,7 +687,34 @@ for (let i = 0; i < parsedShows.length; i++) {
         break;
     }
 }
+// --- NEW: HOLIDAY OVERRIDE ---
+    if (window.lsrHolidayInfo && window.lsrHolidayInfo.isAway) {
+        const holidayDesc = `We're currently away on ${window.lsrHolidayInfo.type} and we will return ${window.lsrHolidayInfo.returnDate}.`;
+        
+        liveShow = {
+            title: "Nothing Live: We're on Holiday",
+            description: holidayDesc,
+            image: "/ourlogo.jpeg",
+            rawStart: "Holiday",
+            rawEnd: window.lsrHolidayInfo.returnDate,
+            host: "Leeds Student Radio"
+        };
+        
+        nextShow = {
+            title: "Nothing Live: We're on Holiday",
+            description: holidayDesc,
+            image: "/ourlogo.jpeg",
+            rawStart: "Holiday",
+            rawEnd: window.lsrHolidayInfo.returnDate,
+            host: "Leeds Student Radio"
+        };
+        
+        // Clears out the rest of the schedule block below the up next show
+        upcomingShows = []; 
+    }
+    // ----------------------------
 
+    
     const intendedTitle = liveShow ? liveShow.title : "No show currently live";
     const lnTitle = document.getElementById('live-now-title');
     const mainTitle = document.getElementById('main-player-title');
@@ -1278,67 +1305,68 @@ function loadArchiveGrid() {
 
     window.addEventListener('resize', updateChartHeaderText);
 
-// --- 6.8 STATUS POPUP LOGIC ---
-    async function fetchStatusPopupData() {
-        // 1. Check if we've already checked for the popup this session
-        if (sessionStorage.getItem('lsrPopupChecked')) {
-            return; // Exit immediately, don't fetch or show anything
+// --- 6.8 STATUS (HOLIDAY) LOGIC ---
+async function fetchStatusPopupData() {
+    // 1. Check if we've already cached the holiday status this session
+    const cached = sessionStorage.getItem('lsrHolidayInfo');
+    if (cached) {
+        window.lsrHolidayInfo = JSON.parse(cached);
+        // If we're away and the schedule is already loaded, refresh the UI text
+        if (window.lsrHolidayInfo.isAway && allScheduleRows && allScheduleRows.length > 0) {
+            updateLiveNowUI(getCurrentWeekType());
         }
-
-        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=384985644";
-        
-        try {
-            const response = await fetch(sheetUrl);
-            const csvText = await response.text();
-            
-            // 2. Mark as checked so it doesn't run again on other pages or reloads
-            sessionStorage.setItem('lsrPopupChecked', 'true');
-            
-            const rows = parseCSV(csvText);
-            
-            if (rows.length < 2) return; 
-            
-            const headers = rows[0].map(header => header ? header.trim().toLowerCase() : '');
-            
-            const statusIdx = headers.indexOf('status');
-            const holidayTypeIdx = headers.indexOf('holiday_type');
-            const returnDateIdx = headers.indexOf('return_date');
-
-            if (statusIdx === -1 || holidayTypeIdx === -1 || returnDateIdx === -1) {
-                console.error("LSR Popup: Missing required columns in sheet.");
-                return;
-            }
-
-            const dataRow = rows[1].map(cell => cell ? cell.trim() : '');
-            const status = dataRow[statusIdx].toLowerCase();
-
-            if (status === 'away') {
-                const holidayType = dataRow[holidayTypeIdx];
-                const returnDate = dataRow[returnDateIdx];
-                
-                const popupText = document.getElementById('lsr-popup-text');
-                const popup = document.getElementById('lsr-status-popup');
-
-               if (popupText && popup) {
-    popupText.innerHTML = `
-        <h3>Thanks for tuning in!</h3>
-        <p>(Un)fortunately, we are away on ${holidayType} and will be back ${returnDate}.</p>
-    `;
-   popup.classList.add('show');
-}
-            }
-        } catch (error) {
-            console.error('Error fetching LSR status:', error);
-        }
+        return; 
     }
 
-   const popupCloseBtn = document.getElementById('lsr-popup-close');
+    const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?output=csv&gid=384985644";
+    
+    try {
+        const response = await fetch(sheetUrl);
+        const csvText = await response.text();
+        const rows = parseCSV(csvText);
+        
+        if (rows.length < 2) return; 
+        
+        const headers = rows[0].map(header => header ? header.trim().toLowerCase() : '');
+        
+        const statusIdx = headers.indexOf('status');
+        const holidayTypeIdx = headers.indexOf('holiday_type');
+        const returnDateIdx = headers.indexOf('return_date');
+
+        if (statusIdx === -1 || holidayTypeIdx === -1 || returnDateIdx === -1) {
+            console.error("LSR Holiday check: Missing required columns in sheet.");
+            return;
+        }
+
+        const dataRow = rows[1].map(cell => cell ? cell.trim() : '');
+        const status = dataRow[statusIdx].toLowerCase();
+        
+        const holidayInfo = {
+            isAway: (status === 'away'),
+            type: dataRow[holidayTypeIdx],
+            returnDate: dataRow[returnDateIdx]
+        };
+
+        // 2. Save data to memory & session storage
+        sessionStorage.setItem('lsrHolidayInfo', JSON.stringify(holidayInfo));
+        window.lsrHolidayInfo = holidayInfo;
+
+        // 3. Force the UI to refresh if it determined we are on holiday and schedule is ready
+        if (holidayInfo.isAway && allScheduleRows && allScheduleRows.length > 0) {
+            updateLiveNowUI(getCurrentWeekType());
+        }
+
+    } catch (error) {
+        console.error('Error fetching LSR status:', error);
+    }
+}
+
+// Ensure the popup UI stays hidden/removable if it still exists in the HTML
+const popupCloseBtn = document.getElementById('lsr-popup-close');
 if (popupCloseBtn) {
     popupCloseBtn.addEventListener('click', () => {
         const popup = document.getElementById('lsr-status-popup');
-        popup.classList.remove('show');
-        // Optional: fully hide after transition
-        setTimeout(() => { popup.style.visibility = 'hidden'; }, 300);
+        if(popup) popup.classList.remove('show');
     });
 }
     // --- 7. ROUTING & INIT ---
