@@ -1726,6 +1726,52 @@ img.player-is-loading {
     transition: opacity 0.3s ease-in-out;
 }
 
+
+
+/* --- MAIN PLAYER SKELETON FIX --- */
+
+/* 1. Force the main card skeleton image to match the actual main player size */
+.main-card.lsr-card-skeleton .lsr-card-skel-img {
+    width: 250px;
+    height: 250px;
+    flex-shrink: 0;
+}
+
+/* 2. Give the main skeleton card a min-height so it doesn't collapse */
+.main-card.lsr-card-skeleton {
+    min-height: 294px; /* 250px image + 40px padding + 4px border */
+}
+
+/* 3. Space out the skeleton text to match the height of the 250px image */
+.main-card.lsr-card-skeleton .lsr-card-skel-content {
+    justify-content: flex-start;
+    gap: 15px; 
+    padding-top: 10px;
+}
+
+/* 4. Match the mobile column layout exactly */
+@media (max-width: 600px) {
+    .main-card.lsr-card-skeleton {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .main-card.lsr-card-skeleton .lsr-card-skel-img {
+        width: 100%;
+        max-width: 250px;
+        height: 250px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .main-card.lsr-card-skeleton .lsr-card-skel-content {
+        align-items: center; /* Center the skeleton text bars on mobile */
+    }
+}
+
+
+
 .inline-play-btn {
     position: relative;
     top: auto;
