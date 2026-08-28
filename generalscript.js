@@ -692,7 +692,7 @@ for (let i = 0; i < parsedShows.length; i++) {
         const holidayDesc = `We're currently away on ${window.lsrHolidayInfo.type} and we will return ${window.lsrHolidayInfo.returnDate}.`;
         
         liveShow = {
-            title: "Nothing Live: We're on Holiday",
+            title: "We're on Holiday",
             description: holidayDesc,
             image: "/ourlogo.jpeg",
             rawStart: "Holiday",
@@ -701,7 +701,7 @@ for (let i = 0; i < parsedShows.length; i++) {
         };
         
         nextShow = {
-            title: "Nothing Live: We're on Holiday",
+            title: "We're on Holiday",
             description: holidayDesc,
             image: "/ourlogo.jpeg",
             rawStart: "Holiday",
