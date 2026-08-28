@@ -773,7 +773,8 @@ for (let i = 0; i < parsedShows.length; i++) {
         if (altSkel) altSkel.style.opacity = '0';
     }
 
-    // 2. Update Content and Fade In
+
+ // 2. Update Content and Fade In
   setTimeout(() => {
         const defaultImg = "/ourlogo.jpeg";
 
@@ -781,6 +782,7 @@ for (let i = 0; i < parsedShows.length; i++) {
             const lnImg = document.getElementById('live-now-img');
             const lnDesc = document.getElementById('live-now-desc');
             const liveBadge = document.querySelector('.live-badge');
+            const visualizer = document.querySelector('.visualizer'); // <-- ADDED: Grab visualizer
 
             if (liveShow) {
                 if (lnTitle) lnTitle.textContent = liveShow.title;
@@ -791,8 +793,16 @@ for (let i = 0; i < parsedShows.length; i++) {
                 if (liveBadge) {
                     if (window.lsrHolidayInfo && window.lsrHolidayInfo.isAway) {
                         liveBadge.textContent = "OFF AIR";
+                        // Make orange like 'up next'
+                        liveBadge.style.background = "rgba(255, 255, 255, 0.08)";
+                        liveBadge.style.color = "#ffb130";
+                        if (visualizer) visualizer.style.display = "none";
                     } else {
                         liveBadge.textContent = "ON AIR"; 
+                        // Reset to default green
+                        liveBadge.style.background = "";
+                        liveBadge.style.color = "";
+                        if (visualizer) visualizer.style.display = ""; 
                     }
                 }
 
@@ -802,7 +812,14 @@ for (let i = 0; i < parsedShows.length; i++) {
                 if (lnImg) lnImg.src = defaultImg;
                 if (lnDesc) lnDesc.textContent = "No show is live right now :(";
 
-                if (liveBadge) liveBadge.textContent = "OFF AIR";
+                if (liveBadge) {
+                    liveBadge.textContent = "OFF AIR";
+                    // Make orange like 'up next'
+                    liveBadge.style.background = "rgba(255, 255, 255, 0.08)";
+                    liveBadge.style.color = "#ffb130";
+                }
+                // Hide visualizer
+                if (visualizer) visualizer.style.display = "none"; 
                 
                 updateMediaSession({
                     title: "OFF AIR", 
