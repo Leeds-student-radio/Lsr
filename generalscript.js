@@ -1307,10 +1307,8 @@ function loadArchiveGrid() {
 
 // --- 6.8 STATUS (HOLIDAY) LOGIC ---
 async function fetchStatusPopupData() {
-    // 1. Check if we've already cached the holiday status this session
-    const cached = sessionStorage.getItem('lsrHolidayInfo');
-    if (cached) {
-        window.lsrHolidayInfo = JSON.parse(cached);
+    // 1. Check if we've already fetched the holiday status in this window instance
+    if (window.lsrHolidayInfo) {
         // If we're away and the schedule is already loaded, refresh the UI text
         if (window.lsrHolidayInfo.isAway && allScheduleRows && allScheduleRows.length > 0) {
             updateLiveNowUI(getCurrentWeekType());
@@ -1341,18 +1339,15 @@ async function fetchStatusPopupData() {
         const dataRow = rows[1].map(cell => cell ? cell.trim() : '');
         const status = dataRow[statusIdx].toLowerCase();
         
-        const holidayInfo = {
+        // 2. Save data to memory ONLY (resets on refresh)
+        window.lsrHolidayInfo = {
             isAway: (status === 'away'),
             type: dataRow[holidayTypeIdx],
             returnDate: dataRow[returnDateIdx]
         };
 
-        // 2. Save data to memory & session storage
-        sessionStorage.setItem('lsrHolidayInfo', JSON.stringify(holidayInfo));
-        window.lsrHolidayInfo = holidayInfo;
-
         // 3. Force the UI to refresh if it determined we are on holiday and schedule is ready
-        if (holidayInfo.isAway && allScheduleRows && allScheduleRows.length > 0) {
+        if (window.lsrHolidayInfo.isAway && allScheduleRows && allScheduleRows.length > 0) {
             updateLiveNowUI(getCurrentWeekType());
         }
 
