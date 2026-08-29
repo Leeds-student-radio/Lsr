@@ -303,6 +303,10 @@ p.player-is-loading {
 }
 
 
+.show-card.show-card-2h .show-card img {
+    width: 100%;
+   
+}
 
 /* Style the new duration text */
 .show-card-2h .duration-label {
