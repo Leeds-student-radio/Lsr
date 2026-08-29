@@ -303,8 +303,8 @@ p.player-is-loading {
 }
 
 
-.show-card-2h .show-card img {
-    width: 100%;
+.show-card-2h img {
+    width: 100% !important;
    
 }
 
