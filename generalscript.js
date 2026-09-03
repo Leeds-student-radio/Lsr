@@ -1741,7 +1741,7 @@ function hideIndicator() {
         });
     }
 
-  function displayMessage(messageDoc, prepend = false) {
+ function displayMessage(messageDoc, prepend = false) {
     const messageData = messageDoc.data({ serverTimestamps: 'estimate' });
     const docId = messageDoc.id;
 
@@ -1755,10 +1755,26 @@ function hideIndicator() {
     let timestampString = '';
     if (createdAt && typeof createdAt.toDate === 'function') {
         const date = createdAt.toDate();
-        timestampString = new Intl.DateTimeFormat('en-GB', {
-            timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hour12: false
+        
+        // Formats as "01 Sep"
+        const dateStr = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London', 
+            day: '2-digit', 
+            month: 'short'
         }).format(date);
+        
+        // Formats as "14:30"
+        const timeStr = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: false
+        }).format(date);
+
+        // Combine them: "01 Sep 14:30"
+        timestampString = `${dateStr} ${timeStr}`;
     }
+
 
     // Grouping: check the neighbouring message to decide if we hide avatar/name
     const neighbour = prepend ? chatMessages.firstElementChild : chatMessages.lastElementChild;
