@@ -645,22 +645,30 @@ function updateLiveNowUI(realWeek) {
     const currentDay = london.day;
     const currentMinutes = london.minutes;
 
-   const todayShows = allScheduleRows.filter(row => {
-        const day = row[4]?.trim() || '';
-        const week = row[5]?.trim() || '';
-        return day.toLowerCase() === currentDay.toLowerCase() && matchesWeek(week, realWeek);
-    });
+  const todayShows = allScheduleRows.filter(row => {
+    const day = row[5]?.trim() || '';   // F = Day
+    const week = row[6]?.trim() || '';  // G = Week
 
-    const parsedShows = todayShows.map(row => ({
-        title: row[1] || "No show live",
-        description: row[2] || "Check our schedule for the next show!",
-        image: row[3] || "/ourlogo.jpeg",
-        start: timeToMinutes(row[6]),
-        end: timeToMinutes(row[7]),
-        rawStart: row[6],
-        rawEnd: row[7],
-        host: row[8] || "Leeds Student Radio"
-    })).filter(s => s.start !== -1).sort((a, b) => a.start - b.start);
+    return day.toLowerCase() === currentDay.toLowerCase()
+        && matchesWeek(week, realWeek);
+});
+
+const parsedShows = todayShows.map(row => ({
+    title: row[1] || "No show live",                            // B
+    description: row[2] || "Check our schedule for the next show!", // C
+
+    // IMPORTANT:
+    // D / row[3] is deliberately ignored.
+    // E / row[4] contains the ImageKit URL.
+    image: row[4] || "/ourlogo.jpeg",
+
+    start: timeToMinutes(row[7]),   // H
+    end: timeToMinutes(row[8]),     // I
+    rawStart: row[7],
+    rawEnd: row[8],
+    host: row[9] || "Leeds Student Radio" // J
+})).filter(s => s.start !== -1)
+  .sort((a, b) => a.start - b.start);
 
   let liveShow = null;
 let nextShow = null;
@@ -944,13 +952,17 @@ if (nextContainer) {
             dayCol.className = `schedule-day-column day-${day}`; 
             dayCol.innerHTML = `<h3 class="day-title">${day}</h3>`;
 
-           const filteredShows = allScheduleRows.filter(row => {
-                const rowDay = row[4]?.trim() || '';
-                const rowWeek = row[5]?.trim() || '';
-                return rowDay.toLowerCase() === day.toLowerCase() && matchesWeek(rowWeek, weekLetter);
-            });
+          const filteredShows = allScheduleRows.filter(row => {
+    const rowDay = row[5]?.trim() || '';   // F
+    const rowWeek = row[6]?.trim() || '';  // G
 
-            filteredShows.sort((a, b) => timeToMinutes(a[6]) - timeToMinutes(b[6]));
+    return rowDay.toLowerCase() === day.toLowerCase()
+        && matchesWeek(rowWeek, weekLetter);
+});
+
+filteredShows.sort(
+    (a, b) => timeToMinutes(a[7]) - timeToMinutes(b[7])
+);
 
             if (filteredShows.length === 0) {
                 dayCol.innerHTML += `<p class="no-shows">No shows scheduled</p>`;
@@ -958,10 +970,19 @@ if (nextContainer) {
 
             filteredShows.forEach(row => {
                 const show = {
-                    title: row[1], desc: row[2], img: row[3] || "https://via.placeholder.com/300",
-                    day: row[4], week: row[5], start: row[6], end: row[7], host: row[8],
-                    color: row[9] 
-                };
+    title: row[1],                                  // B
+    desc: row[2],                                   // C
+
+    // row[3] = D upload image — IGNORE IT
+    img: row[4] || "https://via.placeholder.com/300", // E
+
+    day: row[5],       // F
+    week: row[6],      // G
+    start: row[7],     // H
+    end: row[8],       // I
+    host: row[9],      // J
+    color: row[10]     // K
+};
                 const showEl = document.createElement('div');
                 showEl.className = 'show-card';
                 
