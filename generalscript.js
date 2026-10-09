@@ -520,7 +520,7 @@ function getLondonTimeDetails() {
     }
 
     const TERM_START_DATE = new Date('2026-01-26T00:00:00Z').getTime(); 
-    let currentViewWeek = 'A';
+    let currentViewWeek = 'B';
     let allScheduleRows = [];
 
     function timeToMinutes(timeStr) {
