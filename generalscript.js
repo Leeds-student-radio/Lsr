@@ -519,7 +519,7 @@ function getLondonTimeDetails() {
         };
     }
 
-    const TERM_START_DATE = new Date('2026-01-26T00:00:00Z').getTime(); 
+    const TERM_START_DATE = new Date('2026-10-05T00:00:00Z').getTime();
     let currentViewWeek = 'B';
     let allScheduleRows = [];
 
@@ -554,12 +554,15 @@ function getLondonTimeDetails() {
     return hours * 60 + minutes;
 }
 
-    function getCurrentWeekType() {
-        const nowMs = Date.now(); 
-        const diffInMs = nowMs - TERM_START_DATE;
-        const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
-        return (diffInWeeks % 2 === 0) ? 'A' : 'B';
-    }
+  
+
+function getCurrentWeekType() {
+    const nowMs = Date.now(); 
+    const diffInMs = nowMs - TERM_START_DATE;
+    const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
+
+    return (diffInWeeks % 2 === 0) ? 'B' : 'A';
+}
 function matchesWeek(sheetWeek, targetWeek) {
     // If the cell is completely blank or undefined, assume it runs EVERY week
     if (!sheetWeek || sheetWeek.toString().trim() === '') {
