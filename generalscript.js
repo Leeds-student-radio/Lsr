@@ -2096,3 +2096,103 @@ onValue(activeRef, snap => {
 }
 
 window.initChatSystem = initChatSystem;
+
+
+// --- HOMEPAGE CARDS: EDIT THE GOOGLE SHEET, NOT THIS ARRAY ---
+// Publish the 'Home' tab via Google Sheets > File > Share > Publish to web.
+// If Google gives you a different CSV URL, replace ONLY this constant.
+const homeCardsSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRoXcefXiUOFuRnA6DpheBwR2CJ4Zs09o68IG9in3w2WwncXybxsbVDWwQY6u6MSpmFDiRrx83MO8M3/pub?gid=1702081167&output=csv';
+
+function parseHomeCSV(source) {
+  const rows = []; let row = [], cell = '', quoted = false;
+  for (let i = 0; i < source.length; i++) {
+    const c = source[i];
+    if (c === '"') {
+      if (quoted && source[i + 1] === '"') { cell += '"'; i++; }
+      else quoted = !quoted;
+    } else if (c === ',' && !quoted) { row.push(cell); cell = ''; }
+    else if ((c === '\n' || c === '\r') && !quoted) {
+      if (c === '\r' && source[i + 1] === '\n') i++;
+      row.push(cell); rows.push(row); row = []; cell = '';
+    } else cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function homeBadgeIcon(link, badge) {
+  const text = `${link} ${badge}`.toLowerCase();
+  if (text.includes('instagram.com')) return 'fab fa-instagram';
+  if (text.includes('tiktok.com')) return 'fab fa-tiktok';
+  if (text.includes('spotify.com')) return 'fab fa-spotify';
+  if (text.includes('soundcloud.com')) return 'fab fa-soundcloud';
+  return 'fa-solid fa-link';
+}
+
+function makeHomeCard([badge, title, link, imageUrl], wide) {
+  const figure = document.createElement('figure');
+  figure.className = wide ? 'card card-wide' : 'card';
+
+  const a = document.createElement('a');
+  a.href = link;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+
+  const img = document.createElement('img');
+  img.src = imageUrl;
+  img.alt = title;
+  if (wide || /tiktok\.com/i.test(link)) img.className = 'card-img-top';
+  if (wide) img.loading = 'lazy';
+
+  const badgeDiv = document.createElement('div');
+  badgeDiv.className = 'card-badge';
+  const icon = document.createElement('i');
+  icon.className = homeBadgeIcon(link, badge);
+  badgeDiv.append(icon, document.createTextNode(' ' + badge));
+
+  const overlay = document.createElement('figcaption');
+  overlay.className = 'card-overlay';
+  const heading = document.createElement('h2');
+  heading.className = 'card-title font-handwritten';
+  heading.textContent = title;
+  overlay.append(heading);
+  a.append(img, badgeDiv, overlay);
+  figure.append(a);
+  return figure;
+}
+
+async function loadHomeCards() {
+  const topGrid = document.getElementById('home-cards-top');
+  const bottomGrid = document.getElementById('opposite');
+  if (!topGrid || !bottomGrid) return; // Only on homepage.
+  try {
+    const response = await fetch(homeCardsSheetUrl, { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+    const csv = await response.text();
+    const rows = parseHomeCSV(csv);
+    const columns = rows.shift()?.map(c => c.trim().toLowerCase());
+    if (!columns || columns.slice(0, 4).join('|') !== 'badge|title|link|image url') {
+      throw new Error('Home tab must have columns: badge, title, link, image url');
+    }
+    const cards = rows.map(row => row.slice(0, 4).map(v => v.trim()))
+      .filter(row => row.every(Boolean))
+      .filter(row => {
+        try { const a = new URL(row[2], location.origin); const i = new URL(row[3], location.origin);
+          return ['http:', 'https:'].includes(a.protocol) && ['http:', 'https:'].includes(i.protocol);
+        } catch { return false; }
+      });
+    if (!cards.length) throw new Error('No valid cards found in Home tab');
+    // Three cards per row. Styling continues to come from generalstyle.css.
+    topGrid.replaceChildren(...cards.slice(0, 3).map(row => makeHomeCard(row, false)));
+    bottomGrid.replaceChildren(...cards.slice(3).map(row => makeHomeCard(row, true)));
+  } catch (err) {
+    console.error('Unable to load homepage cards from Google Sheets:', err);
+    topGrid.textContent = 'Unable to load homepage cards. Please try refreshing.';
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadHomeCards);
+} else {
+  loadHomeCards();
+}
