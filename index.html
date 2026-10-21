@@ -115,9 +115,18 @@
   <button id="lsr-popup-close" aria-label="Close popup">&times;</button>
 </div>
         <div class="container-homepage">
-        <!-- Home tab: rows 2-4 go in the first grid, rows 5-7 in the second. -->
-        <section class="section-grid grid-3" id="home-cards-top"></section>
-        <section class="section-grid grid-3" id="opposite"></section>
+        <style>
+          /* Home card loading placeholders. The real cards retain existing site CSS. */
+          .home-card-skeleton { position: relative; overflow: hidden; pointer-events: none; background: #252525; min-height: 240px; }
+          .home-card-skeleton .home-skeleton-image { position: absolute; inset: 0; background: linear-gradient(110deg,#292929 8%,#3b3b3b 23%,#292929 38%); background-size: 220% 100%; animation: home-skeleton-shimmer 1.4s ease-in-out infinite; }
+          .home-card-skeleton .home-skeleton-badge { position: absolute; top: 16px; left: 16px; width: 42%; height: 24px; border-radius: 5px; background: rgba(255,255,255,.20); }
+          .home-card-skeleton .home-skeleton-title { position: absolute; bottom: 20px; left: 18px; right: 18px; height: 55px; border-radius: 5px; background: linear-gradient(to bottom,rgba(255,255,255,.23) 0 34%,transparent 34% 56%,rgba(255,255,255,.16) 56% 90%,transparent 90%); }
+          @keyframes home-skeleton-shimmer { to { background-position-x: -220%; } }
+          @media (prefers-reduced-motion: reduce) { .home-card-skeleton .home-skeleton-image { animation: none; } }
+        </style>
+        <!-- The skeleton is visible immediately on direct load AND SRA navigation. -->
+        <section class="section-grid grid-3" id="home-cards-top" aria-busy="true"><figure class="card home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure><figure class="card home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure><figure class="card home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure></section>
+        <section class="section-grid grid-3" id="opposite" aria-busy="true"><figure class="card card-wide home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure><figure class="card card-wide home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure><figure class="card card-wide home-card-skeleton" aria-hidden="true"><div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div></figure></section>
         </div>
     </main>
 
