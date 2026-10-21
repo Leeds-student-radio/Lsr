@@ -1464,6 +1464,10 @@ if (popupCloseBtn) {
 
                 updatePlayButtons(!radioPlayer.paused);
 
+                // Homepage cards must be re-initialised after SRA swaps <main>.
+                // The script module itself is not re-executed during client-side navigation.
+                loadHomeCards();
+
                 // Initialize specific section data based on URL
                // INSIDE: loadPage(url)
 
@@ -2161,14 +2165,41 @@ function makeHomeCard([badge, title, link, imageUrl], wide) {
   return figure;
 }
 
+// Sequence prevents a stale request from overwriting cards after navigating away/back.
+let homeCardsLoadId = 0;
+
+function showHomeCardSkeletons(topGrid, bottomGrid) {
+  for (const [grid, wide] of [[topGrid, false], [bottomGrid, true]]) {
+    // Do not flash the skeleton if cards are already rendered.
+    if (grid.querySelector('.card:not(.home-card-skeleton)')) continue;
+    grid.replaceChildren();
+    for (let i = 0; i < 3; i++) {
+      const figure = document.createElement('figure');
+      figure.className = `card${wide ? ' card-wide' : ''} home-card-skeleton`;
+      figure.setAttribute('aria-hidden', 'true');
+      figure.innerHTML = '<div class="home-skeleton-image"></div><div class="home-skeleton-badge"></div><div class="home-skeleton-title"></div>';
+      grid.appendChild(figure);
+    }
+    grid.setAttribute('aria-busy', 'true');
+  }
+}
+
 async function loadHomeCards() {
   const topGrid = document.getElementById('home-cards-top');
   const bottomGrid = document.getElementById('opposite');
-  if (!topGrid || !bottomGrid) return; // Only on homepage.
+  if (!topGrid || !bottomGrid) return;
+
+  const loadId = ++homeCardsLoadId;
+  showHomeCardSkeletons(topGrid, bottomGrid);
   try {
     const response = await fetch(homeCardsSheetUrl, { cache: 'no-cache' });
     if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
     const csv = await response.text();
+    // SRA may have replaced these grids while the request was in flight.
+    if (loadId !== homeCardsLoadId ||
+        document.getElementById('home-cards-top') !== topGrid ||
+        document.getElementById('opposite') !== bottomGrid) return;
+
     const rows = parseHomeCSV(csv);
     const columns = rows.shift()?.map(c => c.trim().toLowerCase());
     if (!columns || columns.slice(0, 4).join('|') !== 'badge|title|link|image url') {
@@ -2177,17 +2208,25 @@ async function loadHomeCards() {
     const cards = rows.map(row => row.slice(0, 4).map(v => v.trim()))
       .filter(row => row.every(Boolean))
       .filter(row => {
-        try { const a = new URL(row[2], location.origin); const i = new URL(row[3], location.origin);
+        try {
+          const a = new URL(row[2], location.origin);
+          const i = new URL(row[3], location.origin);
           return ['http:', 'https:'].includes(a.protocol) && ['http:', 'https:'].includes(i.protocol);
         } catch { return false; }
       });
     if (!cards.length) throw new Error('No valid cards found in Home tab');
-    // Three cards per row. Styling continues to come from generalstyle.css.
+
     topGrid.replaceChildren(...cards.slice(0, 3).map(row => makeHomeCard(row, false)));
     bottomGrid.replaceChildren(...cards.slice(3).map(row => makeHomeCard(row, true)));
+    topGrid.removeAttribute('aria-busy');
+    bottomGrid.removeAttribute('aria-busy');
   } catch (err) {
     console.error('Unable to load homepage cards from Google Sheets:', err);
+    if (loadId !== homeCardsLoadId || document.getElementById('home-cards-top') !== topGrid) return;
     topGrid.textContent = 'Unable to load homepage cards. Please try refreshing.';
+    bottomGrid.replaceChildren();
+    topGrid.removeAttribute('aria-busy');
+    bottomGrid.removeAttribute('aria-busy');
   }
 }
 
