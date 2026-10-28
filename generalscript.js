@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 // --- MODIFIED: Added getDocs and limit to the import below ---
-import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc, getDocs, limit, where } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js"; 
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1302,16 +1302,145 @@ function loadArchiveGrid() {
         tableContainer.innerHTML = rowsHtml;
     }
 
-    async function loadSongs() {
-        const tableBody = document.getElementById('lsr-trk-wgt-song-table-body');
-        if (!tableBody) return;
+    let songLoadVersion = 0;
 
-        if (!cachedSongs) {
-            tableBody.innerHTML = '<div class="lsr-trk-wgt-row"><div class="lsr-trk-wgt-cell" style="text-align:center; padding:20px;">Loading songs...</div></div>';
-            cachedSongs = await fetchChartData("detected_songs");
+async function fetchWeeklyTopFive() {
+    const shazamDb = getFirestore(shazamApp);
+    const now = Date.now();
+    const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+    const snapshot = await getDocs(query(
+        collection(shazamDb, "song_plays"),
+        where("playedAt", ">", Timestamp.fromMillis(weekAgo)),
+        where("playedAt", "<=", Timestamp.fromMillis(now))
+    ));
+
+    const songs = new Map();
+
+    snapshot.forEach(document => {
+        const play = document.data();
+        const playedAt = play.playedAt?.toMillis();
+
+        if (
+            !play.songId ||
+            !Number.isFinite(playedAt) ||
+            playedAt <= weekAgo ||
+            playedAt > now
+        ) return;
+
+        const existing = songs.get(play.songId);
+
+        if (existing) {
+            existing.count += 1;
+
+            if (playedAt > existing.latest) {
+                existing.title = play.title;
+                existing.artist = play.artist;
+                existing.image = play.image;
+                existing.latest = playedAt;
+            }
+        } else {
+            songs.set(play.songId, {
+                songId: play.songId,
+                title: play.title,
+                artist: play.artist,
+                image: play.image,
+                count: 1,
+                latest: playedAt
+            });
         }
-        displayLeaderboard(cachedSongs, 'songs', 'lsr-trk-wgt-song-table-body');
+    });
+
+    // Escape text before passing it to the existing HTML renderer.
+    const escape = value => String(value ?? "").replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[character])
+    );
+
+    // Count every play first, then select the five highest totals.
+    return [...songs.values()]
+        .sort((a, b) =>
+            b.count - a.count || a.songId.localeCompare(b.songId)
+        )
+        .slice(0, 5)
+        .map(song => ({
+            title: escape(song.title || "Unknown Song"),
+            artist: escape(song.artist || "Unknown Artist"),
+            image: /^https?:\/\//i.test(song.image || "")
+                ? escape(song.image)
+                : "",
+            count: song.count
+        }));
+}
+
+async function loadSongs() {
+    const tableBody = document.getElementById(
+        "lsr-trk-wgt-song-table-body"
+    );
+    if (!tableBody) return;
+
+    const version = ++songLoadVersion;
+    const isWeekly = tableBody.dataset.weekly === "true";
+
+    try {
+        let songs;
+
+        if (isWeekly) {
+            songs = await fetchWeeklyTopFive();
+        } else {
+            if (!cachedSongs) {
+                cachedSongs = await fetchChartData("detected_songs");
+            }
+            songs = cachedSongs;
+        }
+
+        // Ignore results if the visitor has navigated away.
+        if (
+            version !== songLoadVersion ||
+            !tableBody.isConnected
+        ) return;
+
+        if (isWeekly && songs.length === 0) {
+            tableBody.innerHTML =
+                '<p style="padding:12px;">No songs recorded this week yet.</p>';
+            return;
+        }
+
+        displayLeaderboard(
+            songs,
+            "songs",
+            "lsr-trk-wgt-song-table-body"
+        );
+    } catch (error) {
+        console.error("Unable to load song chart:", error);
+
+        if (
+            version === songLoadVersion &&
+            tableBody.isConnected
+        ) {
+            tableBody.innerHTML =
+                '<p role="alert" style="padding:12px;">Unable to load the chart. Please try again shortly.</p>';
+        }
     }
+}
+
+// Refresh the weekly card every minute while the page is visible.
+setInterval(() => {
+    if (
+        !document.hidden &&
+        document.querySelector(
+            '#lsr-trk-wgt-song-table-body[data-weekly="true"]'
+        )
+    ) {
+        loadSongs();
+    }
+}, 60000);
 
     async function loadArtists() {
         const tableBody = document.getElementById('lsr-trk-wgt-artist-table-body');
