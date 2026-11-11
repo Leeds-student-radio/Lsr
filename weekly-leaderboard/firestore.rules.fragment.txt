@@ -1,0 +1,23 @@
+// Merge these matches into the EXISTING /databases/{database}/documents block.
+// Do not replace the project's rules with this fragment.
+// An overlapping broad allow rule wins over a false rule; review live rules first.
+
+match /leaderboards/weeklyTopFive {
+  allow get: if true;
+  allow list, create, update, delete: if false;
+}
+
+match /_weeklyLeaderboardPlays/{document} {
+  allow read, write: if false;
+}
+match /_weeklyLeaderboardSongs/{document} {
+  allow read, write: if false;
+}
+match /_weeklyLeaderboardControl/{document} {
+  allow read, write: if false;
+}
+
+// The Admin SDK used by the trusted functions bypasses these client rules.
+// Keep the existing logger's authorized writes and other site features working.
+// After the new summary is verified and the new website is live, remove public
+// song_plays listing/reading only after identifying every existing consumer.

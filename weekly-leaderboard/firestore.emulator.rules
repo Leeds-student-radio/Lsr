@@ -1,0 +1,8 @@
+// Local emulator only. Never deploy this file to the live project.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /leaderboards/weeklyTopFive { allow get: if true; }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

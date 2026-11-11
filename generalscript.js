@@ -1,8 +1,8 @@
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-// --- MODIFIED: Added getDocs and limit to the import below ---
-import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc, getDocs, limit, where } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js"; 
+import { getFirestore, collection, addDoc, serverTimestamp, Timestamp, query, orderBy, limitToLast, onSnapshot, doc, deleteDoc, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+import { createWeeklyTopFiveClient, WEEKLY_TOP_FIVE_DOCUMENT } from "./weekly-top-five-client.mjs";
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -1304,113 +1304,98 @@ function loadArchiveGrid() {
 
     let songLoadVersion = 0;
 
-async function fetchWeeklyTopFive() {
-    const shazamDb = getFirestore(shazamApp);
-    const now = Date.now();
-    const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+// One shared summary reader. Only the visible weekly chart keeps its listener
+// connected; the backend counts songs and rolling-window expirations once.
+const weeklyTopFiveClient = createWeeklyTopFiveClient({
+    subscribeSummary(onValue, onError) {
+        return onSnapshot(
+            doc(getFirestore(shazamApp), WEEKLY_TOP_FIVE_DOCUMENT),
+            { includeMetadataChanges: true },
+            snapshot => onValue({
+                data: snapshot.exists() ? snapshot.data() : null,
+                fromCache: snapshot.metadata.fromCache || snapshot.metadata.hasPendingWrites
+            }),
+            onError
+        );
+    },
+    onUpdate(state) {
+        if (state.error) console.warn("Unable to update the weekly song chart:", state.error);
+        renderWeeklyTopFive(state);
+    }
+});
 
-    const snapshot = await getDocs(query(
-        collection(shazamDb, "song_plays"),
-        where("playedAt", ">", Timestamp.fromMillis(weekAgo)),
-        where("playedAt", "<=", Timestamp.fromMillis(now))
-    ));
+function renderWeeklyTopFive(
+    state,
+    tableBody = document.getElementById("lsr-trk-wgt-song-table-body"),
+    version = songLoadVersion
+) {
+    if (
+        document.hidden || !tableBody || !tableBody.isConnected || tableBody.dataset.weekly !== "true" ||
+        tableBody !== document.getElementById("lsr-trk-wgt-song-table-body") ||
+        version !== songLoadVersion
+    ) return;
 
-    const songs = new Map();
+    if (state.rows && state.rows.length > 0) {
+        displayLeaderboard(state.rows, "songs", tableBody.id);
+    } else if (state.rows && state.status === "fresh") {
+        tableBody.innerHTML = '<p style="padding:12px;">No songs recorded this week yet.</p>';
+    } else {
+        tableBody.replaceChildren();
+    }
 
-    snapshot.forEach(document => {
-        const play = document.data();
-        const playedAt = play.playedAt?.toMillis();
+    // Keep previously valid rows when a refresh fails, but never label them current.
+    // Missing or unfinished summary documents are not an empty leaderboard.
+    if (state.message) {
+        const status = document.createElement("p");
+        status.setAttribute("role", state.status === "unavailable" ? "alert" : "status");
+        status.style.cssText = "font-size:0.75rem;line-height:1.4;padding:8px 4px;margin:0;";
+        status.textContent = state.message;
+        tableBody.appendChild(status);
+    }
+}
 
-        if (
-            !play.songId ||
-            !Number.isFinite(playedAt) ||
-            playedAt <= weekAgo ||
-            playedAt > now
-        ) return;
-
-        const existing = songs.get(play.songId);
-
-        if (existing) {
-            existing.count += 1;
-
-            if (playedAt > existing.latest) {
-                existing.title = play.title;
-                existing.artist = play.artist;
-                existing.image = play.image;
-                existing.latest = playedAt;
-            }
-        } else {
-            songs.set(play.songId, {
-                songId: play.songId,
-                title: play.title,
-                artist: play.artist,
-                image: play.image,
-                count: 1,
-                latest: playedAt
-            });
-        }
-    });
-
-    // Escape text before passing it to the existing HTML renderer.
-    const escape = value => String(value ?? "").replace(
-        /[&<>"']/g,
-        character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        }[character])
-    );
-
-    // Count every play first, then select the five highest totals.
-    return [...songs.values()]
-        .sort((a, b) =>
-            b.count - a.count || a.songId.localeCompare(b.songId)
-        )
-        .slice(0, 5)
-        .map(song => ({
-            title: escape(song.title || "Unknown Song"),
-            artist: escape(song.artist || "Unknown Artist"),
-            image: /^https?:\/\//i.test(song.image || "")
-                ? escape(song.image)
-                : "",
-            count: song.count
-        }));
+function syncWeeklyTopFive(
+    tableBody = document.getElementById("lsr-trk-wgt-song-table-body"),
+    version = songLoadVersion
+) {
+    if (document.hidden || !tableBody || tableBody.dataset.weekly !== "true") {
+        weeklyTopFiveClient.stop();
+        return;
+    }
+    // start() reuses the healthy subscription. Terminal-error retries are
+    // limited to one per minute, even if navigation or visibility changes repeat.
+    renderWeeklyTopFive(weeklyTopFiveClient.start(), tableBody, version);
 }
 
 async function loadSongs() {
     const tableBody = document.getElementById(
         "lsr-trk-wgt-song-table-body"
     );
-    if (!tableBody) return;
+    if (!tableBody) {
+        weeklyTopFiveClient.stop();
+        return;
+    }
 
     const version = ++songLoadVersion;
     const isWeekly = tableBody.dataset.weekly === "true";
 
-    try {
-        let songs;
+    if (isWeekly) {
+        syncWeeklyTopFive(tableBody, version);
+        return;
+    }
+    weeklyTopFiveClient.stop();
 
-        if (isWeekly) {
-            songs = await fetchWeeklyTopFive();
-        } else {
-            if (!cachedSongs) {
-                cachedSongs = await fetchChartData("detected_songs");
-            }
-            songs = cachedSongs;
+    try {
+        if (!cachedSongs) {
+            cachedSongs = await fetchChartData("detected_songs");
         }
+        const songs = cachedSongs;
 
         // Ignore results if the visitor has navigated away.
         if (
             version !== songLoadVersion ||
             !tableBody.isConnected
         ) return;
-
-        if (isWeekly && songs.length === 0) {
-            tableBody.innerHTML =
-                '<p style="padding:12px;">No songs recorded this week yet.</p>';
-            return;
-        }
 
         displayLeaderboard(
             songs,
@@ -1430,17 +1415,10 @@ async function loadSongs() {
     }
 }
 
-// Refresh the weekly card every minute while the page is visible.
-setInterval(() => {
-    if (
-        !document.hidden &&
-        document.querySelector(
-            '#lsr-trk-wgt-song-table-body[data-weekly="true"]'
-        )
-    ) {
-        loadSongs();
-    }
-}, 60000);
+// Healthy minute checks are local only. Published updates arrive through the
+// listener immediately. A failed listener gets at most one retry per minute.
+setInterval(syncWeeklyTopFive, 60000);
+document.addEventListener("visibilitychange", () => syncWeeklyTopFive());
 
     async function loadArtists() {
         const tableBody = document.getElementById('lsr-trk-wgt-artist-table-body');
@@ -1572,6 +1550,7 @@ if (popupCloseBtn) {
 
             if (newMain && currentMain) {
                 currentMain.innerHTML = newMain.innerHTML;
+                syncWeeklyTopFive();
                 document.title = newDoc.title;
 
                 const metaTags = newDoc.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"], meta[name="description"]');

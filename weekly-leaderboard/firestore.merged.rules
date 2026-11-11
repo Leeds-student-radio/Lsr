@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Preserve the existing application's access and original expiry date.
+    // The new server-owned leaderboard data is excluded from this legacy rule.
+    match /{collection}/{document=**} {
+      allow read, write: if request.time < timestamp.date(2027, 7, 25)
+        && !(collection in [
+          '_weeklyLeaderboardPlays',
+          '_weeklyLeaderboardSongs',
+          '_weeklyLeaderboardControl',
+          'leaderboards'
+        ]);
+    }
+
+    // Readers receive a single published result. Only the trusted Admin SDK
+    // can change it; collection enumeration is not required by the website.
+    match /leaderboards/weeklyTopFive {
+      allow get: if true;
+      allow list, create, update, delete: if false;
+    }
+
+    match /_weeklyLeaderboardPlays/{document=**} {
+      allow read, write: if false;
+    }
+    match /_weeklyLeaderboardSongs/{document=**} {
+      allow read, write: if false;
+    }
+    match /_weeklyLeaderboardControl/{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
