@@ -1,0 +1,50 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "_weeklyLeaderboardPlays",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "expiresAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "_weeklyLeaderboardPlays",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "playedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "_weeklyLeaderboardPlays",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "songId", "order": "ASCENDING" },
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "playedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "_weeklyLeaderboardPlays",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "songId", "order": "ASCENDING" },
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "playedAtMs", "order": "DESCENDING" },
+        { "fieldPath": "playedAt", "order": "ASCENDING" },
+        { "fieldPath": "__name__", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": [
+    { "collectionGroup": "_weeklyLeaderboardControl", "fieldPath": "rankCache", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardPlays", "fieldPath": "title", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardPlays", "fieldPath": "artist", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardPlays", "fieldPath": "image", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardSongs", "fieldPath": "title", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardSongs", "fieldPath": "artist", "indexes": [] },
+    { "collectionGroup": "_weeklyLeaderboardSongs", "fieldPath": "image", "indexes": [] },
+    { "collectionGroup": "leaderboards", "fieldPath": "songs", "indexes": [] }
+  ]
+}
